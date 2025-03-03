@@ -23,7 +23,7 @@ const LibrarianSidebar = () => {
                         <NavLink
                             to="/librarian/books"
                             className="block py-2 px-4 hover:bg-gray-700"
-                            activeClassName="bg-blue-600"
+                            activeclassname="bg-blue-600"
                         >
                             Books
                         </NavLink>
@@ -32,7 +32,7 @@ const LibrarianSidebar = () => {
                         <NavLink
                             to="/librarian/members"
                             className="block py-2 px-4 hover:bg-gray-700"
-                            activeClassName="bg-blue-600"
+                            activeclassname="bg-blue-600"
                         >
                             Members
                         </NavLink>
@@ -41,7 +41,7 @@ const LibrarianSidebar = () => {
                         <NavLink
                             to="/librarian/categories"
                             className="block py-2 px-4 hover:bg-gray-700"
-                            activeClassName="bg-blue-600"
+                            activeclassname="bg-blue-600"
                         >
                             Categories
                         </NavLink>
@@ -50,7 +50,7 @@ const LibrarianSidebar = () => {
                         <NavLink
                             to="/librarian/shelfs"
                             className="block py-2 px-4 hover:bg-gray-700"
-                            activeClassName="bg-blue-600"
+                            activeclassname="bg-blue-600"
                         >
                             Shelfs
                         </NavLink>
@@ -59,7 +59,7 @@ const LibrarianSidebar = () => {
                         <NavLink
                             to="/librarian/fines"
                             className="block py-2 px-4 hover:bg-gray-700"
-                            activeClassName="bg-blue-600"
+                            activeclassname="bg-blue-600"
                         >
                             Fines
                         </NavLink>
