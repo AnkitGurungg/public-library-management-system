@@ -11,6 +11,15 @@ const LibrarianSidebar = () => {
             <div>
                 <div className="py-2">
                     <NavLink
+                        to="/librarian"
+                        className="block py-2 px-4 hover:bg-gray-700"
+                        activeclassname="bg-blue-600"
+                    >
+                        Dashboard
+                    </NavLink>
+                </div>
+                <div className="py-2">
+                    <NavLink
                         to="/librarian/catalog"
                         className="block py-2 px-4 hover:bg-gray-700"
                         activeclassname="bg-blue-600"
