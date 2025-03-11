@@ -1,4 +1,4 @@
-import CategoryAPI from "@/services/CategoryServices";
+import GlobalService from "@/services/GlobalServices";
 import { useQuery } from "@tanstack/react-query";
 
 export const useFetchCategory = () => {
@@ -6,11 +6,11 @@ export const useFetchCategory = () => {
     queryKey: ["categories"],
     queryFn: async () => {
       try {
-        const res = await CategoryAPI("/get/categories");
+        const res = await GlobalService("/api/category/get/categories");
         return { status: res.status, data: res.data };
       } catch (error) {
         console.log(error);
-        if (error.response) {
+        if (error.response.status === 404) {
           return {
             status: error.response.status,
             data: error.response.data.message,

@@ -1,4 +1,16 @@
 import { useFetchCategory } from "../hooks/useFetchCategory";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+import { Trash2 } from "lucide-react";
+import Delete from "./modals/Delete";
+import AddCategory from "./modals/AddCategory";
+import { Input } from "../ui/input";
 
 const Categories = () => {
   const { data: categories } = useFetchCategory();
@@ -7,41 +19,56 @@ const Categories = () => {
 
   return (
     <div>
-      <table>
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>name</th>
-            <th>Starting number</th>
-            <th>Ending number</th>
-            <th>Added date</th>
-            <th>Updated date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {categories?.status === 404 || categories?.status === 500 ? (
-            <tr>
-              <td>{categories?.data}</td>
-            </tr>
-          ) : (
-            categories?.data.map((element, index) => (
-              <tr key={element.id || index}>
-                <td>{element.name}</td>
-                <td>{element.startingNumber}</td>
-                <td>{element.endingNumber}</td>
-                <td>{element.addedDate}</td>
-                <td>{element.updatedDate}</td>
-                <td>
-                  <img src="../../../../react.svg" alt="" />
-                  <img src="../../../../react.svg" alt="" />
-                  <img src="../../../../react.svg" alt="" />
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+      <div className="flex flex-row items-center gap-4">
+        <h1>Category Management</h1>
+        <AddCategory />
+        <Input
+          type="text"
+          placeholder="Search here"
+          className="bg-white w-[220px]"
+        />
+      </div>
+
+      <div className="bg-white rounded-[8px] mt-4">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Id</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Starting Number</TableHead>
+              <TableHead>Ending Number</TableHead>
+              <TableHead>Added Date</TableHead>
+              <TableHead>Updated Date</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {categories?.status === 404 || categories?.status === 500 ? (
+              <TableRow>
+                <TableCell>{categories?.data}</TableCell>
+              </TableRow>
+            ) : (
+              categories?.data?.map((element, index) => (
+                <TableRow key={element.categoryId || index}>
+                  <TableCell>{element.categoryId}</TableCell>
+                  <TableCell>{element.name}</TableCell>
+                  <TableCell>{element.startingNumber}</TableCell>
+                  <TableCell>{element.endingNumber}</TableCell>
+                  <TableCell>{element.addedDate}</TableCell>
+                  <TableCell>{element.updatedDate}</TableCell>
+                  <TableCell>
+                    <Delete
+                      id={element.categoryId}
+                      name={element.name}
+                      type={"category"}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

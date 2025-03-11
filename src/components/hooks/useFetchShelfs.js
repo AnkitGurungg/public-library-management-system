@@ -1,3 +1,4 @@
+import GlobalService from "@/services/GlobalServices";
 import ShelfAPI from "@/services/ShelfServices";
 import { useQuery } from "@tanstack/react-query";
 
@@ -6,7 +7,7 @@ export const useFetchShelfs = () => {
     queryKey: ["shelfs"],
     queryFn: async () => {
       try {
-        const res = await ShelfAPI("/get/shelves");
+        const res = await GlobalService("/api/shelf/get/shelves");
         return { status: res.status, data: res.data };
       } catch (error) {
         if (error.response && error.response.status === 404) {
