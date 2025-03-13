@@ -1,5 +1,8 @@
+import { UAppLayout, Home, Genres } from "./indexes/User"
+import { LAppLayout } from "./indexes/Librarian"
+import { Dashboard, Catalog, Books, Categories, Members, Shelfs, Fines } from "./indexes/LibrarianAndAdmin"
+import {} from "./indexes/Admin"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import { UserAppLayout, Home, Genres, LibrarianAppLayout, Dashboard, Catalog, Books, Members, Categories, Shelfs, Fines } from "./components/Index"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 const App = () => {
@@ -8,7 +11,7 @@ const App = () => {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <UserAppLayout />,
+      element: <UAppLayout />,
       children: [
         { index: true, element: <Home /> },
         { path: 'genres', element: <Genres /> },
@@ -16,7 +19,7 @@ const App = () => {
     },
     {
       path: '/librarian',
-      element: <LibrarianAppLayout />,
+      element: <LAppLayout />,
       children: [
         { index: true, element: <Dashboard /> },
         { path: 'catalog', element: <Catalog /> },
