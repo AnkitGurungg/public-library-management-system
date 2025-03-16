@@ -18,14 +18,16 @@ const Categories = () => {
 
   return (
     <div>
-      <div className="flex flex-row items-center gap-4">
+      <div className="flex flex-row  justify-between gap-4">
         <h1>Category Management</h1>
+        <div className="flex items-center gap-1">
         <AddCategory />
         <Input
           type="text"
           placeholder="Search here"
           className="bg-white w-[220px]"
-        />
+          />
+          </div>
       </div>
 
       <div className="bg-white rounded-[8px] mt-4">
