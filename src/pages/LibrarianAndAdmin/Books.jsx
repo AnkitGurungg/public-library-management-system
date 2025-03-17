@@ -12,6 +12,7 @@ import {
 } from "../../components/ui/table";
 import Delete from "../../components/Delete";
 import UpdateBook from "../../features/LibrarianAndAdmin/Books/UpdateBook";
+import ViewBook from "@/features/LibrarianAndAdmin/Books/ViewBook";
 
 const Books = () => {
   const { data: books } = useFetchBooks();
@@ -46,8 +47,9 @@ const Books = () => {
                   <TableCell>{element.category.name}</TableCell>
                   <TableCell>{element.language}</TableCell>
                   <TableCell>{element.quantity}</TableCell>
-                  <TableCell>
-                    <UpdateBook id={element.bookId}></UpdateBook>
+                  <TableCell className="flex flex-row justify-center items-center">
+                    <UpdateBook id={element.bookId} />
+                    <ViewBook id={element.bookId} />
                     <Delete
                       id={element.bookId}
                       name={element.title}

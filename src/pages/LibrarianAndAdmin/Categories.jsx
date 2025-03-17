@@ -10,6 +10,8 @@ import {
 import Delete from "@/components/Delete";
 import AddCategory from "@/features/LibrarianAndAdmin/Categories/AddCategory";
 import { Input } from "@/components/ui/input";
+import ViewCategory from "@/features/LibrarianAndAdmin/Categories/ViewCategory";
+import UpdateCategory from "@/features/LibrarianAndAdmin/Categories/UpdateCategory";
 
 const Categories = () => {
   const { data: categories } = useFetchCategory();
@@ -57,7 +59,9 @@ const Categories = () => {
                   <TableCell>{element.endingNumber}</TableCell>
                   <TableCell>{element.addedDate}</TableCell>
                   <TableCell>{element.updatedDate}</TableCell>
-                  <TableCell>
+                  <TableCell className="flex flex-row justify-center items-center">
+                    <UpdateCategory id={element.categoryId} />
+                    <ViewCategory id={element.categoryId} />
                     <Delete
                       id={element.categoryId}
                       name={element.name}

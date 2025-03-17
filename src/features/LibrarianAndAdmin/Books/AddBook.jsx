@@ -37,7 +37,7 @@ const AddBook = () => {
     setBookImage(e.target.files[0]);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const formData = new FormData();
 
     if (!bookImage || bookImage === null) {
@@ -52,7 +52,7 @@ const AddBook = () => {
       );
 
       try {
-        const response = GlobalService.post("api/book/add", formData, {
+        const response = await GlobalService.post("api/book/add", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

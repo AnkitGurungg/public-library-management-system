@@ -1,5 +1,4 @@
 import { useFetchShelfs } from "../../hooks/useFetchShelfs";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import AddShelf from "@/features/LibrarianAndAdmin/Shelf/AddShelf";
 
@@ -10,10 +9,11 @@ import {
   TableRow,
   TableCell,
   TableBody,
-} from  "@/components/ui/table";
+} from "@/components/ui/table";
 
 import UpdateShelf from "@/features/LibrarianAndAdmin/Shelf/UpdateShelf";
 import Delete from "@/components/Delete";
+import ViewShelf from "@/features/LibrarianAndAdmin/Shelf/ViewShelf";
 
 const Shelfs = () => {
   const { data: shelfs, isLoading } = useFetchShelfs();
@@ -58,9 +58,14 @@ const Shelfs = () => {
                 <TableCell>{element.updatedDate}</TableCell>
                 <TableCell>{element.capacity}</TableCell>
                 <TableCell>{element.category.name}</TableCell>
-                <TableCell>
+                <TableCell className="flex flex-row justify-center items-center">
                   <UpdateShelf id={element.shelfId} />
-                  <Delete id={element.shelfId} name={element.name} type={"shelf"}/>
+                  <ViewShelf id={element.shelfId} />
+                  <Delete
+                    id={element.shelfId}
+                    name={element.name}
+                    type={"shelf"}
+                  />
                 </TableCell>
               </TableRow>
             ))

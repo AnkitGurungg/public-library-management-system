@@ -51,10 +51,10 @@ const UpdateShelf = ({ id }) => {
           },
         }
       );
-      setOpen(false)
-      refetchShelfs()
+      setOpen(false);
+      refetchShelfs();
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
   };
 
