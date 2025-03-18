@@ -10,9 +10,12 @@ import {
 } from "@/components/ui/table";
 import { Indent } from "lucide-react";
 import { data } from "react-router-dom";
+import ViewMember from "./ViewMember";
+import Delete from "@/components/Delete";
 
 const VerifiedMembers = () => {
-  const { data: verifiedMembers, refetch: refetchVerifiedMembers } = useFetchVerifiedMembers();
+  const { data: verifiedMembers, refetch: refetchVerifiedMembers } =
+    useFetchVerifiedMembers();
   console.log(verifiedMembers);
 
   return (
@@ -28,17 +31,27 @@ const VerifiedMembers = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {verifiedMembers?.status === 404 && <TableRow>{verifiedMembers?.data}</TableRow>}
+          {verifiedMembers?.status === 404 && (
+            <TableRow>{verifiedMembers?.data}</TableRow>
+          )}
           {verifiedMembers?.status === 500 && <p>{verifiedMembers?.data}</p>}
-          {verifiedMembers?.status===200 && verifiedMembers?.data?.map((element, index) => (
-            <TableRow key={element.userId || index}>
-              <TableCell>{element.userId}</TableCell>
-              <TableCell>{element.name}</TableCell>
-              <TableCell>{element.email}</TableCell>
-              <TableCell>{element.contactNumber}</TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          ))}
+          {verifiedMembers?.status === 200 &&
+            verifiedMembers?.data?.map((element, index) => (
+              <TableRow key={element.userId || index}>
+                <TableCell>{element.userId}</TableCell>
+                <TableCell>{element.name}</TableCell>
+                <TableCell>{element.email}</TableCell>
+                <TableCell>{element.contactNumber}</TableCell>
+                <TableCell className="flex flex-row justify-center items-center">
+                <ViewMember id={element.userId} type={"vm"} />
+                <Delete
+                  id={element.userId}
+                  name={element.name}
+                  type={"user"} 
+                />
+                </TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </div>

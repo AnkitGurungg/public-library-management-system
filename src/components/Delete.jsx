@@ -14,11 +14,15 @@ import { useFetchBooks } from "@/hooks/useFetchBooks";
 import { Trash2 } from "lucide-react";
 import { useFetchCategory } from "@/hooks/useFetchCategory";
 import { useFetchShelfs } from "@/hooks/useFetchShelfs";
+import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
+import { useFetchVerifiedMembers } from "@/hooks/useFetchVerifiedMembers";
 
 const Delete = ({ id, name, type }) => {
   const { data: books, refetch: refetchBooks } = useFetchBooks();
   const { data: categories, refetch: refetchCategories } = useFetchCategory();
   const { data: shelfs, refetch: refetchShelfs } = useFetchShelfs();
+  const { data: VerifiedMembers, refetch: refetchVerifiedMembers } = useFetchVerifiedMembers();
+  const { data: nonVerifiedMembers, refetch: refetchNonVerifiedMembers } = useFetchNonVerifiedMembers();
 
   const [open, setOpen] = useState(false);
 
@@ -35,6 +39,9 @@ const Delete = ({ id, name, type }) => {
       if (type === "shelf") {
         endpoint = `/api/shelf/delete/${id}`;
       }
+      if (type === "user") {
+        endpoint = `/api/user/delete/${id}`;
+      }
 
       if (endpoint) {
         const res = await GlobalService.delete(endpoint);
@@ -50,6 +57,10 @@ const Delete = ({ id, name, type }) => {
         }
         if (type === "shelf") {
           refetchShelfs(); 
+        }
+        if (type === "user") {
+          refetchVerifiedMembers()
+          refetchNonVerifiedMembers()
         }
       }
     } catch (error) {
@@ -72,6 +83,7 @@ const Delete = ({ id, name, type }) => {
           {type === "book" && <p>{type} {name} in id {id}?</p>}
           {type === "category" && <p>{type} {name} in id {id}?</p>}
           {type === "shelf" && <p>{type} {name} in id {id}?</p>}
+          {type === "user" && <p>{type} {name} in id {id}?</p>}
         </p>
         <DialogFooter>
           <Button onClick={handleDelete}>Confirm</Button>

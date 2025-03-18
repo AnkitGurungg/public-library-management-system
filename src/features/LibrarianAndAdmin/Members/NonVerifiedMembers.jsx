@@ -1,6 +1,4 @@
 import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
-import { useFetchVerifiedMembers } from "@/hooks/useFetchVerifiedMembers";
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -9,8 +7,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Indent } from "lucide-react";
-import { data } from "react-router-dom";
+import { ToggleRight } from "lucide-react";
+import Delete from "@/components/Delete";
+import VerifyMember from "./VerifyMember";
+import ViewMember from "./ViewMember";
 
 const NonVerifiedMembers = () => {
   const { data: nonVerifiedMembers, refetch: refetchNonVerifiedMembers } = useFetchNonVerifiedMembers();
@@ -37,7 +37,15 @@ const NonVerifiedMembers = () => {
               <TableCell>{element.name}</TableCell>
               <TableCell>{element.email}</TableCell>
               <TableCell>{element.contactNumber}</TableCell>
-              <TableCell>Action</TableCell>
+              <TableCell className="flex flex-row justify-center items-center">
+                <VerifyMember id={element.userId} />
+                <ViewMember id={element.userId} type={"nonvm"} />
+                <Delete
+                  id={element.userId}
+                  name={element.name}
+                  type={"user"} 
+                />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
