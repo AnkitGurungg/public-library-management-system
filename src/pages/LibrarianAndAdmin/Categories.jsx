@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useEffect, useState } from "react";
 import Delete from "@/components/Delete";
 import AddCategory from "@/features/LibrarianAndAdmin/Categories/AddCategory";
 import { Input } from "@/components/ui/input";
@@ -14,22 +15,45 @@ import ViewCategory from "@/features/LibrarianAndAdmin/Categories/ViewCategory";
 import UpdateCategory from "@/features/LibrarianAndAdmin/Categories/UpdateCategory";
 
 const Categories = () => {
-  const { data: categories } = useFetchCategory();
-  console.log(categories?.data);
-  console.log(categories?.status);
+  const { data: categories, refetch: refetchCategories } = useFetchCategory();
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredCategories, setFilteredCategories] = useState([]);
+
+  useEffect(() => {
+    refetchCategories();
+  }, []);
+
+  useEffect(() => {
+    if (categories?.status === 200 && Array.isArray(categories?.data)) {
+      const lowerSearch = searchTerm.toLowerCase();
+
+      const filtered = categories.data.filter((category) =>
+        category.name?.toLowerCase().includes(lowerSearch)
+      );
+
+      setFilteredCategories(
+        searchTerm.trim() === "" ? categories.data : filtered
+      );
+    } else {
+      setFilteredCategories([]);
+    }
+  }, [categories, searchTerm]);
 
   return (
     <div>
       <div className="flex flex-row  justify-between gap-4">
-        <h1>Category Management</h1>
+        <h1>Available Categories</h1>
         <div className="flex items-center gap-1">
-        <AddCategory />
-        <Input
-          type="text"
-          placeholder="Search here"
-          className="bg-white w-[220px]"
+          <AddCategory />
+          <Input
+            type="text"
+            placeholder="Search here"
+            className="bg-white w-[220px]"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-          </div>
+        </div>
       </div>
 
       <div className="bg-white rounded-[8px] mt-4">
@@ -46,12 +70,9 @@ const Categories = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {categories?.status === 404 || categories?.status === 500 ? (
-              <TableRow>
-                <TableCell>{categories?.data}</TableCell>
-              </TableRow>
-            ) : (
-              categories?.data?.map((element, index) => (
+            {Array.isArray(filteredCategories) &&
+            filteredCategories.length > 0 ? (
+              filteredCategories.map((element, index) => (
                 <TableRow key={element.categoryId || index}>
                   <TableCell>{element.categoryId}</TableCell>
                   <TableCell>{element.name}</TableCell>
@@ -60,16 +81,43 @@ const Categories = () => {
                   <TableCell>{element.addedDate}</TableCell>
                   <TableCell>{element.updatedDate}</TableCell>
                   <TableCell className="flex flex-row justify-center items-center">
-                    <UpdateCategory id={element.categoryId} />
-                    <ViewCategory id={element.categoryId} />
-                    <Delete
-                      id={element.categoryId}
-                      name={element.name}
-                      type={"category"}
-                    />
+                    <div className="relative group">
+                      <UpdateCategory id={element.categoryId} />
+                      <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        Update category
+                      </span>
+                    </div>
+
+                    <div className="relative group">
+                      <ViewCategory id={element.categoryId} />
+                      <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        View category
+                      </span>
+                    </div>
+
+                    <div className="relative group">
+                      <Delete
+                        id={element.categoryId}
+                        name={element.name}
+                        type={"category"}
+                      />
+                      <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        Delete category
+                      </span>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center">
+                  {searchTerm.trim()
+                    ? "No matching books found."
+                    : Array.isArray(categories?.data)
+                    ? "No books available."
+                    : categories?.data?.message || "No books available."}
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>

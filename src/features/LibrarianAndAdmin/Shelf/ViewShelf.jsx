@@ -9,10 +9,18 @@ import {
 } from "@/components/ui/dialog";
 import { useFetchShelfs } from "@/hooks/useFetchShelfs";
 import { NotepadText } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const ViewShelf = ({ id }) => {
   const { data: shelfs, refetch: refetchShelfs } = useFetchShelfs();
-  const shelf = shelfs?.data?.find((element) => element.shelfId === id);
+  const [shelf, setShelf] = useState(null);
+
+  useEffect(() => {
+    if (shelfs?.data && Array.isArray(shelfs.data)) {
+      const foundShelf = shelfs.data.find((element) => element.shelfId === id);
+      setShelf(foundShelf || null);
+    }
+  }, [shelfs, id]);
 
   return (
     <div>

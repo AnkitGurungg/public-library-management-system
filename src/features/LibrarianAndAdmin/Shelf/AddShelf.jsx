@@ -12,8 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { useFetchCategory } from "@/hooks/useFetchCategory";
-import GlobalService from "@/services/GlobalServices";
 import { useFetchShelfs } from "@/hooks/useFetchShelfs";
+import GLOBAL_SERVICE from "@/services/GlobalServices";
 
 const AddShelf = () => {
   const {
@@ -28,11 +28,9 @@ const AddShelf = () => {
   const { data: categories, refetch: refetchCategories } = useFetchCategory();
 
   const onSubmit = async (data) => {
-    console.log(data);
-    console.log(JSON.stringify(data));
     try {
-      const response = await GlobalService.post(
-        "/api/shelf/add",
+      const response = await GLOBAL_SERVICE.post(
+        "/api/v1/la/shelf/add",
         JSON.stringify(data),
         {
           headers: {
@@ -42,9 +40,9 @@ const AddShelf = () => {
       );
       reset();
       refetchShelfs();
-      console.log(response);
+      // console.log(response);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -94,7 +92,7 @@ const AddShelf = () => {
                   message: "Please enter atleast 1 character!",
                 },
               })}
-             />
+            />
             <p>{errors?.capacity?.message}</p>
           </div>
           <div>
@@ -130,9 +128,9 @@ const AddShelf = () => {
               {...register("description", {
                 required: "Please enter description!",
                 minLength: {
-                    value: 5,
-                    message: "Please enter atleast 5 characters!"
-                }
+                  value: 5,
+                  message: "Please enter atleast 5 characters!",
+                },
               })}
             />
             <p>{errors?.description?.message}</p>

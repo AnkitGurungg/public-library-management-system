@@ -1,4 +1,4 @@
-import GlobalService from "@/services/GlobalServices";
+import GLOBAL_SERVICE from "@/services/GlobalServices";
 import { useQuery } from "@tanstack/react-query";
 
 export const useFetchCategory = () => {
@@ -6,7 +6,9 @@ export const useFetchCategory = () => {
     queryKey: ["categories"],
     queryFn: async () => {
       try {
-        const res = await GlobalService("/api/category/get/categories");
+        const res = await GLOBAL_SERVICE.get(
+          "/api/v1/la/category/get/categories"
+        );
         return { status: res.status, data: res.data };
       } catch (error) {
         console.log(error);

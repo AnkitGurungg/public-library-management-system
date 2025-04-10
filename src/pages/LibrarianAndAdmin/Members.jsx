@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import NonVerifiedMembers from "@/features/LibrarianAndAdmin/Members/NonVerifiedMembers";
-import VerifiedMembers from "@/features/LibrarianAndAdmin/Members/VerifiedMembers";
-import { Input } from "@/components/ui/input";
-import { CircleCheck } from "lucide-react";
 import { CircleX } from "lucide-react";
+import { CircleCheck } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import VerifiedMembers from "@/features/LibrarianAndAdmin/Members/VerifiedMembers";
+import NonVerifiedMembers from "@/features/LibrarianAndAdmin/Members/NonVerifiedMembers";
+import { useState, useEffect } from "react";
 
 const Members = () => {
   const [showVM, setVMShow] = useState(false);
@@ -13,7 +13,6 @@ const Members = () => {
   return (
     <div>
       <div className="flex flex-row items-center gap-4">
-        <h1 className="text-xl">Member Management</h1>
         <Button
           onClick={() => {
             setVMShow(false);
@@ -29,8 +28,9 @@ const Members = () => {
             setVMShow(true);
             setNONVmShow(false);
           }}
+          className="bg-white text-black hover:bg-white"
         >
-          <CircleCheck className="bg-black border-white"/>
+          <CircleCheck className="bg-white border-black" />
           Verified Members
         </Button>
 

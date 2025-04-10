@@ -7,7 +7,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,139 +14,96 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import GlobalService from "@/services/GlobalServices";
 import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
+import VerifyOTP from "./VerifyOTP";
+import Login from "../Login/Login";
 
 const Register = () => {
+  const [showOTP, setShowOTP] = useState(false);
+  const [showRegister, setShowRegister] = useState(true);
+  const [loading, setLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset
+    reset,
   } = useForm();
-  const [error, setError] = useState(null);
-  const [userImage, setUserImage] = useState(null);
-  const [evidenceImages, setEvidenceImages] = useState([]);
-  const {data: nonVerifiedMembers, refetch: refetchNonVerifiedMembers} = useFetchNonVerifiedMembers();
+  const { data: nonVerifiedMembers, refetch: refetchNonVerifiedMembers } =
+    useFetchNonVerifiedMembers();
 
-  const handleUserImage = (e) => {
-    setUserImage(e.target.files[0]);
-    console.log(userImage);
-  };
-  
-  const handleEvidenceImage = (e) => {
-    const newImage = e.target.files[0]
-    setEvidenceImages(prevImages => {
-        return [...prevImages, newImage]
-    })
-    console.log([...evidenceImages, newImage]);
+  const afterRegister = () => {
+    reset();
+    setShowOTP(true);
+    setShowRegister(false);
+    alert("Registration successful! Please check your email for verification.");
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
-
-    if (!userImage || userImage === null) {
-      setError("Select at least one");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append(
-      "userRequestDto",
-      new Blob([JSON.stringify(data)], { type: "application/json" })
-    );
-    formData.append("userImage", userImage);
-    evidenceImages.forEach((image) => {
-        formData.append("evidenceImages", image)
-    })
-
+    setLoading(true);
     try {
-      const response = GlobalService.post("/api/register", formData, {
+      const response = await GlobalService.post("/auth/register", data, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
+        withCredentials: true,
       });
-      reset()
-      refetchNonVerifiedMembers()
-      console.log(response)
 
+      if (response.status === 201) {
+        localStorage.setItem(
+          "Authorization",
+          response.headers.get("Authorization")
+        );
+        afterRegister();
+      }
+      refetchNonVerifiedMembers();
+      console.log(response);
     } catch (error) {
-        console.log(error)
-        if(error && error.status ===400){
-            alert("400")
+      console.log(error);
+      if (error.response) {
+        if (error.response.status === 400) {
+          alert("400");
         }
-        if(error && error.status ===500){
-            alert("500")
+        if (error.response.status === 409) {
+          alert(error.response.data.message);
         }
+        if (error.response.status === 500) {
+          alert("500");
+        }
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button>Register</Button>
-        </DialogTrigger>
-        <DialogContent className="w-390" aria-describedby={undefined}>
-          <DialogHeader>
-            <DialogTitle>Register</DialogTitle>
-          </DialogHeader>
-          <hr />
-          <ScrollArea className="h-[70vh]">
+      {showRegister && (
+        <Dialog>
+          <div className="flex items-center">
+            <span>Don't have an account?</span>
+            <DialogTrigger asChild>
+              <span className="text-[#206ea6] hover:cursor-pointer ml-2">
+                Register
+              </span>
+            </DialogTrigger>
+          </div>
+
+          <DialogContent className="w-390" aria-describedby={undefined}>
+            <DialogHeader className="flex justify-center items-center">
+              <DialogTitle className="text-2xl opacity-75">
+                Register An Account
+              </DialogTitle>
+            </DialogHeader>
+            <hr />
+
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div>
+              <div className="flex flex-col gap-4 mb-3">
                 <div>
-                  <Label htmlFor="name">
-                    Name
-                  </Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    defaultValue=""
-                    {...register("name", {
-                      required: "Please enter name!",
-                      minLength: {
-                        value: 5,
-                        message: "Min lenght should be 5",
-                      },
-                      maxLength: {
-                        value: 20,
-                        message: "Max lenght should be 20",
-                      },
-                    })}
-                  />
-                  <p>{errors?.name?.message}</p>
-                </div>
-
-                <div>
-                  <Label htmlFor="title">
-                    Contact
-                  </Label>
-                  <Input
-                    id="contact"
-                    type="text"
-                    defaultValue=""
-                    {...register("contactNumber", {
-                      required: "Please enter contact!",
-                      minLength: {
-                        value: 10,
-                        message: "Please enter atleast 10 characters",
-                      },
-                      maxLength: {
-                        value: 50,
-                        message: "Max length should be 50",
-                      },
-                    })}
-                  />
-                  <p>{errors?.contactNumber?.message}</p>
-                </div>
-
-                <div>
-                  <Label htmlFor="title">
-                    Email
-                  </Label>
                   <Input
                     id="email"
                     type="email"
                     defaultValue=""
+                    placeholder="Enter Email"
                     {...register("email", {
                       required: "Please enter email!",
                       minLength: {
@@ -159,109 +115,55 @@ const Register = () => {
                         message: "Max length should be 50",
                       },
                     })}
+                    className="h-13 placeholder-black placeholder-opacity-200 placeholder:text-[16px]"
                   />
-                  <p>{errors?.email?.message}</p>
+                  <p className="text-red-500 text-[15px] ml-0.5">
+                    {errors?.email?.message}
+                  </p>
                 </div>
 
                 <div>
-                  <Label htmlFor="address">
-                    Address
-                  </Label>
                   <Input
-                    id="address"
-                    type="text"
+                    type="password"
+                    id="password"
+                    placeholder="Password"
+                    // style={{ WebkitTextSecurity: "disc" }}
                     defaultValue=""
-                    {...register("address", {
-                      required: "Please enter is address!",
-                      minLength: {
-                        value: 1,
-                        message: "Minimum length is required",
-                      },
-                      maxLength: {
-                        value: 50,
-                        message: "Max length should be 50",
-                      },
-                    })}
-                  />
-                  <p>{errors?.address?.message}</p>
-                </div>
-
-                <div>
-                  <Label htmlFor="image">
-                    Image
-                  </Label>
-                  <Input
-                    id="image"
-                    type="file"
-                    defaultValue=""
-                    onChange={handleUserImage}
-                    accept="image/jpeg, image/png"
-                    required
-                  />
-                  <p>{error}</p>
-                </div>
-
-                <div>
-                  <Label htmlFor="image">
-                    Evidence One
-                  </Label>
-                  <Input
-                    id="e1-image"
-                    type="file"
-                    defaultValue=""
-                    onChange={handleEvidenceImage}
-                    accept="image/jpeg, image/png"
-                    required
-                  />
-                  <p>{error}</p>
-                </div>
-
-                <div>
-                  <Label htmlFor="image">
-                    Evidence Two
-                  </Label>
-                  <Input
-                    id="e2-image"
-                    type="file"
-                    defaultValue=""
-                    onChange={handleEvidenceImage}
-                    accept="image/jpeg, image/png"
-                    required
-                  />
-                  <p>{error}</p>
-                </div>
-
-                <div>
-                  <Label htmlFor="description">
-                    Description
-                  </Label>
-                  <Input
-                    id="description"
-                    type="text"
-                    defaultValue=""
-                    {...register("description", {
-                      required: "Please enter description",
+                    {...register("password", {
+                      required: "Please enter password!",
                       minLength: {
                         value: 1,
                         message: "Min length is required",
                       },
                     })}
+                    className="h-13 placeholder-black placeholder-opacity-200 placeholder:text-[16px]"
                   />
-                  <p>{errors?.description?.message}</p>
+                  <p className="text-red-500 text-[15px] ml-0.5">
+                    {errors?.password?.message}
+                  </p>
                 </div>
               </div>
-              <DialogFooter className="grid grid-cols-4">
-                <DialogClose asChild>
-                  <Button className="grid col-span-2">Close</Button>
-                </DialogClose>
-                <Button type="submit" className="grid col-span-2">
-                  Add
+              <DialogFooter className="grid grid-cols-4 w-full gap-0 mt-4">
+                <Button
+                  type="submit"
+                  className={`grid col-span-4 h-12 text-[20px] bg-[#206ea6] hover:bg-[#206ea6] 
+                  ${
+                    loading ? "hover:cursor-progress" : "hover:cursor-pointer"
+                  }`}
+                >
+                  Register
                 </Button>
+
+                <div className="col-span-4 flex items-center">
+                  <div>Already Have an Account?</div>
+                  <div className="text-[#206ea6] ml-2">{<Login />}</div>
+                </div>
               </DialogFooter>
             </form>
-          </ScrollArea>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
+      )}
+      {showOTP && <VerifyOTP />}
     </div>
   );
 };

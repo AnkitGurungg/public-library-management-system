@@ -7,24 +7,25 @@ import {
   DialogClose,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
 import { useFetchVerifiedMembers } from "@/hooks/useFetchVerifiedMembers";
 import { NotepadText } from "lucide-react";
 
 const ViewMember = ({ id, type }) => {
-  const ServerAPI = "http://localhost:8080/";
+  const BACKEND_SERVER_BASE_URL = "http://localhost:8080/";
   const { data: verifiedMembers, refetch: refetchVerifiedMembers } =
     useFetchVerifiedMembers();
   const { data: nonVerifiedMembers, refetch: refetchNonVerifiedMembers } =
     useFetchNonVerifiedMembers();
 
-  const verifiedMember = verifiedMembers?.data?.find(
-    (element) => element.userId === id
-  );
-  const nonVerifiedMember = nonVerifiedMembers?.data?.find(
-    (element) => element.userId === id
-  );
+  const verifiedMember =
+    Array.isArray(verifiedMembers?.data) &&
+    verifiedMembers?.data?.length > 0 &&
+    verifiedMembers?.data?.find((element) => element.userId === id);
+  const nonVerifiedMember =
+    Array.isArray(nonVerifiedMembers?.data) &&
+    nonVerifiedMembers?.data?.length > 0 &&
+    nonVerifiedMembers?.data?.find((element) => element.userId === id);
 
   const checkUserType = () => {
     if (type === "vm") {
@@ -71,45 +72,59 @@ const ViewMember = ({ id, type }) => {
                   </div>
                 </div>
               </div>
-              <div>
-                <a
-                  href={ServerAPI + checkUserType().evidences[0]?.userImage}
-                  target="_blank"
-                >
-                  <img
-                    src={ServerAPI + checkUserType().evidences[0]?.userImage}
-                    alt="User Image Loading!!!"
-                  />
-                </a>
-              </div>
-              <div>
+
+              {checkUserType()?.evidences?.length > 2 && (
                 <div>
-                  <a
-                    href={ServerAPI + checkUserType().evidences[0]?.evidenceOne}
-                    target="_blank"
-                  >
-                    <img
-                      src={
-                        ServerAPI + checkUserType().evidences[0]?.evidenceOne
-                      }
-                      alt="Evidence1 Loading!!!"
-                    />
-                  </a>
+                  <div>
+                    <a
+                      href={BACKEND_SERVER_BASE_URL + checkUserType().evidences[0]?.userImage}
+                      target="_blank"
+                    >
+                      <img
+                        src={
+                          BACKEND_SERVER_BASE_URL + checkUserType().evidences[0]?.userImage
+                        }
+                        alt="User Image Loading!!!"
+                      />
+                    </a>
+                  </div>
+
+                  <div>
+                    <div>
+                      <a
+                        href={
+                          BACKEND_SERVER_BASE_URL + checkUserType().evidences[0]?.evidenceOne
+                        }
+                        target="_blank"
+                      >
+                        <img
+                          src={
+                            BACKEND_SERVER_BASE_URL +
+                            checkUserType().evidences[0]?.evidenceOne
+                          }
+                          alt="Evidence1 Loading!!!"
+                        />
+                      </a>
+                    </div>
+                    <div>
+                      <a
+                        href={
+                          BACKEND_SERVER_BASE_URL + checkUserType().evidences[0]?.evidenceTwo
+                        }
+                        target="_blank"
+                      >
+                        <img
+                          src={
+                            BACKEND_SERVER_BASE_URL +
+                            checkUserType().evidences[0]?.evidenceTwo
+                          }
+                          alt="Evidence2 Loading!!!"
+                        />
+                      </a>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <a
-                    href={ServerAPI + checkUserType().evidences[0]?.evidenceTwo}
-                    target="_blank"
-                  >
-                    <img
-                      src={
-                        ServerAPI + checkUserType().evidences[0]?.evidenceTwo
-                      }
-                      alt="Evidence2 Loading!!!"
-                    />
-                  </a>
-                </div>
-              </div>
+              )}
             </div>
           ) : (
             <p>Does not exist</p>

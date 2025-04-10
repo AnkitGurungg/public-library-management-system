@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import GlobalService from "@/services/GlobalServices";
 import { PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import GLOBAL_SERVICE from "@/services/GlobalServices";
 
 const BorrowBook = () => {
   const [show, setShow] = useState(false);
@@ -28,11 +28,9 @@ const BorrowBook = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log(JSON.stringify(data));
-
     try {
-      const response = await GlobalService.post(
-        "/api/borrow/add",
+      const response = await GLOBAL_SERVICE.post(
+        "/api/v1/la/borrow/add",
         JSON.stringify(data),
         {
           headers: {
@@ -40,11 +38,12 @@ const BorrowBook = () => {
           },
         }
       );
+      console.log(response.config.headers.getAccept());
+      console.log(response.config.headers.getContentType());
       reset();
       refetchBorrowedBooks();
-
     } catch (error) {
-        console.log(error)
+      console.log(error);
       if (error.status === 404 || error.status === 400) {
         alert(error?.response?.data?.message);
       }
@@ -132,10 +131,10 @@ const BorrowBook = () => {
                 <p>{errors?.dueDate?.message}</p>
               </div>
               <div>
-                <Label>Description</Label>
+                <Label>Note</Label>
                 <Input
                   type="text"
-                  {...register("description", {
+                  {...register("note", {
                     required: "Please enter description!",
                     minLength: {
                       value: 5,
@@ -143,7 +142,7 @@ const BorrowBook = () => {
                     },
                   })}
                 />
-                <p>{errors?.description?.message}</p>
+                <p>{errors?.note?.message}</p>
               </div>
             </div>
 

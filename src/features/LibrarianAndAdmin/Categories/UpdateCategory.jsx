@@ -14,7 +14,7 @@ import { PencilLine } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { useFetchCategory } from "@/hooks/useFetchCategory";
-import GlobalService from "@/services/GlobalServices";
+import GLOBAL_SERVICE from "@/services/GlobalServices";
 
 const UpdateCategory = ({ id }) => {
   const { data: categories, refetch: refetchCategories } = useFetchCategory();
@@ -37,11 +37,9 @@ const UpdateCategory = ({ id }) => {
   }, [categories, id, setValue]);
 
   const onSubmit = async (data) => {
-    console.log(data);
-    console.log(JSON.stringify(data));
     try {
-      const response = await GlobalService.put(
-        `/api/category/update/${id}`,
+      const response = await GLOBAL_SERVICE.put(
+        `/api/v1/la/category/update/${id}`,
         JSON.stringify(data),
         {
           headers: {

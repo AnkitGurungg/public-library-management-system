@@ -14,7 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
-import GlobalService from "@/services/GlobalServices";
+import { PlusCircle } from "lucide-react";
+import GLOBAL_SERVICE from "@/services/GlobalServices";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useFetchBooks } from "@/hooks/useFetchBooks";
 
@@ -42,7 +43,6 @@ const AddBook = () => {
 
     if (!bookImage || bookImage === null) {
       setError("Select at least one");
-      console.log(error);
       return;
     } else {
       formData.append("bookImage", bookImage);
@@ -52,16 +52,19 @@ const AddBook = () => {
       );
 
       try {
-        const response = await GlobalService.post("api/book/add", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const response = await GLOBAL_SERVICE.post(
+          "/api/v1/la/book/add",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
         reset();
         refetchBooks();
-        console.log(response);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
   };
@@ -70,7 +73,10 @@ const AddBook = () => {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button>Add Book</Button>
+          <Button>
+            <PlusCircle></PlusCircle>
+            Add Book
+          </Button>
         </DialogTrigger>
         <DialogContent className="w-390" aria-describedby={undefined}>
           <DialogHeader>
@@ -156,15 +162,13 @@ const AddBook = () => {
                   </Label>
 
                   <select
-                    onValueChange={(value) => setValue("categoryId", value)}
+                    onChange={(e) => setValue("categoryId", e.target.value)}
                     {...register("categoryId", {
                       required: "Please select at least one",
                     })}
                     className="w-[340px] h-[39px] border-2 rounded-[8px]"
                   >
-                    <option disabled>
-                      Please select atleast one category
-                    </option>
+                    <option disabled>Please select atleast one category</option>
                     {/* iterate for each of the categories */}
                     {categories?.status == 200 &&
                       categories?.data.map((element, index) => (

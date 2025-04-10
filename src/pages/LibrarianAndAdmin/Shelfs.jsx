@@ -14,18 +14,47 @@ import {
 import UpdateShelf from "@/features/LibrarianAndAdmin/Shelf/UpdateShelf";
 import Delete from "@/components/Delete";
 import ViewShelf from "@/features/LibrarianAndAdmin/Shelf/ViewShelf";
+import { useState, useEffect } from "react";
 
 const Shelfs = () => {
-  const { data: shelfs, isLoading } = useFetchShelfs();
-  console.log(shelfs?.data);
-  console.log(shelfs?.status);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredShelfs, setFilteredShelfs] = useState([]);
+  const {
+    data: shelfs,
+    refetch: refetchShelfs,
+    isLoading,
+    error,
+  } = useFetchShelfs();
+
+  useEffect(() => {
+    refetchShelfs();
+  }, []);
+
+  useEffect(() => {
+    if (shelfs?.status === 200 && Array.isArray(shelfs?.data)) {
+      const lowerSearch = searchTerm.toLowerCase();
+
+      const filtered = shelfs.data.filter((shelf) =>
+        shelf.name?.toLowerCase().includes(lowerSearch)
+      );
+      setFilteredShelfs(searchTerm.trim() === "" ? shelfs.data : filtered);
+    } else {
+      setFilteredShelfs([]);
+    }
+  }, [shelfs, searchTerm]);
 
   return (
     <div>
       <div className="flex flex-row items-center">
-        <h1>Shelf Management</h1>
+        <h1>Available Shelfs</h1>
         <AddShelf />
-        <Input placeholder="Search here" className="w-55 bg-white" />
+        <Input
+          type="text"
+          placeholder="Search here"
+          className="w-55 bg-white"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
       <Table className="bg-white rounded-2xl mt-3">
         <TableHeader>
@@ -45,12 +74,8 @@ const Shelfs = () => {
               <TableCell>Loading...</TableCell>
             </TableRow>
           )}
-          {shelfs?.status === 404 || shelfs?.status === 500 ? (
-            <TableRow>
-              <TableCell>{shelfs.data}</TableCell>
-            </TableRow>
-          ) : (
-            shelfs?.data.map((element, index) => (
+          {Array.isArray(filteredShelfs) && filteredShelfs.length > 0 ? (
+            filteredShelfs.map((element, index) => (
               <TableRow key={element.shelfId || index}>
                 <TableCell>{element.shelfId}</TableCell>
                 <TableCell>{element.name}</TableCell>
@@ -69,6 +94,16 @@ const Shelfs = () => {
                 </TableCell>
               </TableRow>
             ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={7} className="text-center">
+                {searchTerm.trim()
+                  ? "No matching shelfs found!"
+                  : Array.isArray(shelfs?.data)
+                  ? "No shelfs available!"
+                  : shelfs?.data?.message || "No shelfs available!"}
+              </TableCell>
+            </TableRow>
           )}
         </TableBody>
       </Table>

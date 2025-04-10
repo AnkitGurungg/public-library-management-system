@@ -1,5 +1,5 @@
-import { Outlet } from "react-router-dom"
-import UHeader from "./UHeader"
+import { Outlet } from "react-router-dom";
+import UHeader from "./UHeader";
 
 const UAppLayout = () => {
   return (
@@ -7,7 +7,7 @@ const UAppLayout = () => {
       <UHeader />
       <Outlet />
     </div>
-  )
-}
+  );
+};
 
-export default UAppLayout
+export default UAppLayout;

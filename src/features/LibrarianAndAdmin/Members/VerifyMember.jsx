@@ -8,11 +8,11 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import { useState } from "react";
-import GlobalService from "@/services/GlobalServices";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
 import { useFetchVerifiedMembers } from "@/hooks/useFetchVerifiedMembers";
+import GLOBAL_SERVICE from "@/services/GlobalServices";
 
 const VerifyMember = ({ id }) => {
   const [open, setOpen] = useState(false);
@@ -23,15 +23,12 @@ const VerifyMember = ({ id }) => {
 
   const handleVerification = async () => {
     try {
-      const response = await GlobalService.put(`/api/user/verify/${id}`);
+      const response = await GLOBAL_SERVICE.put(`/api/v1/la/user/verify/${id}`);
       refetchNonVerifiedMembers();
       refetchVerifiedMembers();
       setOpen(false);
-      console.log(response);
-
     } catch (error) {
       alert(response);
-      console.log(response);
     }
   };
 

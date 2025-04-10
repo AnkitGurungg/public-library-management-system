@@ -8,18 +8,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Indent } from "lucide-react";
-import { data } from "react-router-dom";
 import ViewMember from "./ViewMember";
 import Delete from "@/components/Delete";
+import { useEffect } from "react";
 
 const VerifiedMembers = () => {
   const { data: verifiedMembers, refetch: refetchVerifiedMembers } =
     useFetchVerifiedMembers();
-  console.log(verifiedMembers);
+
+  useEffect(() => {
+    refetchVerifiedMembers();
+  }, []);
 
   return (
-    <div>
+    <div className="bg-white mt-4 rounded-[8px]">
       <Table>
         <TableHeader>
           <TableRow>
@@ -35,7 +37,10 @@ const VerifiedMembers = () => {
             <TableRow>{verifiedMembers?.data}</TableRow>
           )}
           {verifiedMembers?.status === 500 && <p>{verifiedMembers?.data}</p>}
+
           {verifiedMembers?.status === 200 &&
+          Array.isArray(verifiedMembers?.data) &&
+          verifiedMembers?.data?.length > 0 ? (
             verifiedMembers?.data?.map((element, index) => (
               <TableRow key={element.userId || index}>
                 <TableCell>{element.userId}</TableCell>
@@ -43,15 +48,33 @@ const VerifiedMembers = () => {
                 <TableCell>{element.email}</TableCell>
                 <TableCell>{element.contactNumber}</TableCell>
                 <TableCell className="flex flex-row justify-center items-center">
-                <ViewMember id={element.userId} type={"vm"} />
-                <Delete
-                  id={element.userId}
-                  name={element.name}
-                  type={"user"} 
-                />
+                  <div className="relative group">
+                    <ViewMember id={element.userId} type={"vm"} />
+                    <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      View Member
+                    </span>
+                  </div>
+
+                  <div className="relative group">
+                    <Delete
+                      id={element.userId}
+                      name={element.name}
+                      type={"user"}
+                    />
+                    <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      Delete Member
+                    </span>
+                  </div>
                 </TableCell>
               </TableRow>
-            ))}
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan="100%" className="text-center">
+                {verifiedMembers?.data?.message}
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </div>

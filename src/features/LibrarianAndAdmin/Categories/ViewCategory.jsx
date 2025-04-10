@@ -7,15 +7,23 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import { useState, useEffect } from "react";
 import { NotepadText } from "lucide-react";
 import { useFetchCategory } from "@/hooks/useFetchCategory";
 
 const ViewCategory = ({ id }) => {
-  const { data: categories, refetch: refetchCategories } = useFetchCategory();
-  console.log(categories?.data);
-  const category = categories?.data?.find(
-    (element) => element.categoryId === id
-  );
+  const BACKEND_SERVER_BASE_URL = "http://localhost:8080/";
+  const { data: categories } = useFetchCategory();
+  const [category, setCategory] = useState(null);
+
+  useEffect(() => {
+    if (categories?.data && Array.isArray(categories.data)) {
+      const foundCategory = categories.data.find(
+        (element) => element.categoryId === id
+      );
+      setCategory(foundCategory || null);
+    }
+  }, [categories, id]);
 
   return (
     <div>

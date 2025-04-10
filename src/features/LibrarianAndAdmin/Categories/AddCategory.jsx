@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import GlobalService from "@/services/GlobalServices";
 import { useForm } from "react-hook-form";
+import { PlusCircle } from "lucide-react";
+import GLOBAL_SERVICE from "@/services/GlobalServices";
 
 const AddCategory = () => {
   const {
@@ -22,32 +23,34 @@ const AddCategory = () => {
     formState: { errors, isSubmitting },
     reset,
   } = useForm();
-  const {data: categories, refetch: refetchCategories} = useFetchCategory();
+  const { data: categories, refetch: refetchCategories } = useFetchCategory();
 
   const onSubmit = async (data) => {
-
-    try{
-        const respose = await GlobalService.post("/api/category/add", JSON.stringify(data), {
-            headers: {
-                "Content-Type" : "application/json"
-            }
-        })
-        reset()
-        refetchCategories()
-
-        console.log(respose)
-    } catch(error){
-        alert(error)
-        console.log(error)
+    try {
+      const respose = await GLOBAL_SERVICE.post(
+        "/api/v1/la/category/add",
+        JSON.stringify(data),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      reset();
+      refetchCategories();
+    } catch (error) {
+      alert(error);
     }
-
   };
 
   return (
     <div>
       <Dialog>
-        <DialogTrigger>
-          <Button>Add Category</Button>
+        <DialogTrigger asChild>
+          <Button>
+            <PlusCircle></PlusCircle>
+            Add Category
+          </Button>
         </DialogTrigger>
         <DialogContent aria-describedby={undefined}>
           <DialogHeader>
@@ -88,7 +91,9 @@ const AddCategory = () => {
                     },
                   })}
                 />
-                <p className="text-red-500">{errors?.startingNumber?.message}</p>
+                <p className="text-red-500">
+                  {errors?.startingNumber?.message}
+                </p>
               </div>
               <div>
                 <Label>Ending Number</Label>
