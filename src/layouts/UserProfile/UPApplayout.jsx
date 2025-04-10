@@ -24,9 +24,13 @@ const UPApplayout = () => {
   }, [userInfo]);
 
   return (
-    <div className="flex h-screen">
-      <UPSidebar className="fixed" />
-      <Outlet className="flex-1 relative" />
+    <div className="flex flex-1 overflow-auto">
+      <div className="w-64 fixed overflow-auto h-full bg-amber-400">
+        <UPSidebar />
+      </div>
+      <div className="flex-1 ml-64 overflow-auto">
+        <Outlet />
+      </div>
     </div>
   );
 };

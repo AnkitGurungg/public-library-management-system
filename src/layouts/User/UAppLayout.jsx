@@ -1,11 +1,15 @@
 import { Outlet } from "react-router-dom";
 import UHeader from "./UHeader";
+import UFooter from "./UFooter";
 
 const UAppLayout = () => {
   return (
-    <div>
+    <div className="flex flex-col h-screen">
       <UHeader />
-      <Outlet />
+      <div className="flex-1 overflow-auto">
+        <Outlet />
+      </div>
+      <UFooter />
     </div>
   );
 };

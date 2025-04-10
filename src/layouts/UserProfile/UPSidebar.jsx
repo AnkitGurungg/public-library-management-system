@@ -22,7 +22,7 @@ const UPSidebar = () => {
   }, [userProfile]);
 
   return (
-    <div className="w-1/4 bg-[#f1f1f1]">
+    <div className="bg-[#f1f1f1] top-0 ml-0 h-full">
       <div className="p-4">
         <div className="flex justify-center mb-4">
           {Array.isArray(userProfile?.data?.evidences) &&
