@@ -9,26 +9,28 @@ const UPApplayout = () => {
     useContext(UserContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setToken(localStorage.getItem("Authorization"));
-    getUserInfo();
-  }, []);
+  // useEffect(() => {
+  //   setToken(localStorage.getItem("Authorization"));
+  //   getUserInfo();
+  // }, []);
 
-  useEffect(() => {
-    console.log("UApplayout", userInfo);
-    if (userInfo && Object.keys(userInfo).length > 0) {
-      console.log("Updated user info:", userInfo);
-    } else {
-      navigate("/");
-    }
-  }, [userInfo]);
+  // useEffect(() => {
+  //   console.log("UApplayout", userInfo);
+  //   if (userInfo && Object.keys(userInfo).length > 0) {
+  //     console.log("Updated user info:", userInfo);
+  //   } else {
+  //     navigate("/");
+  //   }
+  // }, [userInfo]);
 
   return (
     <div className="flex flex-1 overflow-auto">
-      <div className="w-64 fixed overflow-auto h-full bg-amber-400">
-        <UPSidebar />
-      </div>
-      <div className="flex-1 ml-64 overflow-auto">
+      <UHeader />
+
+      <div className="mt-[4.5rem] flex-1 overflow-auto">
+        <div className="w-64 fixed overflow-auto h-full bg-amber-400">
+          <UPSidebar />
+        </div>
         <Outlet />
       </div>
     </div>

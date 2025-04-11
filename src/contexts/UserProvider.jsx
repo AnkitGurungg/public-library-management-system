@@ -7,6 +7,7 @@ export function UserProvider({ children }) {
   // const [token, setToken] = useState(
   //   () => localStorage.getItem("Authorization") || ""
   // );
+
   const [token, setToken] = useState("");
   const [userInfo, setUserInfo] = useState({});
   const [loading, setLoading] = useState(true);
@@ -35,8 +36,7 @@ export function UserProvider({ children }) {
   };
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("Authorization");
-    setToken(storedToken);
+    setToken(localStorage.getItem("Authorization"));
   }, []);
 
   useEffect(() => {

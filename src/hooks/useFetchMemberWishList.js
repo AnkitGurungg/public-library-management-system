@@ -11,6 +11,7 @@ export const useFetchMemberWishList = () => {
         );
         console.log(response);
         return { status: response.status, data: response.data };
+        
       } catch (error) {
         console.log(error);
         if (error.response.status === 404) {
@@ -22,5 +23,6 @@ export const useFetchMemberWishList = () => {
         return { status: 500, data: "Internal Server Error!!!" };
       }
     },
+    
   });
 };

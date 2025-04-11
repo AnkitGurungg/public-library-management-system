@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import Register from "../Register/Register";
 import { UserContext } from "@/contexts/UserContext";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const { getUserInfo, setToken } = useContext(UserContext);
@@ -34,7 +35,7 @@ const Login = () => {
       if (response.status === 200) {
         reset();
         setOpen(false);
-        alert("Login success");
+        toast.success("Login success")
         const token = response.headers.get("Authorization");
         localStorage.setItem("Authorization", token);
         setToken(token);

@@ -22,14 +22,18 @@ const UPSidebar = () => {
   }, [userProfile]);
 
   return (
-    <div className="bg-[#f1f1f1] top-0 ml-0 h-full">
+    <div className="bg-[#f1f1f1] top-0 ml-0 h-full w-64">
       <div className="p-4">
         <div className="flex justify-center mb-4">
           {Array.isArray(userProfile?.data?.evidences) &&
           userProfile.data.evidences.length > 0 &&
           userProfile.data.evidences[0].userImage ? (
             <img
-              src={member.profileImage || "/placeholder.svg"}
+              src={
+                userProfile?.data?.evidences[0]?.userImage
+                  ? `${BACKEND_SERVER_BASE_URL}${userProfile.data.evidences[0].userImage}`
+                  : "/placeholder.svg"
+              }
               alt="User profile"
               width={150}
               height={150}
@@ -65,14 +69,14 @@ const UPSidebar = () => {
             Borrowed Books
           </NavLink>
           <NavLink
-            to="/member/profile/payments"
+            to="/member/profile/fines"
             className="flex items-center p-2 hover:bg-[#206ea6] hover:text-white rounded"
           >
             <CreditCard className="mr-2 h-5 w-5" />
-            Payments
+            Fines
           </NavLink>
           <NavLink
-            to="/member/profile/settings"
+            to="/member/profile/account-settings"
             className="flex items-center p-2 hover:bg-[#206ea6] hover:text-white rounded"
           >
             <Settings className="mr-2 h-5 w-5" />

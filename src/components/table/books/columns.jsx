@@ -1,0 +1,44 @@
+import Delete from "@/components/Delete";
+import UpdateBook from "@/features/LibrarianAndAdmin/Books/UpdateBook";
+import ViewBook from "@/features/LibrarianAndAdmin/Books/ViewBook";
+
+export const columns = [
+  {
+    accessorKey: "bookId",
+    header: "ID",
+  },
+
+  {
+    accessorKey: "title",
+    header: "Title",
+  },
+
+  {
+    header: "Category",
+    cell: ({ row }) => row.original.category?.name || "",
+  },
+
+  {
+    accessorKey: "language",
+    header: "Language",
+  },
+
+  {
+    accessorKey: "quantity",
+    header: "Total",
+  },
+
+  {
+    header: "Action",
+    cell: ({ row }) => {
+      const book = row.original;
+      return (
+        <div className="flex items-center justify-center gap-2">
+          <ViewBook id={book.bookId} />
+          <UpdateBook id={book.bookId} />
+          <Delete id={book.bookId} name={book.title} type={"book"} />
+        </div>
+      );
+    },
+  },
+];

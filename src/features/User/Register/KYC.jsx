@@ -86,7 +86,7 @@ const KYC = () => {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <button>KYC</button>
+          <button className="text-[18px]">KYC</button>
         </DialogTrigger>
         <DialogContent className="w-390" aria-describedby={undefined}>
           <DialogHeader>

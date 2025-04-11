@@ -4,12 +4,12 @@ import UFooter from "./UFooter";
 
 const UAppLayout = () => {
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col">
       <UHeader />
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto mt-[4.5rem]">
         <Outlet />
+        <UFooter />
       </div>
-      <UFooter />
     </div>
   );
 };

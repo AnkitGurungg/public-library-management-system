@@ -1,6 +1,7 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
-export const BACKEND_SERVER_BASE_URL = "http://localhost:8080/"
+export const BACKEND_SERVER_BASE_URL = "http://localhost:8080/";
 
 const getToken = () => {
   // localStorage.setItem("Authorization", localStorage.getItem("Authorization"));
@@ -19,6 +20,7 @@ const GLOBAL_SERVICE = axios.create({
 GLOBAL_SERVICE.interceptors.request.use(
   (config) => {
     if (getToken()) {
+      console.log(`Bearer ${getToken()}`);
       config.headers["Authorization"] = `Bearer ${getToken()}`;
     }
     // console.warn("Intercptor Request: ", config);
@@ -39,19 +41,23 @@ GLOBAL_SERVICE.interceptors.response.use(
   function (error) {
     // console.log("Intercptor Response Error: ", error);
     if (error.status === 401) {
-      alert("You are not unauthorized")
+      toast.dismiss("Please Login!");
+      // alert("You are not unauthorized")
       // localStorage.clear();
     }
     if (error.status === 403) {
-      alert("Pemission not provided")
+      toast.dismiss("No Permission!");
+      // alert("Pemission not provided")
       // localStorage.clear();
     }
     if (error.status === 406) {
-      console.log("406")
-      localStorage.removeItem("Authorization")
+      toast.success("Please Login!");
+      console.log("406");
+      localStorage.removeItem("Authorization");
       // localStorage.clear();
     }
     if (error.status === 500) {
+      toast.error("Server error!");
       // localStorage.clear();
     }
     return Promise.reject(error);

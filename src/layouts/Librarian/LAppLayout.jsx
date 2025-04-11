@@ -7,23 +7,6 @@ import { UserContext } from "@/contexts/UserContext";
 const LAppLayout = () => {
   const { userInfo, loading } = useContext(UserContext);
   const nagivate = useNavigate();
-  console.log(userInfo, loading);
-
-  // useEffect(() => {
-  //   if (loading) return;
-
-  //   if (!userInfo || userInfo.role !== "ROLE_LIBRARIAN") {
-  //     nagivate("/");
-  //   }
-  // }, [userInfo]);
-
-  // if (loading) {
-  //   return (
-  //     <div>
-  //       <h1>Loading..........</h1>
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="flex h-screen">

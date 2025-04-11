@@ -15,6 +15,7 @@ import { PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
+import toast from "react-hot-toast";
 
 const BorrowBook = () => {
   const [show, setShow] = useState(false);
@@ -38,14 +39,13 @@ const BorrowBook = () => {
           },
         }
       );
-      console.log(response.config.headers.getAccept());
-      console.log(response.config.headers.getContentType());
       reset();
       refetchBorrowedBooks();
+      (response.status === 201 || response.status === 201) &&
+        toast.success("Borrow succeed!");
     } catch (error) {
-      console.log(error);
       if (error.status === 404 || error.status === 400) {
-        alert(error?.response?.data?.message);
+        toast.error(error?.response?.data?.message);
       }
       console.log(error);
     }

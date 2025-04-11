@@ -16,6 +16,7 @@ import GlobalService from "@/services/GlobalServices";
 import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
 import VerifyOTP from "./VerifyOTP";
 import Login from "../Login/Login";
+import LoadingComponent from "@/components/Loading/LoadingComponent";
 
 const Register = () => {
   const [showOTP, setShowOTP] = useState(false);
@@ -146,10 +147,7 @@ const Register = () => {
               <DialogFooter className="grid grid-cols-4 w-full gap-0 mt-4">
                 <Button
                   type="submit"
-                  className={`grid col-span-4 h-12 text-[20px] bg-[#206ea6] hover:bg-[#206ea6] 
-                  ${
-                    loading ? "hover:cursor-progress" : "hover:cursor-pointer"
-                  }`}
+                  className={`grid col-span-4 h-12 text-[20px] bg-[#206ea6] hover:bg-[#206ea6]`}
                 >
                   Register
                 </Button>
@@ -164,6 +162,7 @@ const Register = () => {
         </Dialog>
       )}
       {showOTP && <VerifyOTP />}
+      {loading && <LoadingComponent />}
     </div>
   );
 };

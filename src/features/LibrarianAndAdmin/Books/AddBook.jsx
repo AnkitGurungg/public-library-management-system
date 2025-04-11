@@ -18,6 +18,8 @@ import { PlusCircle } from "lucide-react";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useFetchBooks } from "@/hooks/useFetchBooks";
+import LoadingComponent from "@/components/Loading/LoadingComponent";
+import toast from "react-hot-toast";
 
 const AddBook = () => {
   const { data: categories, refetch: refetchCategories } = useFetchCategory();
@@ -32,6 +34,7 @@ const AddBook = () => {
   } = useForm();
   const [bookImage, setBookImage] = useState(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // handle the book image
   const handleBookImage = (e) => {
@@ -52,6 +55,7 @@ const AddBook = () => {
       );
 
       try {
+        setLoading(true);
         const response = await GLOBAL_SERVICE.post(
           "/api/v1/la/book/add",
           formData,
@@ -63,14 +67,19 @@ const AddBook = () => {
         );
         reset();
         refetchBooks();
+        toast.success("Book added");
       } catch (error) {
         // console.log(error);
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   return (
     <div>
+      {loading && <LoadingComponent />}
+
       <Dialog>
         <DialogTrigger asChild>
           <Button>

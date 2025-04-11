@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useFetchBooks } from "@/hooks/useFetchBooks";
-import { NotepadText } from "lucide-react";
+import { Eye, NotepadText } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
 
@@ -28,7 +28,7 @@ const ViewBook = ({ id }) => {
     <div>
       <Dialog>
         <DialogTrigger>
-          <NotepadText />
+          <Eye className="text-green-500" />
         </DialogTrigger>
 
         <DialogContent>

@@ -45,8 +45,8 @@ export default function ProfilePopover() {
             </NavLink>
           </div>
           <div className="space-y-2">
-            <NavLink to="/member/profile/payments">
-              <h4 className="font-medium leading-none">Payments</h4>
+            <NavLink to="/member/profile/fines">
+              <h4 className="font-medium leading-none">Fines</h4>
             </NavLink>
           </div>
           <div className="grid gap-4">
