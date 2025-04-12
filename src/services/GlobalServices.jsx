@@ -19,10 +19,16 @@ const GLOBAL_SERVICE = axios.create({
 
 GLOBAL_SERVICE.interceptors.request.use(
   (config) => {
-    if (getToken()) {
+    if (!config.skipAuthInterceptor && getToken()) {
       console.log(`Bearer ${getToken()}`);
       config.headers["Authorization"] = `Bearer ${getToken()}`;
     }
+
+    // if (getToken()) {
+    //   console.log(`Bearer ${getToken()}`);
+    //   config.headers["Authorization"] = `Bearer ${getToken()}`;
+    // }
+
     // console.warn("Intercptor Request: ", config);
     return config;
   },
@@ -39,9 +45,14 @@ GLOBAL_SERVICE.interceptors.response.use(
   },
 
   function (error) {
+    console.log(error.config);
+    if (error.config?.skipAuthInterceptor) {
+      return Promise.reject(error);
+    }
+
     // console.log("Intercptor Response Error: ", error);
     if (error.status === 401) {
-      toast.dismiss("Please Login!");
+      toast.success(error.response?.data?.message || "Not Authorized");
       // alert("You are not unauthorized")
       // localStorage.clear();
     }

@@ -14,14 +14,15 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import GlobalService from "@/services/GlobalServices";
 import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
-import VerifyOTP from "./VerifyOTP";
+import VerifyOTP from "./VerifyEmail";
 import Login from "../Login/Login";
 import LoadingComponent from "@/components/Loading/LoadingComponent";
+import { CgSpinner } from "react-icons/cg";
+import VerifyEmail from "./VerifyEmail";
+import toast from "react-hot-toast";
 
-const Register = () => {
-  const [showOTP, setShowOTP] = useState(false);
-  const [showRegister, setShowRegister] = useState(true);
-  const [loading, setLoading] = useState(false);
+const Register = ({ isOpenRegister, setIsOpenRegister, setIsOpenLogin }) => {
+  const [isVerifyEmailOpen, setIsVerifyEmailOpen] = useState(false);
 
   const {
     register,
@@ -32,15 +33,7 @@ const Register = () => {
   const { data: nonVerifiedMembers, refetch: refetchNonVerifiedMembers } =
     useFetchNonVerifiedMembers();
 
-  const afterRegister = () => {
-    reset();
-    setShowOTP(true);
-    setShowRegister(false);
-    alert("Registration successful! Please check your email for verification.");
-  };
-
   const onSubmit = async (data) => {
-    setLoading(true);
     try {
       const response = await GlobalService.post("/auth/register", data, {
         headers: {
@@ -54,7 +47,9 @@ const Register = () => {
           "Authorization",
           response.headers.get("Authorization")
         );
-        afterRegister();
+        toast.success("Check your email for otp!");
+        setIsOpenRegister(false);
+        setIsVerifyEmailOpen(true);
       }
       refetchNonVerifiedMembers();
       console.log(response);
@@ -71,40 +66,38 @@ const Register = () => {
           alert("500");
         }
       }
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
     <div>
-      {showRegister && (
-        <Dialog>
-          <div className="flex items-center">
-            <span>Don't have an account?</span>
-            <DialogTrigger asChild>
-              <span className="text-[#206ea6] hover:cursor-pointer ml-2">
-                Register
-              </span>
-            </DialogTrigger>
-          </div>
+      <VerifyEmail
+        isVerifyEmailOpen={isVerifyEmailOpen}
+        setIsVerifyEmailOpen={setIsVerifyEmailOpen}
+      />
+      <Dialog open={isOpenRegister} onOpenChange={setIsOpenRegister}>
+        <DialogContent className="w-390" aria-describedby={undefined}>
+          <DialogHeader className="flex justify-center items-center">
+            <DialogTitle className=" opacity-75 text-4xl font-bold text-[#2d3436]">
+              Register An Account
+            </DialogTitle>
+          </DialogHeader>
+          <hr />
+          <div className="flex items-center justify-center">
+            <div className="w-full max-w-md px-4">
+              <div className="text-center mb-4">
+                <p className=" text-[#636e72] px-4">
+                  Create an account to enjoy all the services!
+                </p>
+              </div>
 
-          <DialogContent className="w-390" aria-describedby={undefined}>
-            <DialogHeader className="flex justify-center items-center">
-              <DialogTitle className="text-2xl opacity-75">
-                Register An Account
-              </DialogTitle>
-            </DialogHeader>
-            <hr />
-
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="flex flex-col gap-4 mb-3">
-                <div>
+              <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+                <div className="">
                   <Input
+                    className="w-full h-[65px] rounded-xl border border-gray-300 bg-white px-4 focus:outline-none focus:ring-1 focus:ring-[#81c7b5]"
                     id="email"
                     type="email"
-                    defaultValue=""
-                    placeholder="Enter Email"
+                    placeholder="Email Address"
                     {...register("email", {
                       required: "Please enter email!",
                       minLength: {
@@ -116,20 +109,16 @@ const Register = () => {
                         message: "Max length should be 50",
                       },
                     })}
-                    className="h-13 placeholder-black placeholder-opacity-200 placeholder:text-[16px]"
                   />
                   <p className="text-red-500 text-[15px] ml-0.5">
                     {errors?.email?.message}
                   </p>
                 </div>
-
                 <div>
                   <Input
                     type="password"
                     id="password"
                     placeholder="Password"
-                    // style={{ WebkitTextSecurity: "disc" }}
-                    defaultValue=""
                     {...register("password", {
                       required: "Please enter password!",
                       minLength: {
@@ -137,32 +126,43 @@ const Register = () => {
                         message: "Min length is required",
                       },
                     })}
-                    className="h-13 placeholder-black placeholder-opacity-200 placeholder:text-[16px]"
+                    className="w-full h-[65px] rounded-xl border  border-gray-300 bg-white px-4 focus:outline-none focus:ring-1 focus:ring-[#81c7b5]"
                   />
                   <p className="text-red-500 text-[15px] ml-0.5">
                     {errors?.password?.message}
                   </p>
                 </div>
-              </div>
-              <DialogFooter className="grid grid-cols-4 w-full gap-0 mt-4">
                 <Button
                   type="submit"
-                  className={`grid col-span-4 h-12 text-[20px] bg-[#206ea6] hover:bg-[#206ea6]`}
+                  className="bg-[#196489] w-full h-[65px] mx-auto mt-4 flex items-center justify-center rounded-xl text-white text-xl font-medium transition-colors hover:bg-[#196489]"
+                  disabled={isSubmitting}
                 >
-                  Register
+                  {isSubmitting ? (
+                    <span className="flex items-center gap-2">
+                      <CgSpinner className="animate-spin text-[40px]" />
+                    </span>
+                  ) : (
+                    "Register"
+                  )}
                 </Button>
+              </form>
 
-                <div className="col-span-4 flex items-center">
-                  <div>Already Have an Account?</div>
-                  <div className="text-[#206ea6] ml-2">{<Login />}</div>
-                </div>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
-      )}
-      {showOTP && <VerifyOTP />}
-      {loading && <LoadingComponent />}
+              <div className="mt-5 text-center text-[#4d5156]">
+                Already Have An Account?{" "}
+                <a
+                  className="font-medium text-[#196489] cursor-pointer"
+                  onClick={() => {
+                    setIsOpenLogin(true);
+                    setIsOpenRegister(false);
+                  }}
+                >
+                  Login
+                </a>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import GLOBAL_SERVICE from "@/services/GlobalServices";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
+import toast from "react-hot-toast";
 
 export function UserProvider({ children }) {
   // const [token, setToken] = useState(
@@ -27,8 +28,10 @@ export function UserProvider({ children }) {
         setLoading(false);
         setUserInfo(response.data);
       } catch (error) {
-        alert("Error fetching user data:", error);
-        console.log("Error fetching user data:", error);
+        if (error.status === 404) {
+          toast.success("User does not exist");
+          localStorage.removeItem("Authorization");
+        }
       } finally {
         setLoading(false);
       }
@@ -37,9 +40,11 @@ export function UserProvider({ children }) {
 
   useEffect(() => {
     setToken(localStorage.getItem("Authorization"));
+    console.log("Token setted");
   }, []);
 
   useEffect(() => {
+    console.log("Token changed");
     if (token) {
       getUserInfo();
     } else {
