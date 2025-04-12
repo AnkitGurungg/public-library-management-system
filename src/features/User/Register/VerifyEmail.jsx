@@ -37,7 +37,6 @@ const VerifyEmail = ({ isVerifyEmailOpen, setIsVerifyEmailOpen }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await GLOBAL_SERVICE.post("/auth/v1/verify/otp", {
         otp,
@@ -52,7 +51,7 @@ const VerifyEmail = ({ isVerifyEmailOpen, setIsVerifyEmailOpen }) => {
       if (error?.response?.status === 409) {
         toast.error(error?.response?.data?.message || "Regenerate new OTP");
       } else {
-        console.log("njjjj")
+        console.log("njjjj");
         toast.error(error?.response?.data?.message || "Regenerate new OTP");
       }
     }
@@ -64,11 +63,11 @@ const VerifyEmail = ({ isVerifyEmailOpen, setIsVerifyEmailOpen }) => {
     try {
       const response = await GLOBAL_SERVICE.get("/auth/v1/regenerate-otp");
       console.log(response);
-      toast.success("OTP send again");
+      toast.success("OTP sent again!");
     } catch (error) {
       console.log(error);
       if (error) {
-        toast.success(error?.response?.data?.message);
+        toast.error(error?.response?.data?.message || "Regenerate new OTP");
       }
       console.error("OTP verification failed:", error);
     } finally {
