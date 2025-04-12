@@ -17,6 +17,7 @@ import { UserContext } from "@/contexts/UserContext";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import toast from "react-hot-toast";
 import VerifyEmail from "../Register/VerifyEmail";
+import { CgSpinner } from "react-icons/cg";
 
 const Login = ({ isOpenLogin, setIsOpenLogin }) => {
   const { getUserInfo, setToken } = useContext(UserContext);
@@ -62,42 +63,50 @@ const Login = ({ isOpenLogin, setIsOpenLogin }) => {
         return response;
       }
       if (response.status === 203) {
+        console.log("response 203", response);
         const token = response?.data?.accessToken;
         localStorage.setItem("Authorization", token);
         setToken(token);
         navigate("/");
         setIsOpenLogin(false);
-        toast.success("Verify Email");
-        setIsVerifyEmailOpen(true)
+        toast.success("Verify your email first!");
+        setIsVerifyEmailOpen(true);
         // getUserInfo();
         return response;
       }
     } catch (error) {
       console.log(error);
       if (error) {
-        if (error.response.status === 401) {
+        if (error?.response?.status === 401) {
           navigate("/");
-          toast.success(error?.response?.data?.message);
-        }
-        if (error.response.status === 403) {
-          navigate("/");
-          alert("403");
-        }
-        if (error.response.status === 412) {
-          alert("400");
-        }
-        if (error.response.status === 428) {
-          navigate("/");
-          toast.success("Verify Email");
-          localStorage.setItem(
-            "Authorization",
-            error.response.data.accessToken
+          toast.error(
+            error?.response?.data?.message || "Invalid username or password"
           );
-          setIsOpenLogin(false);
         }
+        if (error?.response?.status === 403) {
+          toast.error(
+            error?.response?.data?.message || "Permission not given!"
+          );
+          navigate("/");
+        }
+        if (error?.response?.status === 412) {
+          toast.error(
+            error?.response?.data?.message || "Pre login conditin failed!"
+          );
+        }
+
+        // if (error.response.status === 428) {
+        //   navigate("/");
+        //   toast.success("Verify Email");
+        //   localStorage.setItem(
+        //     "Authorization",
+        //     error?.response?.data?.accessToken
+        //   );
+        // }
+
         if (error.response.status === 500) {
           navigate("/");
-          alert("500");
+          toast.error(error?.response?.data?.message || "Server error!");
         }
       }
       return error;
@@ -111,10 +120,10 @@ const Login = ({ isOpenLogin, setIsOpenLogin }) => {
         setIsOpenRegister={setIsOpenRegister}
         setIsOpenLogin={setIsOpenLogin}
       />
-      {/* <VerifyEmail
+      <VerifyEmail
         isVerifyEmailOpen={isVerifyEmailOpen}
         setIsVerifyEmailOpen={setIsVerifyEmailOpen}
-      /> */}
+      />
       <Dialog open={isOpenLogin} onOpenChange={setIsOpenLogin}>
         <DialogContent className="w-390" aria-describedby={undefined}>
           <DialogHeader className="flex justify-center items-center">
@@ -172,11 +181,19 @@ const Login = ({ isOpenLogin, setIsOpenLogin }) => {
                     {errors?.password?.message}
                   </p>
                 </div>
-                <Button className="bg-[#196489] w-full h-[65px] mx-auto mt-4 flex items-center justify-center rounded-xl text-white text-xl font-medium transition-colors hover:bg-[#196489]">
-                  Login
+                <Button
+                  className="bg-[#196489] w-full h-[65px] mx-auto mt-4 flex items-center justify-center rounded-xl text-white text-xl font-medium transition-colors hover:bg-[#196489]"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center gap-2">
+                      <CgSpinner className="animate-spin text-[40px]" />
+                    </span>
+                  ) : (
+                    "Register"
+                  )}
                 </Button>
               </form>
-
               <div className="mt-5 text-center text-[#4d5156]">
                 Don't Have An Account?{" "}
                 <a

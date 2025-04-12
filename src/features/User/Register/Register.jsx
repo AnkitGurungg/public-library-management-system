@@ -74,6 +74,7 @@ const Register = ({ isOpenRegister, setIsOpenRegister, setIsOpenLogin }) => {
       <VerifyEmail
         isVerifyEmailOpen={isVerifyEmailOpen}
         setIsVerifyEmailOpen={setIsVerifyEmailOpen}
+        setIsOpenLogin={setIsOpenLogin}
       />
       <Dialog open={isOpenRegister} onOpenChange={setIsOpenRegister}>
         <DialogContent className="w-390" aria-describedby={undefined}>

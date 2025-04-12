@@ -63,7 +63,6 @@ GLOBAL_SERVICE.interceptors.response.use(
     }
     if (error.status === 406) {
       toast.success("Please Login!");
-      console.log("406");
       localStorage.removeItem("Authorization");
       // localStorage.clear();
     }

@@ -42,19 +42,19 @@ const VerifyEmail = ({ isVerifyEmailOpen, setIsVerifyEmailOpen }) => {
       const response = await GLOBAL_SERVICE.post("/auth/v1/verify/otp", {
         otp,
       });
-
       console.log(response);
       if (response.status === 200) {
         localStorage.removeItem("Authorization");
+        toast.success(response.data.message || "Email Verified!");
         setIsVerifyEmailOpen(false);
-        toast.success(response.data.message || response.data);
-        // onVerify();
       }
     } catch (error) {
-      if (error) {
-        toast.success(error?.response?.data?.message);
+      if (error?.response?.status === 409) {
+        toast.error(error?.response?.data?.message || "Regenerate new OTP");
+      } else {
+        console.log("njjjj")
+        toast.error(error?.response?.data?.message || "Regenerate new OTP");
       }
-      console.error("OTP verification failed:", error);
     }
   };
 
