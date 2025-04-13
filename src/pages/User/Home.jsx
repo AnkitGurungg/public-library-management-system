@@ -1,4 +1,5 @@
 import { Input } from "@/components/ui/input";
+import BookCard from "@/features/User/Home/BookCard";
 import Card from "@/features/User/Home/Card";
 import useFetchDisplayBooks from "@/hooks/useFetchDisplayBooks";
 import { useFetchMemberWishList } from "@/hooks/useFetchMemberWishList";
@@ -17,12 +18,13 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
-      <ul className="grid grid-cols-5 justify-center items-center">
+    <div className="max-w-7xl mx-auto px-16 py-16">
+      <ul className="grid grid-cols-5 justify-center items-center gap-5">
         {displayBooks?.status === 200 &&
           displayBooks.data?.length > 0 &&
           displayBooks?.data?.map((curBook) => (
-            <Card key={curBook.bookId} curBook={curBook} />
+            <BookCard key={curBook.bookId} curBook={curBook} />
+            // <Card key={curBook.bookId} curBook={curBook} />
           ))}
       </ul>
     </div>

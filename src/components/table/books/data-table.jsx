@@ -39,9 +39,8 @@ export function DataTable({ columns, data }) {
         <h1>Available Books</h1>
         <Button> Add Book</Button>
       </div>
-
       <div className="rounded-md border px-3 pt-3 bg-white">
-        <div className="mb-4">
+        <div className="mb-4 flex items-center justify-between px-6">
           <Input
             className="w-1/4"
             placeholder="Search by title..."
@@ -50,7 +49,9 @@ export function DataTable({ columns, data }) {
               table.getColumn("title")?.setFilterValue(event.target.value)
             }
           />
-          <div></div>
+          <div>
+            <Button>Filter</Button>
+          </div>
         </div>
 
         <Table>

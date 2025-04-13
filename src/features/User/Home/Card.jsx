@@ -18,9 +18,8 @@ const Card = ({ curBook }) => {
     navigate(`/books/book/${curBook.bookId}`);
   };
 
-  // ✅ Updated to include role check
   const handleAddToWishlist = async (e) => {
-    e.stopPropagation(); // Prevent navigation on button click
+    e.stopPropagation();
 
     if (!token) {
       alert("Please log in to add books to your wishlist.");

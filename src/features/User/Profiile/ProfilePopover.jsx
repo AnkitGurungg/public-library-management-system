@@ -8,16 +8,20 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 import { useContext } from "react";
 import { UserContext } from "@/contexts/UserContext";
+import { useFetchMemberWishList } from "@/hooks/useFetchMemberWishList";
 
 export default function ProfilePopover() {
   const { setToken, loading, userInfo, getUserInfo, setUserInfo } =
     useContext(UserContext);
   const navigate = useNavigate();
+  const { data: memberWishList, refetch: refetchMemberWishList } =
+    useFetchMemberWishList();
 
   const logoutHandler = () => {
     localStorage.removeItem("Authorization");
     setToken("");
     setUserInfo({});
+    refetchMemberWishList();
     // localStorage.removeItem("x-refresh-token");
     navigate("/");
   };

@@ -53,12 +53,9 @@ export const columns = [
       const returnDate = row.getValue("getReturnDate");
       if (!returnDate) {
         return (
-          <Button
-            variant="destructive"
-            className="h-5 px-2 text-[10px] pointer-events-none cursor-default"
-          >
+          <span className="bg-red-300 text-red-600 px-3 py-1.5 rounded-2xl text-[11px]">
             NOT RETURNED
-          </Button>
+          </span>
         );
       }
       return <span>{returnDate}</span>;
@@ -66,7 +63,7 @@ export const columns = [
   },
   {
     accessorKey: "isExtended",
-    header: "Extended Due date",
+    header: "Ext Due date",
     cell: ({ row }) => {
       const isExtended = row.getValue("isExtended");
       return isExtended ? "YES" : "NO";
