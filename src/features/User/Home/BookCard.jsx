@@ -29,12 +29,12 @@ const BookCard = ({ curBook }) => {
     e.stopPropagation();
 
     if (!token) {
-      alert("Please log in to add books to your wishlist.");
+      toast.error("Please Login!");
       return;
     }
 
     if (userInfo?.role !== "ROLE_MEMBER") {
-      alert("Only members are allowed to add books to the wishlist.");
+      toast.error("Not allowed!");
       return;
     }
 
@@ -49,13 +49,13 @@ const BookCard = ({ curBook }) => {
         // }
       );
       refetchMemberWishList();
-      toast.success("Book added to wishlist!");
+      toast.success("Added to wishlist!");
       console.log(response.data);
     } catch (error) {
-      console.log(error.config.headers.Authorization);
-      console.log(error.config.headers["Authorization"]);
       console.error("Error adding to wishlist:", error);
-      alert("Failed to add to wishlist. Please try again.");
+      toast.error("Please try again!");
+      // console.log(error.config.headers.Authorization);
+      // console.log(error.config.headers["Authorization"]);
     }
   };
 
@@ -63,10 +63,10 @@ const BookCard = ({ curBook }) => {
     <div className="max-w-sm overflow-hidden mb-3 transition-transform duration-300 hover:-translate-y-1">
       <div className="pb-2 cursor-pointer" onClick={specificBookDetails}>
         <img
-          src={`http://localhost:8080/${imageURL}`}
+          src={`${BACKEND_SERVER_BASE_URL}${imageURL}`}
           alt="Book img"
-          className=" aspect-[9/16] object-cover"
-          priority
+          className="aspect-[9/16] object-cover drop-shadow-md"
+          priority="true"
         />
         <h2 className="text-base font-bold line-clamp-1">{title}</h2>
         <p className="text-gray-600 text-base">by {author}</p>
@@ -79,14 +79,14 @@ const BookCard = ({ curBook }) => {
           ) ? (
             <Button
               onClick={() => navigate("/member/profile/wish-list")}
-              className="w-full bg-white border-1 border-[#9cc2ff] text-[#206ea6] uppercase hover:bg-[#206ea6] hover:text-white rounded-none"
+              className="w-full text-white border-1 border-[#206ea6] bg-[#206ea6] uppercase hover:text-[#206ea6] hover:bg-white  rounded-none"
             >
               View WishList
             </Button>
           ) : (
             <Button
               onClick={handleAddToWishlist}
-              className="w-full bg-white border-1 border-[#9cc2ff] text-[#206ea6] uppercase hover:bg-[#206ea6] hover:text-white rounded-none"
+              className="w-full bg-white border-1 border-[#206ea6] text-[#206ea6] uppercase hover:bg-[#206ea6] hover:text-white rounded-none"
             >
               Add to WishList
             </Button>

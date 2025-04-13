@@ -22,6 +22,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import WishList from "./features/User/WishList/WishList";
 import MemberFines from "./features/User/Fines/MemberFines";
+import AllTopBorrowedBooks from "./features/User/Home/AllTopBorrowedBooks";
+import NewArrivalBooks from "./features/User/Home/NewArrivalBooks";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -56,6 +58,8 @@ const App = () => {
         { index: true, element: <Home /> },
         { path: "books/genres/:categoryId", element: <GenreFilteredBooks /> },
         { path: "books/book/:bookId", element: <SpecificBook /> },
+        { path: "top-borrowed-books", element: <AllTopBorrowedBooks /> },
+        { path: "new-arrivals", element: <NewArrivalBooks /> },
       ],
     },
 

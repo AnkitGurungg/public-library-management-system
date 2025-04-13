@@ -20,7 +20,10 @@ const HoverCategories = () => {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Button variant="link" className="font-medium text-[17px] hover:text-[#206ea6]">
+        <Button
+          variant="link"
+          className="font-medium text-[17px] hover:text-[#206ea6]"
+        >
           Books
         </Button>
       </HoverCardTrigger>

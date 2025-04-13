@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useFetchDisplayCategory from "@/hooks/useFetchDisplayCategory";
 import { useNavigate } from "react-router-dom";
-import Card from "./Card";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
+import HoverBookCard from "./HoverBookCard";
 
 const GenreFilteredBooks = () => {
   const navigate = useNavigate();
@@ -11,6 +11,7 @@ const GenreFilteredBooks = () => {
   const [books, setBooks] = useState([]);
   const [error, setError] = useState(null);
   const [showGenre, setShowGenre] = useState(false);
+  const [categoryName, setCategoryName] = useState("");
 
   const {
     data: displayCategory,
@@ -35,18 +36,13 @@ const GenreFilteredBooks = () => {
     };
     fetchGenreFilteredBooks();
     refetchDisplayCategory();
-    console.log(displayCategory?.data);
   }, [categoryId]);
-
-  useEffect(() => {
-    console.log(displayCategory);
-  }, [books]);
 
   if (error) return <p>{error}</p>;
   if (isDisplayCategoryLoading) return <p>Loading genres...</p>;
 
   return (
-    <section className="flex">
+    <section className="flex my-9">
       <div className="w-65 max-h-80 overflow-y-auto">
         <button onClick={handleShowGenre}>
           <div>
@@ -83,14 +79,14 @@ const GenreFilteredBooks = () => {
         </div>
       </div>
 
-      <div className="flex flex-grow-1 gap-0">
-        <div className="grid grid-cols-5 ">
+      <div className="flex flex-grow">
+        <div className="grid grid-cols-5 md:grid-cols-2 lg:grid-cols-5 space-y-0">
           {books?.status === 200 &&
           Array.isArray(books?.data) &&
           books?.data?.length !== 0 ? (
             books?.data?.map((element) => (
               <div key={element.bookId}>
-                <Card key={element.bookId} curBook={element} />
+                <HoverBookCard key={element.bookId} curBook={element} />
               </div>
             ))
           ) : (
