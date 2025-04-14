@@ -171,10 +171,9 @@ const UHeader = () => {
   return (
     <>
       <Login isOpenLogin={isOpenLogin} setIsOpenLogin={setIsOpenLogin} />
-
+      
       <div className="z-50 fixed w-full">
         <div className="h-[4.5rem] bg-white flex flex-row justify-around items-center drop-shadow-sm w-full px-4">
-          {/* Logo and Categories */}
           <div className="flex flex-row gap-4 items-center relative">
             <NavLink to="/">
               <h1 className="font-medium text-[17px]">Booksmandala</h1>
@@ -182,11 +181,10 @@ const UHeader = () => {
             <HoverCategories className="w-[329px] h-[378px]" />
           </div>
 
-          {/* Search Input and Results */}
-          <div className="relative w-72">
+          <div className="relative w-96">
             <Input
               placeholder="What do you want to read?"
-              className="w-full h-10 bg-[#f1f1f1] rounded px-3"
+              className="w-full h-11 bg-[#f1f1f1] rounded-md border-none px-3 p-2"
               onChange={(e) => handleSearch(e.target.value)}
               onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
               onFocus={() => {
@@ -194,7 +192,6 @@ const UHeader = () => {
               }}
             />
 
-            {/* Search Result Dropdown */}
             {showDropdown && filteredBooks.length > 0 && (
               <div className="absolute topтє12 left-0 w-full max-h-72 overflow-y-auto bg-white border border-gray-200 shadow-lg rounded-md z-50">
                 {filteredBooks.map((book) => (
