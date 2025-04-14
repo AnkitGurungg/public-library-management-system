@@ -47,9 +47,11 @@ const UPSidebar = () => {
         </div>
 
         <div className="text-center mb-6">
-          <h2 className="text-lg font-bold">{userProfile?.data?.name || ""}</h2>
-          <p className="text-sm text-gray-600">
-            {userProfile?.data?.email || ""}
+          <h2 className="text-lg font-semibold">
+            {userProfile?.data?.name || "N/A"}
+          </h2>
+          <p className="text-sm text-gray-700">
+            {userProfile?.data?.email || "N/A"}
           </p>
         </div>
 
