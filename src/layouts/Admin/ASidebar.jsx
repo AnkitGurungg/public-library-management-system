@@ -136,7 +136,7 @@ const ASidebar = () => {
     //   </div>
     // </div>
 
-    <div className="fixed top-0 left-0 z-40 h-screen bg-primary transition-transform duration-300 ease-in-out text-white p-4 w-64">
+    <div className="fixed top-0 left-0 z-40 h-screen bg-white transition-transform duration-300 ease-in-out text-black p-4 w-64">
       <div className="flex flex-col h-full justify-between">
         <div>
           <div className="flex items-center justify-between mb-8">
@@ -154,7 +154,7 @@ const ASidebar = () => {
             <div className="flex flex-col gap-1">
               <Link
                 to="/admin"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-gray-300 hover:bg-white/10 hover:text-white"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-black font-medium hover:bg-[#d9d9d9] hover:text-black"
               >
                 <Gauge size={20} />
                 <span>Dashboard</span>
@@ -162,7 +162,7 @@ const ASidebar = () => {
 
               <Link
                 to="/admin/catalog"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-gray-300 hover:bg-white/10 hover:text-white"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-black font-medium hover:bg-[#d9d9d9] hover:text-black"
               >
                 <MapPinned size={20} />
                 <span>Catalog</span>
@@ -170,7 +170,7 @@ const ASidebar = () => {
 
               <Link
                 to="/admin/books"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-gray-300 hover:bg-white/10 hover:text-white"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-black font-medium hover:bg-[#d9d9d9] hover:text-black"
               >
                 <Tags size={20} />
                 <span>Books</span>
@@ -178,7 +178,7 @@ const ASidebar = () => {
 
               <Link
                 to="/admin/categories"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-gray-300 hover:bg-white/10 hover:text-white"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-black font-medium hover:bg-[#d9d9d9] hover:text-black"
               >
                 <Users size={20} />
                 <span>Categories</span>
@@ -186,7 +186,7 @@ const ASidebar = () => {
 
               <Link
                 to="/admin/fines"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-gray-300 hover:bg-white/10 hover:text-white"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-black font-medium hover:bg-[#d9d9d9] hover:text-black"
               >
                 <Users size={20} />
                 <span>Fines</span>
@@ -194,14 +194,14 @@ const ASidebar = () => {
 
               <Link
                 to="/admin/shelfs"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-gray-300 hover:bg-white/10 hover:text-white"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-black font-medium hover:bg-[#d9d9d9] hover:text-black"
               >
                 <Users size={20} />
                 <span>Shelfs</span>
               </Link>
               <Link
                 to="/admin/librarians"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-gray-300 hover:bg-white/10 hover:text-white"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-black font-medium hover:bg-[#d9d9d9] hover:text-black"
               >
                 <Users size={20} />
                 <span>Librarians</span>
@@ -210,10 +210,10 @@ const ASidebar = () => {
               <div className="mb-2">
                 <button
                   onClick={() => setReportsOpen(!reportsOpen)}
-                  className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/10 duration-200 ease-in-out gap-3 rounded-md text-base transition-colors  text-white"
+                  className="cursor-pointer w-full flex items-center justify-between px-4 py-3 text-black font-medium hover:bg-[#d9d9d9] hover:text-black duration-200 ease-in-out gap-3 rounded-md text-base transition-colors"
                 >
-                  <div className="flex items-center gap-4">
-                    <span className="text-slate-300">
+                  <div className="flex items-center gap-4 ">
+                    <span className="">
                       <UserCog size={20} />
                     </span>
                     <span className="text-base">Reports</span>

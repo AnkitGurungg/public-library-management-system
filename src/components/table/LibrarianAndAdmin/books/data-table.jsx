@@ -16,8 +16,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import AddBook from "@/features/LibrarianAndAdmin/Books/AddBook";
 
-export function DataTable({ columns, data }) {
+export function DataTable({ columns, data = [] }) {
   const [columnFilters, setColumnFilters] = useState([]);
 
   const table = useReactTable({
@@ -35,32 +36,32 @@ export function DataTable({ columns, data }) {
 
   return (
     <div>
-      <div className="flex items-center py-4 justify-between">
-        <h1>Available Books</h1>
-        <Button> Add Book</Button>
-      </div>
-      <div className="rounded-md border px-3 pt-3 bg-white">
-        <div className="mb-4 flex items-center justify-between px-6">
-          <Input
-            className="w-1/4"
-            placeholder="Search by title..."
-            value={table.getColumn("title")?.getFilterValue() ?? ""}
-            onChange={(event) =>
-              table.getColumn("title")?.setFilterValue(event.target.value)
-            }
-          />
-          <div>
-            <Button>Filter</Button>
-          </div>
+      <div className="flex items-center py-1 justify-between pb-4">
+        <h1 className="text-2xl font-medium">Available Books</h1>
+        <Input
+          className="w-1/4 h-10 bg-white"
+          placeholder="Search by title..."
+          value={table.getColumn("title")?.getFilterValue() ?? ""}
+          onChange={(event) =>
+            table.getColumn("title")?.setFilterValue(event.target.value)
+          }
+        />
+        <div className="flex gap-2.5">
+          <Button className="opacity-90">Filter</Button>
+          <AddBook />
         </div>
-
-        <Table>
-          <TableHeader>
+      </div>
+      <div className="rounded-md">
+        <Table className="">
+          <TableHeader className="border-b-[2px] border-[rgba(0,0,0,0.5)] text-black font-bold">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className="text-black font-medium  uppercase"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -73,7 +74,7 @@ export function DataTable({ columns, data }) {
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="p-0">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -93,7 +94,7 @@ export function DataTable({ columns, data }) {
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={columns?.length}
                   className="h-24 text-center"
                 >
                   No results.

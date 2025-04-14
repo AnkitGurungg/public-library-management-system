@@ -82,7 +82,7 @@ const AddBook = () => {
 
       <Dialog>
         <DialogTrigger asChild>
-          <Button>
+          <Button className="opacity-90">
             <PlusCircle></PlusCircle>
             Add Book
           </Button>

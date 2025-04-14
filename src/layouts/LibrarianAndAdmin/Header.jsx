@@ -30,7 +30,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="border-l-1 border-grey-500">
+    <div className="border-l-1 border-grey-500 bg-white">
       <div className="flex flex-col w-[100px] justify-center ml-1 p-1">
         <p className="text-[18px]">{currentTime}</p>
         <p className="text-[14px]">{currentDate}</p>
