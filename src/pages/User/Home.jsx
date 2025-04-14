@@ -38,7 +38,7 @@ const Home = () => {
 
     <section>
       <div className="max-w-7xl mx-auto px-16 py-4">
-        <div className="mb-5 flex flex-col gap-0.5">
+        <div className="mb-5 flex flex-col gap-1.5">
           <div className="flex items-center justify-between">
             <h2 className="font-bold text-2xl opacity-80">
               Top Borrowed Books

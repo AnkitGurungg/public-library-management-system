@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
+import GLOBAL_SERVICE, {
+  BACKEND_SERVER_BASE_URL,
+} from "@/services/GlobalServices";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -91,10 +93,8 @@ export const columns = (refetchMemberFines) => [
     header: "Action",
     cell: ({ row }) => {
       const isPaid = row.getValue("isPaidStatus");
-
-      const paymentHandler = () => {
-        const currBookFine = row.original;
-
+      const paymentHandler = async (currBookFine) => {
+        console.log(currBookFine);
         const paymentData = {
           totalAmount: currBookFine.getTotalFine,
           fineId: currBookFine.getFineId,
@@ -103,10 +103,21 @@ export const columns = (refetchMemberFines) => [
           bookId: currBookFine.getBookId,
         };
 
-        console.log(paymentData);
+        try {
+          const response = await GLOBAL_SERVICE.post(
+            "/api/v1/m/user/profile/fine/pay",
+            paymentData
+          );
+          console.log(response);
+          const url = response?.data?.payment_url;
 
-        refetchMemberFines();
-        toast.success("Payment succeed!");
+          if (url) {
+            window.open(url, "_blank", "noopener,noreferrer");
+          }
+        } catch (error) {
+          toast.error("Payment failed!");
+          console.error("Payment failed!", error);
+        }
       };
 
       if (isPaid) {
@@ -124,7 +135,7 @@ export const columns = (refetchMemberFines) => [
           <div>
             <button
               className="hover:cursor-pointer px-3 py-0.5 text-sm border bg-red-500 text-white rounded"
-              onClick={paymentHandler}
+              onClick={() => paymentHandler(row.original)}
             >
               Pay Now
             </button>
