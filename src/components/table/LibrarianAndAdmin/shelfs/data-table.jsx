@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import AddShelf from "@/features/LibrarianAndAdmin/Shelf/AddShelf";
 
 export function DataTable({ columns, data = [] }) {
   const [columnFilters, setColumnFilters] = useState([]);
@@ -36,18 +37,18 @@ export function DataTable({ columns, data = [] }) {
   return (
     <div>
       <div className="flex items-center py-1 justify-between pb-4">
-        <h1 className="text-2xl font-medium">Fines</h1>
+        <h1 className="text-2xl font-medium">Shelfs</h1>
         <Input
           className="w-1/4 h-10 bg-white"
-          placeholder="Search by user name..."
-          value={table.getColumn("userName")?.getFilterValue() ?? ""}
+          placeholder="Search by title..."
+          value={table.getColumn("name")?.getFilterValue() ?? ""}
           onChange={(event) =>
-            table.getColumn("userName")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
         />
-
         <div className="flex gap-2.5">
           <Button className="opacity-90">Filter</Button>
+          <AddShelf />
         </div>
       </div>
       <div className="rounded-md">
