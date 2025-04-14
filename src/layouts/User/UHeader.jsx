@@ -171,7 +171,7 @@ const UHeader = () => {
   return (
     <>
       <Login isOpenLogin={isOpenLogin} setIsOpenLogin={setIsOpenLogin} />
-      
+
       <div className="z-50 fixed w-full">
         <div className="h-[4.5rem] bg-white flex flex-row justify-around items-center drop-shadow-sm w-full px-4">
           <div className="flex flex-row gap-4 items-center relative">
@@ -184,7 +184,7 @@ const UHeader = () => {
           <div className="relative w-96">
             <Input
               placeholder="What do you want to read?"
-              className="w-full h-11 bg-[#f1f1f1] rounded-md border-none px-3 p-2"
+              className="w-full h-11 bg-[#f1f1f1] rounded-md border-none px-3 p-2 placeholder:text-gray-500 placeholder:text-sm placeholder:font-medium"
               onChange={(e) => handleSearch(e.target.value)}
               onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
               onFocus={() => {
