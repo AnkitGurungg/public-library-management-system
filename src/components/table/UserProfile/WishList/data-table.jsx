@@ -48,7 +48,7 @@ export function DataTable({ columns, data }) {
         </div>
 
         <Table className="w-full p-0">
-          <TableHeader className="">
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
