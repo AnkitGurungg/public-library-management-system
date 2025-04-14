@@ -48,8 +48,12 @@ const UBorrowedBooks = () => {
     // </section>
 
     <div className="ml-64 p-3">
-      <div className="flex items-center py-4 justify-between text-2xl text-[#206ea6]">
-        <h1>Borrowed Books ({memberBorrowedBooks?.data?.length || "0"})</h1>
+      <div className="flex items-center pt-3 justify-between text-2xl text-[#206ea6]">
+        <div className="px-2">
+          <h1 className="text-2xl font-bold text-[#206ea6] mb-6 pb-2 border-b-2 border-[#206ea6] inline-block">
+            Borrowed Books ({memberBorrowedBooks?.data?.length || "0"})
+          </h1>
+        </div>
       </div>
       <div>
         {memberBorrowedBooks && memberBorrowedBooks?.status === 200 && (

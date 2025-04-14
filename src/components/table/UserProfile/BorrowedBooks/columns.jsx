@@ -63,7 +63,7 @@ export const columns = [
   },
   {
     accessorKey: "isExtended",
-    header: "Ext Due date",
+    header: "Is Extended",
     cell: ({ row }) => {
       const isExtended = row.getValue("isExtended");
       return isExtended ? "YES" : "NO";

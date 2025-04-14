@@ -35,10 +35,10 @@ export function DataTable({ columns, data }) {
 
   return (
     <div>
-      <div className="rounded-md border px-3 pt-3 bg-white">
-        <div className="mb-4">
+      <div className="rounded-md pt-0 bg-white">
+        <div className="mb-3 px-2">
           <Input
-            className="w-1/4"
+            className="w-2/4 bg-[#f1f1f1] h-11"
             placeholder="Search by title..."
             value={table.getColumn("getTitle")?.getFilterValue() ?? ""}
             onChange={(event) =>
@@ -47,13 +47,16 @@ export function DataTable({ columns, data }) {
           />
         </div>
 
-        <Table>
+        <Table className="w-full p-0">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className="bg-[#f1f1f1] text-black"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(

@@ -134,7 +134,7 @@ export const columns = (refetchMemberFines) => [
         return (
           <div>
             <button
-              className="hover:cursor-pointer px-3 py-0.5 text-sm border bg-red-500 text-white rounded"
+              className="hover:cursor-pointer px-3 py-0.5 text-sm border border-red-500 bg-white text-red-500 hover:text-white hover:bg-red-500 rounded"
               onClick={() => paymentHandler(row.original)}
             >
               Pay Now

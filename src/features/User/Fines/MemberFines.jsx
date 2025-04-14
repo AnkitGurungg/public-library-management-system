@@ -18,6 +18,10 @@ const MemberFines = () => {
     refetchMemberFines();
   }, []);
 
+  useEffect(() => {
+    console.log(memberFines);
+  }, [memberFines]);
+
   const paymentHandler = async (currBookFine) => {
     const paymentData = {
       totalAmount: currBookFine.getTotalFine,
