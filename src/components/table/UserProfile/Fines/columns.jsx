@@ -70,7 +70,7 @@ export const columns = (refetchMemberFines) => [
   },
   {
     accessorKey: "isExtended",
-    header: "Extended Due date",
+    header: "Is Extedned",
     cell: ({ row }) => {
       const isExtended = row.getValue("isExtended");
       return isExtended ? "YES" : "NO";
@@ -125,7 +125,7 @@ export const columns = (refetchMemberFines) => [
           <button
             disabled
             // onClick={paymentHandler}
-            className="bg-white border border-[#206ea6] text-[#206ea6] opacity-50 px-3 py-0.5 text-sm rounded cursor-not-allowed"
+            className="bg-white border border-[#206ea6] text-[#206ea6] opacity-60 hover:bg-[#206ea6] hover:text-white px-3 py-0.5 text-sm rounded cursor-not-allowed w-14 uppercase"
           >
             Paid
           </button>
@@ -134,10 +134,10 @@ export const columns = (refetchMemberFines) => [
         return (
           <div>
             <button
-              className="hover:cursor-pointer px-3 py-0.5 text-sm border border-red-500 bg-white text-red-500 hover:text-white hover:bg-red-500 rounded"
+              className="hover:cursor-pointer px-3 py-0.5 text-sm border border-red-500 bg-white text-red-500 opacity-90 hover:text-white hover:bg-red-500 rounded w-14 uppercase"
               onClick={() => paymentHandler(row.original)}
             >
-              Pay Now
+              Pay
             </button>
           </div>
         );
