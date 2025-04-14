@@ -1,4 +1,6 @@
 import { UserContext } from "@/contexts/UserContext";
+import { FaMoneyBillTrendUp } from "react-icons/fa6";
+
 import HoverReports from "@/features/Admin/Reports/HoverReports";
 import HoverSettings from "@/features/LibrarianAndAdmin/Settings/HoverSettings";
 import {
@@ -16,6 +18,8 @@ import {
   MapPinned,
   Tags,
   ChevronDown,
+  User,
+  ShieldUser,
 } from "lucide-react";
 import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -126,7 +130,7 @@ const ASidebar = () => {
     //             Librarians
     //           </Link>
     //         </div>
-    //         <HoverReports />
+    // <HoverReports />
     //       </div>
     //       {/* )} */}
     //     </div>
@@ -139,82 +143,90 @@ const ASidebar = () => {
     <div className="fixed top-0 left-0 z-40 h-screen bg-white transition-transform duration-300 ease-in-out text-black p-4 w-64">
       <div className="flex flex-col h-full justify-between">
         <div>
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-0">
             <div className="flex items-center gap-3">
               <div className="bg-white rounded-lg p-1">
-                <img src="/logo.png" alt="Logo" className="w-7" />
+                <img src="/react.svg" alt="Logo" className="w-7" />
               </div>
               <div className="flex flex-col">
-                <span className="font-semibold text-lg">Sajilo Ticket.</span>
+                <span className="font-semibold text-lg"></span>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col gap-6 overflow-y-auto">
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 text-black/80">
               <Link
                 to="/admin"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-black font-medium hover:bg-[#d9d9d9] hover:text-black"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
               >
-                <Gauge size={20} />
+                <LayoutDashboard size={20} />
                 <span>Dashboard</span>
               </Link>
 
               <Link
                 to="/admin/catalog"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-black font-medium hover:bg-[#d9d9d9] hover:text-black"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
               >
-                <MapPinned size={20} />
+                <Compass size={20} />
                 <span>Catalog</span>
               </Link>
 
               <Link
                 to="/admin/books"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-black font-medium hover:bg-[#d9d9d9] hover:text-black"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
               >
-                <Tags size={20} />
+                <BookOpenText size={20} />
                 <span>Books</span>
               </Link>
 
               <Link
-                to="/admin/categories"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-black font-medium hover:bg-[#d9d9d9] hover:text-black"
+                to="/admin/members"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
               >
                 <Users size={20} />
+                <span>Members</span>
+              </Link>
+
+              <Link
+                to="/admin/categories"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
+              >
+                <Component size={20} />
                 <span>Categories</span>
               </Link>
 
               <Link
                 to="/admin/fines"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-black font-medium hover:bg-[#d9d9d9] hover:text-black"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
               >
-                <Users size={20} />
+                <Coins size={20} />
                 <span>Fines</span>
               </Link>
 
               <Link
                 to="/admin/shelfs"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-black font-medium hover:bg-[#d9d9d9] hover:text-black"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
               >
-                <Users size={20} />
+                <SquareLibrary size={20} />
                 <span>Shelfs</span>
               </Link>
               <Link
                 to="/admin/librarians"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors text-black font-medium hover:bg-[#d9d9d9] hover:text-black"
+                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
               >
-                <Users size={20} />
+                <ShieldUser size={20} />
                 <span>Librarians</span>
               </Link>
 
               <div className="mb-2">
                 <button
                   onClick={() => setReportsOpen(!reportsOpen)}
-                  className="cursor-pointer w-full flex items-center justify-between px-4 py-3 text-black font-medium hover:bg-[#d9d9d9] hover:text-black duration-200 ease-in-out gap-3 rounded-md text-base transition-colors"
+                  className="cursor-pointer w-full flex items-center justify-between px-4 py-3 font-medium hover:bg-[#d9d9d9] hover:text-black duration-200 ease-in-out gap-3 rounded-md text-base transition-colors"
                 >
                   <div className="flex items-center gap-4 ">
                     <span className="">
-                      <UserCog size={20} />
+                      <File size={20} />
                     </span>
                     <span className="text-base">Reports</span>
                   </div>
@@ -229,7 +241,22 @@ const ASidebar = () => {
                   className={`mt-2 space-y-1 ${
                     reportsOpen ? "block" : "hidden"
                   }`}
-                ></div>
+                >
+                  <Link
+                    to="reports/members-report"
+                    className="flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
+                  >
+                    <UserCog size={20} />
+                    Members Report
+                  </Link>
+                  <Link
+                    to="reports/fines-report"
+                    className="flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
+                  >
+                    <FaMoneyBillTrendUp size={20} />
+                    Fines Report
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
