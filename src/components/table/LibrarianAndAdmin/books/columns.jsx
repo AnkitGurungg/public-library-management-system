@@ -24,13 +24,23 @@ export const columns = [
   },
 
   {
+    accessorKey: "publishedDate",
+    header: "Published Date",
+  },
+
+  {
     accessorKey: "language",
     header: "Language",
   },
 
   {
+    accessorKey: "edition",
+    header: "Edition",
+  },
+
+  {
     accessorKey: "quantity",
-    header: "Total",
+    header: "Quantity",
   },
 
   {

@@ -42,11 +42,10 @@ export function DataTable({ columns, data = [] }) {
   });
 
   return (
-    <div className="border-gray-200 shadow-lg">
-      <div className="flex items-center py-1 justify-between pb-4 border px-4 ">
-        <h1 className="text-2xl font-medium">Available Books</h1>
+    <div className="">
+      <div className="flex items-center py-1 justify-between pb-4">
         <Input
-          className="w-1/4 h-10 bg-white"
+          className="w-1/3 h-[39px] bg-white border border-gray-300"
           placeholder="Search by title..."
           value={table.getColumn("title")?.getFilterValue() ?? ""}
           onChange={(event) =>
@@ -55,7 +54,7 @@ export function DataTable({ columns, data = [] }) {
         />
         <div className="flex gap-2.5">
           <Select className="">
-            <SelectTrigger className="w-[160px] bg-white border border-gray-300">
+            <SelectTrigger className="w-[160px] bg-white border border-gray-300 h-[39px]">
               <SelectValue placeholder="Select Category" />
             </SelectTrigger>
             <SelectContent>
@@ -67,17 +66,15 @@ export function DataTable({ columns, data = [] }) {
           <AddBook />
         </div>
       </div>
-      <div className="rounded-md">
-        <Table className="">
+
+      <div className="rounded-md border">
+        <Table className="p-0">
           <TableHeader className="border-b-[2px] border-[rgba(0,0,0,0.5)] text-black font-bold">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead
-                      key={header.id}
-                      className="text-black font-medium  uppercase"
-                    >
+                    <TableHead key={header.id} className="font-medium">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -90,7 +87,7 @@ export function DataTable({ columns, data = [] }) {
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody className="p-0">
+          <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow

@@ -39,7 +39,7 @@ const ASidebar = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="fixed top-0 left-0 z-40 h-screen bg-white transition-transform duration-300 ease-in-out text-black p-4 w-64">
+    <div className="fixed top-0 left-0 z-40 h-screen bg-white transition-transform duration-300 ease-in-out text-black p-4 w-64 shadow-sm">
       <div className="flex flex-col h-full justify-between">
         <div>
           <div className="flex items-center justify-between mb-0">

@@ -8,7 +8,7 @@ const AAppLayout = () => {
       <ASidebar />
       <div className="flex-1 flex flex-col ml-64">
         <Header />
-        <div className="flex-1 overflow-auto p-4 la-content-bg">
+        <div className="flex-1 overflow-auto p-4 bg-[#f1f1f1]">
           <Outlet />
         </div>
       </div>
