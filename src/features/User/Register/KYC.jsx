@@ -12,10 +12,11 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import { useFetchUserProfile } from "@/hooks/useFetchUserProfile";
+import toast from "react-hot-toast";
 
 const KYC = () => {
   const {
@@ -27,6 +28,10 @@ const KYC = () => {
   const [error, setError] = useState(null);
   const [userImage, setUserImage] = useState(null);
   const [evidenceImages, setEvidenceImages] = useState([]);
+
+  const e1Ref = useRef(null);
+  const e2Ref = useRef(null);
+
   const { data: nonVerifiedMembers, refetch: refetchNonVerifiedMembers } =
     useFetchNonVerifiedMembers();
   const { data: userProfile, refetch: refetchUserProfile } =
@@ -36,12 +41,13 @@ const KYC = () => {
     setUserImage(e.target.files[0]);
   };
 
-  const handleEvidenceImage = (e) => {
+  const handleEvidenceImage = (e, index) => {
     const newImage = e.target.files[0];
-    setEvidenceImages((prevImages) => {
-      return [...prevImages, newImage];
-    });
-    console.log([...evidenceImages, newImage]);
+
+    const updatedImages = [...evidenceImages];
+    updatedImages[index] = newImage;
+    setEvidenceImages(updatedImages);
+    console.log(`Selected image for evidence ${index + 1}:`, newImage?.name);
   };
 
   const onSubmit = async (data) => {
@@ -63,21 +69,29 @@ const KYC = () => {
     });
 
     try {
-      const response = GLOBAL_SERVICE.post("/auth/v1/kyc", formData, {
+      const response = await GLOBAL_SERVICE.post("/auth/v1/kyc", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+      toast.success("Submitted");
       reset();
+      setUserImage(null);
+      setEvidenceImages([]);
+      setError(null);
+
+      if (e1Ref.current) e1Ref.current.value = "";
+      if (e2Ref.current) e2Ref.current.value = "";
+
       refetchNonVerifiedMembers();
       refetchUserProfile();
     } catch (error) {
-      console.log(error);
-      if (error && error.status === 400) {
-        alert("400");
+      toast.error("Please try again!");
+      if (error.status === 400) {
+        toast.error("Invalid values!");
       }
-      if (error && error.status === 500) {
-        alert("500");
+      if (error.status === 500) {
+        toast.error("Internal Server Error!");
       }
     }
   };
@@ -173,12 +187,12 @@ const KYC = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="image">Evidence One</Label>
+                  <Label htmlFor="e1-image">Evidence One</Label>
                   <Input
                     id="e1-image"
                     type="file"
-                    defaultValue=""
-                    onChange={handleEvidenceImage}
+                    onChange={(e) => handleEvidenceImage(e, 0)}
+                    ref={e1Ref}
                     accept="image/jpeg, image/png"
                     required
                   />
@@ -186,12 +200,11 @@ const KYC = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="image">Evidence Two</Label>
+                  <Label htmlFor="e2-image">Evidence Two</Label>
                   <Input
                     id="e2-image"
                     type="file"
-                    defaultValue=""
-                    onChange={handleEvidenceImage}
+                    onChange={(e) => handleEvidenceImage(e, 1)}
                     accept="image/jpeg, image/png"
                     required
                   />
@@ -203,7 +216,6 @@ const KYC = () => {
                   <Input
                     id="description"
                     type="text"
-                    defaultValue=""
                     {...register("description", {
                       required: "Please enter description",
                       minLength: {
@@ -217,10 +229,23 @@ const KYC = () => {
               </div>
               <DialogFooter className="grid grid-cols-4">
                 <DialogClose asChild>
-                  <Button className="grid col-span-2">Close</Button>
+                  <Button
+                    className="grid col-span-2"
+                    onClick={() => {
+                      reset();
+                      setUserImage(null);
+                      setEvidenceImages([]);
+                      setError(null);
+
+                      if (e1Ref.current) e1Ref.current.value = "";
+                      if (e2Ref.current) e2Ref.current.value = "";
+                    }}
+                  >
+                    Close
+                  </Button>
                 </DialogClose>
                 <Button type="submit" className="grid col-span-2">
-                  Add
+                  Submit
                 </Button>
               </DialogFooter>
             </form>
