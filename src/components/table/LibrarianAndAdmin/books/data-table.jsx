@@ -17,6 +17,13 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import AddBook from "@/features/LibrarianAndAdmin/Books/AddBook";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function DataTable({ columns, data = [] }) {
   const [columnFilters, setColumnFilters] = useState([]);
@@ -35,8 +42,8 @@ export function DataTable({ columns, data = [] }) {
   });
 
   return (
-    <div>
-      <div className="flex items-center py-1 justify-between pb-4">
+    <div className="border-gray-200 shadow-lg">
+      <div className="flex items-center py-1 justify-between pb-4 border px-4 ">
         <h1 className="text-2xl font-medium">Available Books</h1>
         <Input
           className="w-1/4 h-10 bg-white"
@@ -47,7 +54,16 @@ export function DataTable({ columns, data = [] }) {
           }
         />
         <div className="flex gap-2.5">
-          <Button className="opacity-90">Filter</Button>
+          <Select className="">
+            <SelectTrigger className="w-[160px] bg-white border border-gray-300">
+              <SelectValue placeholder="Select Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="light">Light</SelectItem>
+              <SelectItem value="dark">Dark</SelectItem>
+              <SelectItem value="system">System</SelectItem>
+            </SelectContent>
+          </Select>
           <AddBook />
         </div>
       </div>

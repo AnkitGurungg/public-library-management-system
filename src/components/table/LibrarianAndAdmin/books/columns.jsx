@@ -14,6 +14,11 @@ export const columns = [
   },
 
   {
+    accessorKey: "author",
+    header: "Author",
+  },
+
+  {
     header: "Category",
     cell: ({ row }) => row.original.category?.name || "",
   },

@@ -61,7 +61,10 @@ const BookCard = ({ curBook }) => {
 
   return (
     <div className="max-w-sm overflow-hidden mb-3 transition-transform duration-300 group hover:-translate-y-1">
-      <div className="pb-2 cursor-pointer overflow-hidden" onClick={specificBookDetails}>
+      <div
+        className="pb-2 cursor-pointer overflow-hidden"
+        onClick={specificBookDetails}
+      >
         <img
           src={`${BACKEND_SERVER_BASE_URL}${imageURL}`}
           alt="Book img"

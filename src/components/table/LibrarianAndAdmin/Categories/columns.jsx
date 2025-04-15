@@ -1,6 +1,7 @@
 import Delete from "@/components/Delete";
 import UpdateCategory from "@/features/LibrarianAndAdmin/Categories/UpdateCategory";
 import ViewCategory from "@/features/LibrarianAndAdmin/Categories/ViewCategory";
+import { ChevronsUpDown } from "lucide-react";
 
 export const columns = [
   {
@@ -15,22 +16,70 @@ export const columns = [
 
   {
     accessorKey: "startingNumber",
-    header: "Starting Number",
+    header: ({ column }) => {
+      return (
+        <div className="flex justify-center w-full text-center">
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Starting Number
+            <ChevronsUpDown className="ml-2 h-4 w-4" />
+          </span>
+        </div>
+      );
+    },
   },
 
   {
     accessorKey: "endingNumber",
-    header: "Ending Number",
+    header: ({ column }) => {
+      return (
+        <div className="flex justify-center w-full text-center">
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Ending Number
+            <ChevronsUpDown className="ml-2 h-4 w-4" />
+          </span>
+        </div>
+      );
+    },
   },
 
   {
     accessorKey: "addedDate",
-    header: "Added Date",
+    header: ({ column }) => {
+      return (
+        <div className="flex justify-center w-full text-center">
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Added Date
+            <ChevronsUpDown className="ml-2 h-4 w-4" />
+          </span>
+        </div>
+      );
+    },
   },
 
   {
     accessorKey: "updatedDate",
-    header: "Updated Date",
+    header: ({ column }) => {
+      return (
+        <div className="flex justify-center w-full text-center">
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Updated Date
+            <ChevronsUpDown className="ml-2 h-4 w-4" />
+          </span>
+        </div>
+      );
+    },
   },
 
   {
