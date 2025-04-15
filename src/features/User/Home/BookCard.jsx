@@ -60,15 +60,15 @@ const BookCard = ({ curBook }) => {
   };
 
   return (
-    <div className="max-w-sm overflow-hidden mb-3 transition-transform duration-300 hover:-translate-y-1">
-      <div className="pb-2 cursor-pointer" onClick={specificBookDetails}>
+    <div className="max-w-sm overflow-hidden mb-3 transition-transform duration-300 group hover:-translate-y-1">
+      <div className="pb-2 cursor-pointer overflow-hidden" onClick={specificBookDetails}>
         <img
           src={`${BACKEND_SERVER_BASE_URL}${imageURL}`}
           alt="Book img"
-          className="aspect-[9/16] object-cover drop-shadow-md"
+          className="aspect-[10/16] object-cover drop-shadow-md group-hover:scale-105 duration-500"
           priority="true"
         />
-        <h2 className="text-base font-bold line-clamp-1">{title}</h2>
+        <h2 className="text-base font-bold line-clamp-1 mt-2">{title}</h2>
         <p className="text-gray-600 text-base">by {author}</p>
       </div>
 

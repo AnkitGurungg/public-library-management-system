@@ -22,7 +22,7 @@ import {
   ShieldUser,
 } from "lucide-react";
 import { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const ASidebar = () => {
   const { userInfo, loading } = useContext(UserContext);
@@ -39,107 +39,6 @@ const ASidebar = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    // <div className="w-64 h-screen bg-white text-black fixed top-0 left-0 flex-col justify-between">
-    //   <div className="h-16">
-    //     <Link to="/librarian">
-    //       <img src="../../../react.svg" alt="Logo" className="mb-6" />
-    //     </Link>
-    //   </div>
-    //   <div>
-    //     <div className="py-2">
-    //       <Link
-    //         to="/librarian"
-    //         className="py-2 px-4 hover:bg-gray-600 hover:text-white flex flex-row items-center rounded"
-    //         activeclassname="bg-blue-600"
-    //       >
-    //         <LayoutDashboard className="mr-2" />
-    //         Dashboard
-    //       </Link>
-    //     </div>
-    //     <div className="py-2">
-    //       <Link
-    //         to="/librarian/catalog"
-    //         className="py-2 px-4 hover:bg-gray-600 hover:text-white flex flex-row items-center rounded"
-    //         activeclassname="bg-blue-600"
-    //       >
-    //         <Compass className="mr-2" />
-    //         Catalog
-    //       </Link>
-    //     </div>
-    //     <div>
-    //       <div className="py-2">
-    //         <Link
-    //           to="/librarian/books"
-    //           className="py-2 px-4 hover:bg-gray-600 hover:text-white flex flex-row items-center rounded"
-    //           activeclassname="bg-blue-600"
-    //         >
-    //           <BookOpenText className="mr-2" />
-    //           Books
-    //         </Link>
-    //       </div>
-    //       <div className="py-2">
-    //         <Link
-    //           to="/librarian/members"
-    //           className="py-2 px-4 hover:bg-gray-600 hover:text-white flex flex-row items-center rounded"
-    //           activeclassname="bg-blue-600"
-    //         >
-    //           <Users className="mr-2" />
-    //           Members
-    //         </Link>
-    //       </div>
-    //       <div className="py-2">
-    //         <Link
-    //           to="/librarian/categories"
-    //           className="py-2 px-4 hover:bg-gray-600 hover:text-white flex flex-row items-center rounded"
-    //           activeclassname="bg-blue-600"
-    //         >
-    //           <Component className="mr-2" />
-    //           Categories
-    //         </Link>
-    //       </div>
-    //       <div className="py-2">
-    //         <Link
-    //           to="/librarian/fines"
-    //           className="py-2 px-4 hover:bg-gray-600 hover:text-white flex flex-row items-center rounded"
-    //           activeclassname="bg-blue-600"
-    //         >
-    //           <Coins className="mr-2" />
-    //           Fines
-    //         </Link>
-    //       </div>
-    //       <div className="py-2">
-    //         <Link
-    //           to="/librarian/shelfs"
-    //           className="py-2 px-4 hover:bg-gray-600 hover:text-white flex flex-row items-center rounded"
-    //           activeclassname="bg-blue-600"
-    //         >
-    //           <SquareLibrary className="mr-2" />
-    //           Shelfs
-    //         </Link>
-    //       </div>
-
-    //       {/* {userRole === "ROLE_ADMIN" && ( */}
-    //       <div>
-    //         <div className="py-2">
-    //           <Link
-    //             to="/admin/librarians"
-    //             className="py-2 px-4 hover:bg-gray-700 hover:text-white flex flex-row items-center rounded"
-    //             activeclassname="bg-blue-600"
-    //           >
-    //             <UserCog className="mr-2" />
-    //             Librarians
-    //           </Link>
-    //         </div>
-    // <HoverReports />
-    //       </div>
-    //       {/* )} */}
-    //     </div>
-    //   </div>
-    //   <div className="py-2">
-    //     <HoverSettings />
-    //   </div>
-    // </div>
-
     <div className="fixed top-0 left-0 z-40 h-screen bg-white transition-transform duration-300 ease-in-out text-black p-4 w-64">
       <div className="flex flex-col h-full justify-between">
         <div>
@@ -156,68 +55,108 @@ const ASidebar = () => {
 
           <div className="flex flex-col gap-6 overflow-y-auto">
             <div className="flex flex-col gap-1 text-black/80">
-              <Link
+              <NavLink
                 to="/admin"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                end
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black"
+                    : "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                }
               >
                 <LayoutDashboard size={20} />
                 <span>Dashboard</span>
-              </Link>
+              </NavLink>
 
-              <Link
+              <NavLink
                 to="/admin/catalog"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
+                end
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
+                    : "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                }
               >
                 <Compass size={20} />
                 <span>Catalog</span>
-              </Link>
+              </NavLink>
 
-              <Link
+              <NavLink
                 to="/admin/books"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
+                end
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black"
+                    : "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                }
               >
                 <BookOpenText size={20} />
                 <span>Books</span>
-              </Link>
+              </NavLink>
 
-              <Link
+              <NavLink
                 to="/admin/members"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
+                end
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
+                    : "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                }
               >
                 <Users size={20} />
                 <span>Members</span>
-              </Link>
+              </NavLink>
 
-              <Link
+              <NavLink
                 to="/admin/categories"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
+                end
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
+                    : "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                }
               >
                 <Component size={20} />
                 <span>Categories</span>
-              </Link>
+              </NavLink>
 
-              <Link
+              <NavLink
                 to="/admin/fines"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
+                end
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
+                    : "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                }
               >
                 <Coins size={20} />
                 <span>Fines</span>
-              </Link>
+              </NavLink>
 
-              <Link
+              <NavLink
                 to="/admin/shelfs"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
+                end
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
+                    : "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                }
               >
                 <SquareLibrary size={20} />
                 <span>Shelfs</span>
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to="/admin/librarians"
-                className="flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
+                end
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
+                    : "flex items-center gap-3 px-4 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                }
               >
                 <ShieldUser size={20} />
                 <span>Librarians</span>
-              </Link>
+              </NavLink>
 
               <div className="mb-2">
                 <button
@@ -242,20 +181,30 @@ const ASidebar = () => {
                     reportsOpen ? "block" : "hidden"
                   }`}
                 >
-                  <Link
+                  <NavLink
                     to="reports/members-report"
-                    className="flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
+                    end
+                    className={({ isActive }) =>
+                      isActive
+                        ? "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
+                        : "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                    }
                   >
                     <UserCog size={20} />
                     Members Report
-                  </Link>
-                  <Link
+                  </NavLink>
+                  <NavLink
                     to="reports/fines-report"
-                    className="flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black"
+                    end
+                    className={({ isActive }) =>
+                      isActive
+                        ? "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
+                        : "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                    }
                   >
                     <FaMoneyBillTrendUp size={20} />
                     Fines Report
-                  </Link>
+                  </NavLink>
                 </div>
               </div>
             </div>
