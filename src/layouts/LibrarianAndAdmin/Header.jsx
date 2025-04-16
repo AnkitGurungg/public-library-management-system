@@ -1,10 +1,15 @@
-import { useState, useEffect } from "react";
+import { UserContext } from "@/contexts/UserContext";
+import { Menu } from "lucide-react";
+import { useState, useEffect, useContext } from "react";
 
-const Header = () => {
+
+const Header = ({sidebarToggle, setSidebarToggle}) => {
   const [currentDate, setCurrentDate] = useState("");
   const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
+    // const {}= useContext(UserContext);
+
     const updateDateTime = () => {
       const now = new Date();
       const formattedDate = now.toLocaleDateString("en-US", {
@@ -30,12 +35,19 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="border-l-1 border-grey-900 bg-white drop-shadow-sm">
-      <div className="flex flex-col w-[100px] justify-center ml-1 p-1">
-        <p className="text-[18px]">{currentTime}</p>
-        <p className="text-[14px]">{currentDate}</p>
+    <div className="px-8 flex justify-between border-l-1 border-grey-900 items-center bg-white drop-shadow-sm h-14">
+      <div className="cursor-pointer"
+      onClick={()=> setSidebarToggle(!sidebarToggle)}>
+        <Menu />
       </div>
+
+      <div className="flex items-center gap-3">
+        <img src="/9781786330895-3407.webp" className="w-8 h-8 rounded-full overflow-hidden object-cover" alt="" />
+        
+      </div>
+      
     </div>
+    
   );
 };
 

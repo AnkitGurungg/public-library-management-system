@@ -6,6 +6,7 @@ import {
   getPaginationRowModel,
   useReactTable,
   getFilteredRowModel,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -27,6 +28,7 @@ export function DataTable({ columns, data = [] }) {
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
 
     state: {
       columnFilters,
@@ -36,9 +38,8 @@ export function DataTable({ columns, data = [] }) {
   return (
     <div>
       <div className="flex items-center py-1 justify-between pb-4">
-        <h1 className="text-2xl font-medium">Fines</h1>
         <Input
-          className="w-1/4 h-10 bg-white"
+          className="w-1/3 h-10 bg-white"
           placeholder="Search by user name..."
           value={table.getColumn("userName")?.getFilterValue() ?? ""}
           onChange={(event) =>
@@ -51,7 +52,7 @@ export function DataTable({ columns, data = [] }) {
         </div>
       </div>
       <div className="rounded-md">
-        <Table className="">
+        <Table>
           <TableHeader className="border-b-[2px] border-[rgba(0,0,0,0.5)] text-black font-bold">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -59,7 +60,7 @@ export function DataTable({ columns, data = [] }) {
                   return (
                     <TableHead
                       key={header.id}
-                      className="text-black font-medium  uppercase"
+                      className="text-gray-700 font-medium uppercase"
                     >
                       {header.isPlaceholder
                         ? null

@@ -24,7 +24,7 @@ import {
 import { useState, useEffect, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
-const ASidebar = () => {
+const ASidebar = ({sidebarToggle}) => {
   const { userInfo, loading } = useContext(UserContext);
   const [userRole, setUserRole] = useState(userInfo.role);
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ const ASidebar = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="fixed top-0 left-0 z-40 h-screen bg-white transition-transform duration-300 ease-in-out text-black p-4 w-64 shadow-sm">
+    <div className={`fixed top-0 p-3 left-0 z-40 h-screen w-64 transition-transform duration-300 ease-in-out shadow-lg bg-white text-black ${sidebarToggle ? "-translate-x-full" : "translate-x-0"}`}>
       <div className="flex flex-col h-full justify-between">
         <div>
           <div className="flex items-center justify-between mb-0">

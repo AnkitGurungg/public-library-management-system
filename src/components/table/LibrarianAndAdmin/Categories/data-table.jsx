@@ -193,7 +193,7 @@ export function DataTable({ columns, data }) {
 
       <div className="rounded-md">
         <Table>
-          <TableHeader className="border-b-[2px] border-[rgba(0,0,0,0.5)] text-black font-bold">
+          <TableHeader className="border-b-[2px] border-[rgba(0,0,0,0.5)]">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

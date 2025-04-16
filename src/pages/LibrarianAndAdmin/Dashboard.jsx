@@ -3,12 +3,7 @@ import useFetchCountVm from "@/hooks/Dashboard/useFetchCountVm";
 import useFetchCountNonVm from "@/hooks/Dashboard/useFetchCountNonVm";
 import useFetchCountBooks from "@/hooks/Dashboard/useFetchCountBooks";
 import useFetchCountBorrowedBooks from "@/hooks/Dashboard/useFetchCountBorrowedBooks";
-import {
-  BookOpenText,
-  BookText,
-  UserCheck,
-  UserRoundX,
-} from "lucide-react";
+import { BookOpenText, BookText, UserCheck, UserRoundX } from "lucide-react";
 // import CategoryStatsChart from "@/features/LibrarianAndAdmin/Dashboard/CategoryStatsChart";
 
 const Dashboard = () => {
@@ -43,9 +38,9 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <section>
+    <section className="">
       <div className="flex flex-row items-center justify-center gap-5">
-        <div className="flex flex-row items-center gap-1 bg-white w-[220px] h-[60px] rounded-xl">
+        <div className="flex flex-row items-center gap-1 w-[220px] h-[60px] rounded-xl bg-white">
           <div className="flex justify-center items-center">
             <UserRoundX className="" />
           </div>

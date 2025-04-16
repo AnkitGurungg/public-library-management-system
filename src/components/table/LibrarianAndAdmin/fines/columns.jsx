@@ -1,6 +1,7 @@
 import Delete from "@/components/Delete";
 import UpdateBook from "@/features/LibrarianAndAdmin/Books/UpdateBook";
 import ViewBook from "@/features/LibrarianAndAdmin/Books/ViewBook";
+import { ChevronsUpDown } from "lucide-react";
 
 export const columns = [
   {
@@ -30,23 +31,101 @@ export const columns = [
   },
 
   {
-    header: "Borrow Date",
-    cell: ({ row }) => row?.original?.returns?.borrows?.borrowDate || "N/A",
+    id: "borrowDate",
+    accessorFn: (row) => {
+      const date = row?.returns?.borrows?.borrowDate;
+      return date ? new Date(date).getTime() : null;
+    },
+    header: ({ column }) => (
+      <div className="flex justify-center w-full text-center">
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Borrow Date
+          <ChevronsUpDown className="ml-2 h-4 w-4" />
+        </span>
+      </div>
+    ),
+    cell: ({ row }) => {
+      const date = row.original?.returns?.borrows?.borrowDate;
+      return date || "N/A";
+    },
   },
 
   {
-    header: "Due Date",
-    cell: ({ row }) => row?.original?.returns?.returnDate || "N/A",
+    id: "dueDate",
+    accessorFn: (row) => {
+      const date = row?.returns?.borrows?.dueDate;
+      return date ? new Date(date).getTime() : null;
+    },
+    header: ({ column }) => (
+      <div className="flex justify-center w-full text-center">
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Due Date
+          <ChevronsUpDown className="ml-2 h-4 w-4" />
+        </span>
+      </div>
+    ),
+    cell: ({ row }) => {
+      const date = row.original?.returns?.borrows?.dueDate;
+      return date || "N/A";
+    },
+  },
+
+  // {
+  //   header: "Amount",
+  //   cell: ({ row }) => row?.original?.totalFine || "N/A",
+  // },
+
+  {
+    accessorFn: (row) => row?.totalFine ?? null,
+    id: "amount",
+    header: ({ column }) => (
+      <div className="flex justify-center w-full text-center">
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Amount
+          <ChevronsUpDown className="ml-2 h-4 w-4" />
+        </span>
+      </div>
+    ),
+    cell: ({ row }) => row?.original?.totalFine ?? "N/A",
+    sortingFn: (rowA, rowB, columnId) => {
+      const a = rowA.getValue(columnId) ?? Infinity;
+      const b = rowB.getValue(columnId) ?? Infinity;
+      return a - b;
+    },
   },
 
   {
-    header: "Amount",
-    cell: ({ row }) => row?.original?.totalFine || "N/A",
-  },
-
-  {
-    header: "Returned Date",
-    cell: ({ row }) => row?.original?.returns?.borrows?.dueDate || "N/A",
+    id: "returnDate",
+    accessorFn: (row) => {
+      const date = row?.returns?.returnDate;
+      return date ? new Date(date).getTime() : null;
+    },
+    header: ({ column }) => (
+      <div className="flex justify-center w-full text-center">
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Due Date
+          <ChevronsUpDown className="ml-2 h-4 w-4" />
+        </span>
+      </div>
+    ),
+    cell: ({ row }) => {
+      const date = row.original?.returns?.returnDate;
+      return date || "N/A";
+    },
   },
 
   {
