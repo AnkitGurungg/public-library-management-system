@@ -10,7 +10,7 @@ const Catalog = () => {
   const [showOB, setShowOB] = useState(false);
 
   return (
-    <div class="w-full overflow-hidden">
+    <div class="w-full overflow-hidden min-h-screen">
       <div className="flex flex-row gap-80">
         <div className="flex flex-row items-center gap-2">
           <Button

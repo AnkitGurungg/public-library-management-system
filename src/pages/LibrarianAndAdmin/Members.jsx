@@ -11,7 +11,7 @@ const Members = () => {
   const [showNONVM, setNONVmShow] = useState(true);
 
   return (
-    <div>
+    <div className="min-h-screen">
       <div className="flex flex-row items-center gap-4">
         <Button
           onClick={() => {

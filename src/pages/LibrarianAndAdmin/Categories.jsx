@@ -127,7 +127,7 @@ const Categories = () => {
     //   </div>
     // </div>
 
-    <section>
+    <section className="min-h-screen">
       {categories?.data && (
         <div>
           <DataTable columns={columns} data={categories?.data} />

@@ -100,7 +100,7 @@ const Librarians = () => {
 
     <section>
       {librarians?.data && (
-        <div>
+        <div className="h-screen">
           <DataTable columns={columns} data={librarians?.data} />
         </div>
       )}

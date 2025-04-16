@@ -86,7 +86,7 @@ const Fines = () => {
     //   </div>
     // </section>
 
-    <section>
+    <section className="min-h-screen">
       {fines?.data && (
         <div>
           <DataTable columns={columns} data={fines?.data} />
