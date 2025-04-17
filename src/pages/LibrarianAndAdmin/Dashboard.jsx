@@ -27,6 +27,7 @@ import {
   BookOpen,
   Book,
 } from "lucide-react";
+import BorrowBarChart from "./BorrowBarChart";
 
 function Dashboard() {
   const [chartData, setChartData] = useState([]);
@@ -221,6 +222,7 @@ function Dashboard() {
             </div>
           </CardFooter>
         </Card>
+        <BorrowBarChart />
       </div>
     </section>
   );
