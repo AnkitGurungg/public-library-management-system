@@ -192,36 +192,36 @@ const ASidebar = ({ sidebarToggle }) => {
                       end
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
-                          : "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                          ? "flex items-center gap-2 px-3 ml-3 py-3 rounded-md text-sm transition-colors font-medium bg-[#d9d9d9] text-black "
+                          : "flex items-center gap-2 px-3 ml-3 py-3 rounded-md text-sm transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
                       }
                     >
-                      <FaMoneyBillTrendUp size={20} />
+                      <FaMoneyBillTrendUp size={15} />
                       Most Popular Category
                     </NavLink>
                     <NavLink
-                      to="reports/members-report"
+                      to="reports/most-borrowing-members"
                       end
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
-                          : "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                          ? "flex items-center gap-2 px-3 ml-3 py-3 rounded-md text-sm transition-colors font-medium bg-[#d9d9d9] text-black w-f"
+                          : "flex items-center gap-2 px-3 ml-3 py-3 rounded-md text-sm transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
                       }
                     >
-                      <UserCog size={20} />
-                      Members Report
+                      <UserCog size={15} />
+                      Most Borrowing Members
                     </NavLink>
                     <NavLink
-                      to="reports/fines-report"
+                      to="reports/member-unpaid-fines"
                       end
                       className={({ isActive }) =>
                         isActive
-                          ? "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
-                          : "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                          ? "flex items-center gap-2 px-3 ml-3 py-3 rounded-md text-sm transition-colors font-medium bg-[#d9d9d9] text-black "
+                          : "flex items-center gap-2 px-3 ml-3 py-3 rounded-md text-sm transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
                       }
                     >
-                      <FaMoneyBillTrendUp size={20} />
-                      Fines Report
+                      <FaMoneyBillTrendUp size={15} />
+                      Member Unpaid Fines
                     </NavLink>
                   </div>
                 </ScrollArea>
