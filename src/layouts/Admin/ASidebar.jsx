@@ -23,8 +23,9 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-const ASidebar = ({sidebarToggle}) => {
+const ASidebar = ({ sidebarToggle }) => {
   const { userInfo, loading } = useContext(UserContext);
   const [userRole, setUserRole] = useState(userInfo.role);
   const navigate = useNavigate();
@@ -39,7 +40,11 @@ const ASidebar = ({sidebarToggle}) => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className={`fixed top-0 p-3 left-0 z-40 h-screen w-64 transition-transform duration-300 ease-in-out shadow-lg bg-white text-black ${sidebarToggle ? "-translate-x-full" : "translate-x-0"}`}>
+    <div
+      className={`fixed top-0 p-3 left-0 z-40 h-screen w-64 transition-transform duration-300 ease-in-out shadow-lg bg-white text-black ${
+        sidebarToggle ? "-translate-x-full" : "translate-x-0"
+      }`}
+    >
       <div className="flex flex-col h-full justify-between">
         <div>
           <div className="flex items-center justify-between mb-0">
@@ -176,42 +181,58 @@ const ASidebar = ({sidebarToggle}) => {
                     }`}
                   />
                 </button>
-                <div
-                  className={`mt-2 space-y-1 ${
-                    reportsOpen ? "block" : "hidden"
-                  }`}
-                >
-                  <NavLink
-                    to="reports/members-report"
-                    end
-                    className={({ isActive }) =>
-                      isActive
-                        ? "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
-                        : "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
-                    }
+                <ScrollArea>
+                  <div
+                    className={`mt-2 space-y-1 ${
+                      reportsOpen ? "block" : "hidden"
+                    }`}
                   >
-                    <UserCog size={20} />
-                    Members Report
-                  </NavLink>
-                  <NavLink
-                    to="reports/fines-report"
-                    end
-                    className={({ isActive }) =>
-                      isActive
-                        ? "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
-                        : "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
-                    }
-                  >
-                    <FaMoneyBillTrendUp size={20} />
-                    Fines Report
-                  </NavLink>
-                </div>
+                    <NavLink
+                      to="reports/most-popular-category"
+                      end
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
+                          : "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                      }
+                    >
+                      <FaMoneyBillTrendUp size={20} />
+                      Most Popular Category
+                    </NavLink>
+                    <NavLink
+                      to="reports/members-report"
+                      end
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
+                          : "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                      }
+                    >
+                      <UserCog size={20} />
+                      Members Report
+                    </NavLink>
+                    <NavLink
+                      to="reports/fines-report"
+                      end
+                      className={({ isActive }) =>
+                        isActive
+                          ? "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium bg-[#d9d9d9] text-black "
+                          : "flex items-center gap-3 px-4 ml-5 py-3 rounded-md text-base transition-colors font-medium hover:bg-[#d9d9d9] hover:text-black "
+                      }
+                    >
+                      <FaMoneyBillTrendUp size={20} />
+                      Fines Report
+                    </NavLink>
+                  </div>
+                </ScrollArea>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="pt-6 border-t border-white/10 text-center text-xs text-white/40"></div>
+        <div className="pt-6 border-t border-white/10 text-center text-xs text-white/40 bg-red-700">
+          bijj hhkhk jj
+        </div>
       </div>
     </div>
   );
