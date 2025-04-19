@@ -19,7 +19,9 @@ export const columns = [
   },
 
   {
+    id: "category",
     header: "Category",
+    accessorFn: (row) => row?.category?.name || "",
     cell: ({ row }) => row.original.category?.name || "",
   },
 

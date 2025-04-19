@@ -28,6 +28,11 @@ import {
 export function DataTable({ columns, data = [] }) {
   const [columnFilters, setColumnFilters] = useState([]);
 
+  // Get unique categories from the data
+  const categories = [
+    ...new Set(data.map((book) => book.category?.name).filter(Boolean)),
+  ];
+
   const table = useReactTable({
     data,
     columns,
@@ -35,11 +40,21 @@ export function DataTable({ columns, data = [] }) {
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-
     state: {
       columnFilters,
     },
   });
+
+  // Handle category filter change
+  const handleCategoryFilter = (value) => {
+    if (value === "all") {
+      // Clear the category filter
+      table.getColumn("category.name")?.setFilterValue(undefined);
+    } else {
+      // Set the category filter
+      table.getColumn("category.name")?.setFilterValue(value);
+    }
+  };
 
   return (
     <div className="">
@@ -53,16 +68,38 @@ export function DataTable({ columns, data = [] }) {
           }
         />
         <div className="flex gap-2.5">
-          <Select className="">
+          {/* <Select onValueChange={handleCategoryFilter}>
             <SelectTrigger className="w-[160px] bg-white border border-gray-300 h-[39px]">
               <SelectValue placeholder="Select Category" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="light">Light</SelectItem>
-              <SelectItem value="dark">Dark</SelectItem>
-              <SelectItem value="system">System</SelectItem>
+              <SelectItem value="all">All Categories</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category} value={category}>
+                  {category}
+                </SelectItem>
+              ))}
             </SelectContent>
-          </Select>
+          </Select> */}
+
+          <select
+            className="border rounded px-3 py-2"
+            value={table.getColumn("category")?.getFilterValue() ?? ""}
+            onChange={(e) =>
+              table.getColumn("category")?.setFilterValue(e.target.value)
+            }
+          >
+            <option value="" disabled selected>
+              Select Category
+            </option>
+            <option value="">ALL</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+
           <AddBook />
         </div>
       </div>
