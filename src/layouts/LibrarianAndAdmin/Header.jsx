@@ -35,7 +35,7 @@ const Header = ({sidebarToggle, setSidebarToggle}) => {
   }, []);
 
   return (
-    <div className="px-8 flex justify-between border-l-1 border-grey-900 items-center bg-white drop-shadow-sm h-14">
+    <div className="px-8 flex justify-between border-l-1 border-grey-900 items-center bg-white drop-shadow-sm h-16">
       <div className="cursor-pointer"
       onClick={()=> setSidebarToggle(!sidebarToggle)}>
         <Menu />

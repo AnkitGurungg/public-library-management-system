@@ -3,17 +3,32 @@ import Header from "../LibrarianAndAdmin/Header";
 import ASidebar from "../Admin/ASidebar";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/contexts/UserContext";
+import LSidebar from "./LSidebar";
 
 const LAppLayout = () => {
-  const { userInfo, loading } = useContext(UserContext);
-  const nagivate = useNavigate();
-
   const [sidebarToggle, setSidebarToggle] = useState(false);
-  console.log(sidebarToggle);
+
+  const { token, setToken, loading, userInfo, getUserInfo } =
+    useContext(UserContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (loading) {
+      return;
+    }
+    if (!userInfo || userInfo.role !== "ROLE_LIBRARIAN") {
+      // toast.error("Forbidden!");
+      navigate("/");
+    }
+  }, [userInfo, loading]);
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <div className="flex">
-      <ASidebar sidebarToggle={sidebarToggle} />
+      <LSidebar sidebarToggle={sidebarToggle} />
       <div
         className={`w-full  transition-all duration-200 ${
           sidebarToggle ? "" : "ml-64"
