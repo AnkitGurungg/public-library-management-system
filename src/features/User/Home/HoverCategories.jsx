@@ -5,6 +5,8 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import useFetchDisplayCategory from "@/hooks/useFetchDisplayCategory";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const HoverCategories = () => {
@@ -17,14 +19,16 @@ const HoverCategories = () => {
     error,
   } = useFetchDisplayCategory();
 
+  const [hover, setHover] = useState(false);
+
   return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
+    <HoverCard onOpenChange={setHover} >
+       <HoverCardTrigger asChild>
         <Button
           variant="link"
           className="font-medium text-[17px] hover:text-[#206ea6]"
         >
-          Books
+          Books {hover ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </Button>
       </HoverCardTrigger>
       <HoverCardContent className="w-80 max-h-80 overflow-y-auto">
@@ -33,7 +37,7 @@ const HoverCategories = () => {
           Array.isArray(displayCategory?.data) &&
           displayCategory?.data?.length !== 0 ? (
             displayCategory?.data?.map((element) => (
-              <div className="" key={element.categoryId}>
+              <div className="hover:bg-gray-100 px-3" key={element.categoryId}>
                 <button
                   key={element.categoryId}
                   value={element.categoryId}
@@ -41,7 +45,7 @@ const HoverCategories = () => {
                     navigate(`/books/genres/${element.categoryId}`)
                   }
                 >
-                  <h4 className="text-[20px] font-semibold">{element.name}</h4>
+                  <h4 className="text-base font-sans">{element.name}</h4>
                 </button>
               </div>
             ))

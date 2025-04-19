@@ -19,8 +19,6 @@ const BookCard = ({ curBook }) => {
     setToken(localStorage.getItem("Authorization"));
   }, []);
 
-  console.log(memberWishList);
-
   const specificBookDetails = () => {
     navigate(`/books/book/${curBook.bookId}`);
   };
