@@ -26,7 +26,7 @@ const BorrowedBooks = () => {
   }
 
   return (
-    <div className="bg-white mt-4 rounded-[8px]">
+    <div className="bg-white mt-3 rounded-[8px]">
       <DataTable columns={columns} data={borrowedBooks?.data || []} />
     </div>
   );

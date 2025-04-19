@@ -10,9 +10,9 @@ const Catalog = () => {
   const [showOB, setShowOB] = useState(false);
 
   return (
-    <div class="w-full overflow-hidden min-h-screen">
-      <div className="flex flex-row gap-80">
-        <div className="flex flex-row items-center gap-2">
+    <div class="w-full min-h-screen">
+      <div className="flex justify-between">
+        <div className="flex gap-3">
           <Button
             onClick={() => {
               setShowBB(true);
@@ -21,7 +21,6 @@ const Catalog = () => {
           >
             Borrowed Books
           </Button>
-
           <Button
             onClick={() => {
               setShowBB(false);
@@ -32,16 +31,9 @@ const Catalog = () => {
             Overdue books
           </Button>
         </div>
-
-        <div className="flex flex-row gap-2">
-          <BorrowBook />
-          <Input
-            type="number"
-            placeholder="Search here"
-            className="bg-white w-[240px]"
-          />
-        </div>
+        <BorrowBook />
       </div>
+
       {showBB && <BorrowedBooks />}
       {showOB && <OverdueBooks />}
     </div>
