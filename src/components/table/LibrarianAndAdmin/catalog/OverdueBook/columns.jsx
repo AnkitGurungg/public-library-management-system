@@ -1,21 +1,32 @@
-import Delete from "@/components/Delete";
-import UpdateCategory from "@/features/LibrarianAndAdmin/Categories/UpdateCategory";
-import ViewCategory from "@/features/LibrarianAndAdmin/Categories/ViewCategory";
-import { ChevronsUpDown } from "lucide-react";
+import ReturnBook from "@/features/LibrarianAndAdmin/Catalog/ReturnBook";
+import { ChevronsUpDown, CircleCheckBig } from "lucide-react";
+
+import { CheckCircle, XCircle } from "lucide-react";
 
 export const columns = [
   {
-    accessorKey: "categoryId",
-    header: "ID",
+    id: "bookId",
+    header: "Book ID",
+    cell: ({ row }) => row?.original?.borrowBooks?.bookId || "",
   },
 
   {
-    accessorKey: "name",
+    accessorKey: "userId",
+    header: "User ID",
+    cell: ({ row }) => row?.original?.borrowUsers?.userId || "",
+  },
+
+  {
+    id: "name",
+    accessorFn: (row) => row?.borrowUsers?.name || "",
     header: "Name",
+    cell: ({ row }) => row?.original?.borrowUsers?.name || "",
   },
 
   {
-    accessorKey: "startingNumber",
+    id: "borrowedDate",
+    cell: ({ row }) => row?.original?.borrowDate || "",
+    accessorFn: (row) => row?.borrowDate || "",
     header: ({ column }) => {
       return (
         <div className="flex justify-center w-full text-center">
@@ -23,7 +34,7 @@ export const columns = [
             className="flex items-center cursor-pointer"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Starting Number
+            Borrowed Date
             <ChevronsUpDown className="ml-2 h-4 w-4" />
           </span>
         </div>
@@ -32,7 +43,9 @@ export const columns = [
   },
 
   {
-    accessorKey: "endingNumber",
+    id: "dueDate",
+    cell: ({ row }) => row?.original?.dueDate || "",
+    accessorFn: (row) => row?.dueDate || "",
     header: ({ column }) => {
       return (
         <div className="flex justify-center w-full text-center">
@@ -40,7 +53,7 @@ export const columns = [
             className="flex items-center cursor-pointer"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Ending Number
+            Due Date
             <ChevronsUpDown className="ml-2 h-4 w-4" />
           </span>
         </div>
@@ -49,53 +62,59 @@ export const columns = [
   },
 
   {
-    accessorKey: "addedDate",
-    header: ({ column }) => {
-      return (
-        <div className="flex justify-center w-full text-center">
-          <span
-            className="flex items-center cursor-pointer"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Added Date
-            <ChevronsUpDown className="ml-2 h-4 w-4" />
-          </span>
-        </div>
-      );
-    },
+    id: "extended",
+    accessorFn: (row) => String(row?.extended) || "",
+    header: "Extended",
+    cell: ({ row }) =>
+      row?.original?.extended ? (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-sm font-medium text-green-700 bg-green-100 rounded-md">
+          <CheckCircle size={16} className="text-green-500" />
+          YES
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-sm font-medium text-red-700 bg-red-100 rounded-md">
+          <XCircle size={16} className="text-red-500" />
+          NO
+        </span>
+      ),
   },
 
   {
-    accessorKey: "updatedDate",
-    header: ({ column }) => {
-      return (
-        <div className="flex justify-center w-full text-center">
-          <span
-            className="flex items-center cursor-pointer"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Updated Date
-            <ChevronsUpDown className="ml-2 h-4 w-4" />
-          </span>
-        </div>
-      );
-    },
+    id: "returnStatus",
+    accessorFn: (row) => String(row?.returnStatus) || "",
+    header: "Return Status",
+    cell: ({ row }) =>
+      row?.original?.returnStatus ? (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-sm font-medium text-green-700 bg-green-100 rounded-md">
+          <CheckCircle size={16} className="text-green-500" />
+          YES
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-sm font-medium text-red-700 bg-red-100 rounded-md">
+          <XCircle size={16} className="text-red-500" />
+          NO
+        </span>
+      ),
   },
 
   {
     header: "Action",
     cell: ({ row }) => {
-      const category = row.original;
-      console.log(category);
-      return (
-        <div className="flex items-center justify-center gap-2">
-          <ViewCategory id={category?.categoryId} />
-          <UpdateCategory id={category?.categoryId} />
-          <Delete
-            id={category?.categoryId}
-            name={category?.name}
-            type={"category"}
-          />
+      const borrow = row?.original;
+
+      return borrow.returnStatus ? (
+        <div className="relative group">
+          <CircleCheckBig className="text-green-500" />
+          <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Already Returned
+          </span>
+        </div>
+      ) : (
+        <div className="relative group">
+          <ReturnBook id={borrow.borrowId} />
+          <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Return Book
+          </span>
         </div>
       );
     },

@@ -14,6 +14,7 @@ import GlobalService from "@/services/GlobalServices";
 import { useEffect, useState } from "react";
 import { useFetchBorrowedBooks } from "@/hooks/useFetchBorrowedBooks";
 import useFetchOverdueBooks from "@/hooks/useFetchOverdueBooks";
+import toast from "react-hot-toast";
 
 const ReturnBook = ({ id }) => {
   const [open, setOpen] = useState(false);
@@ -36,10 +37,11 @@ const ReturnBook = ({ id }) => {
       refetchOverdueBooks();
       refetchBorrowedBooks();
       setOpen(false);
+      toast.success("Book returned!");
       console.log(response);
     } catch (error) {
       if (error.status === 409) {
-        alert("Coflict, this book is already returned");
+        toast.error("Coflict, this book is already returned");
       }
     }
   };
