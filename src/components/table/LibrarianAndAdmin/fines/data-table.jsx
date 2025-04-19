@@ -20,6 +20,23 @@ import { Input } from "@/components/ui/input";
 
 export function DataTable({ columns, data = [] }) {
   const [columnFilters, setColumnFilters] = useState([]);
+  const [sorting, setSorting] = useState([]);
+
+  const categories = [
+    ...new Set(
+      data
+        .map((fine) => fine?.returns?.borrows?.borrowBooks?.category?.name)
+        .filter(Boolean)
+    ),
+  ];
+
+  const books = [
+    ...new Set(
+      data
+        .map((book) => book?.returns?.borrows?.borrowBooks?.title)
+        .filter(Boolean)
+    ),
+  ];
 
   const table = useReactTable({
     data,
@@ -30,7 +47,11 @@ export function DataTable({ columns, data = [] }) {
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
 
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+
     state: {
+      sorting,
       columnFilters,
     },
   });
@@ -48,7 +69,56 @@ export function DataTable({ columns, data = [] }) {
         />
 
         <div className="flex gap-2.5">
-          <Button className="opacity-90">Filter</Button>
+          <select
+            className="border rounded-lg text-gray-800 px-3 py-2 bg-white"
+            value={table.getColumn("title")?.getFilterValue() ?? ""}
+            onChange={(e) =>
+              table.getColumn("title")?.setFilterValue(e.target.value)
+            }
+          >
+            <option value="" disabled selected>
+              Select title
+            </option>
+            <option value="">ALL</option>
+            {books.map((book) => (
+              <option key={book} value={book}>
+                {book}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="border rounded-lg text-gray-800 px-3 py-2 bg-white"
+            value={table.getColumn("category")?.getFilterValue() ?? ""}
+            onChange={(e) =>
+              table.getColumn("category")?.setFilterValue(e.target.value)
+            }
+          >
+            <option value="" disabled selected>
+              Select category
+            </option>
+            <option value="">ALL</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="border rounded-lg text-gray-800 px-3 py-2 bg-white "
+            value={table.getColumn("status")?.getFilterValue() ?? ""}
+            onChange={(e) =>
+              table.getColumn("status")?.setFilterValue(e.target.value)
+            }
+          >
+            <option value="" disabled selected>
+              Select paid status
+            </option>
+            <option value="">ALL</option>
+            <option value={true}>YES</option>
+            <option value={false}>NO</option>
+          </select>
         </div>
       </div>
       <div className="rounded-md">
