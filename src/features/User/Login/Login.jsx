@@ -18,6 +18,7 @@ import GLOBAL_SERVICE from "@/services/GlobalServices";
 import toast from "react-hot-toast";
 import VerifyEmail from "../Register/VerifyEmail";
 import { CgSpinner } from "react-icons/cg";
+import ForgotPassword from "../ForgotPassword/ForgotPassword";
 
 const Login = ({ isOpenLogin, setIsOpenLogin }) => {
   const { getUserInfo, setToken } = useContext(UserContext);
@@ -25,6 +26,7 @@ const Login = ({ isOpenLogin, setIsOpenLogin }) => {
   // const [open, setOpen] = useState(false);
   const [isOpenRegister, setIsOpenRegister] = useState(false);
   const [isVerifyEmailOpen, setIsVerifyEmailOpen] = useState(false);
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
 
   const {
     register,
@@ -115,6 +117,13 @@ const Login = ({ isOpenLogin, setIsOpenLogin }) => {
 
   return (
     <div>
+      <ForgotPassword
+   setIsForgotPasswordOpen={setIsForgotPasswordOpen}
+   isForgotPasswordOpen={isForgotPasswordOpen}
+   setIsOpenLogin ={setIsOpenLogin }
+      
+      />
+
       <Register
         isOpenRegister={isOpenRegister}
         setIsOpenRegister={setIsOpenRegister}
@@ -207,7 +216,10 @@ const Login = ({ isOpenLogin, setIsOpenLogin }) => {
                 </a>
               </div>
               <div className="flex justify-center">
-                <span className="text-[#196489] cursor-pointer mt-1">
+                <span className="text-[#196489] cursor-pointer mt-1"
+                onClick={()=> {setIsForgotPasswordOpen(true)
+                  setIsOpenLogin(false) }
+                }>
                   Forgot Password ?
                 </span>
               </div>
