@@ -1,6 +1,7 @@
 import Delete from "@/components/Delete";
 import UpdateBook from "@/features/LibrarianAndAdmin/Books/UpdateBook";
 import ViewBook from "@/features/LibrarianAndAdmin/Books/ViewBook";
+import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
 
 export const columns = [
   {
@@ -27,7 +28,19 @@ export const columns = [
 
   {
     accessorKey: "publishedDate",
-    header: "Published Date",
+    header: ({ column }) => {
+      return (
+        <div className="flex justify-center w-full text-center">
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Published Date
+            <ChevronsUpDown className="ml-2 h-4 w-4" />
+          </span>
+        </div>
+      );
+    },
   },
 
   {
@@ -42,18 +55,67 @@ export const columns = [
 
   {
     accessorKey: "quantity",
-    header: "Quantity",
+    header: ({ column }) => {
+      return (
+        <div className="flex justify-center w-full text-center">
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Quantity
+            <ChevronsUpDown className="ml-2 h-4 w-4" />
+          </span>
+        </div>
+      );
+    },
+  },
+
+  {
+    id: "available",
+    accessorFn: (row) => String(row?.available) || "",
+    header: "Available",
+    cell: ({ row }) =>
+      row?.original?.available ? (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">
+          <CheckCircle size={16} className="text-[#206ea6]" />
+          YES
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-md">
+          <XCircle size={16} className="text-red-500" />
+          NO
+        </span>
+      ),
   },
 
   {
     header: "Action",
     cell: ({ row }) => {
       const book = row.original;
+      const isAvailable = book?.available;
       return (
-        <div className="flex items-center justify-center gap-2">
-          <ViewBook id={book.bookId} />
-          <UpdateBook id={book.bookId} />
-          <Delete id={book.bookId} name={book.title} type={"book"} />
+        <div className="flex items-center justify-center gap-1">
+          <div className="opacity-90">
+            <ViewBook id={book.bookId} />
+          </div>
+
+          <button
+            className={`cursor-not-allowed ${
+              !isAvailable ? "opacity-40" : "opacity-90"
+            }`}
+            disabled={!isAvailable}
+          >
+            <UpdateBook id={book.bookId} />
+          </button>
+
+          <button
+            className={`cursor-not-allowed ${
+              !isAvailable ? "opacity-40" : "opacity-90"
+            }`}
+            disabled={!isAvailable}
+          >
+            <Delete Delete id={book.bookId} name={book.title} type={"book"} />
+          </button>
         </div>
       );
     },

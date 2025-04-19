@@ -86,7 +86,7 @@ const UpdateBook = ({ id }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <PencilLine  size={20} />
+        <PencilLine size={20} />
       </DialogTrigger>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>

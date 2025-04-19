@@ -6,6 +6,7 @@ import {
   getPaginationRowModel,
   useReactTable,
   getFilteredRowModel,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -17,16 +18,10 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import AddBook from "@/features/LibrarianAndAdmin/Books/AddBook";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 export function DataTable({ columns, data = [] }) {
   const [columnFilters, setColumnFilters] = useState([]);
+  const [sorting, setSorting] = useState([]);
 
   // Get unique categories from the data
   const categories = [
@@ -40,21 +35,15 @@ export function DataTable({ columns, data = [] }) {
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+
     state: {
+      sorting,
       columnFilters,
     },
   });
-
-  // Handle category filter change
-  const handleCategoryFilter = (value) => {
-    if (value === "all") {
-      // Clear the category filter
-      table.getColumn("category.name")?.setFilterValue(undefined);
-    } else {
-      // Set the category filter
-      table.getColumn("category.name")?.setFilterValue(value);
-    }
-  };
 
   return (
     <div className="">
@@ -68,29 +57,15 @@ export function DataTable({ columns, data = [] }) {
           }
         />
         <div className="flex gap-2.5">
-          {/* <Select onValueChange={handleCategoryFilter}>
-            <SelectTrigger className="w-[160px] bg-white border border-gray-300 h-[39px]">
-              <SelectValue placeholder="Select Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              {categories.map((category) => (
-                <SelectItem key={category} value={category}>
-                  {category}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select> */}
-
           <select
-            className="border rounded px-3 py-2"
+            className="border rounded-lg text-gray-800 px-3 py-2 bg-white"
             value={table.getColumn("category")?.getFilterValue() ?? ""}
             onChange={(e) =>
               table.getColumn("category")?.setFilterValue(e.target.value)
             }
           >
             <option value="" disabled selected>
-              Select Category
+              Select category
             </option>
             <option value="">ALL</option>
             {categories.map((category) => (
@@ -100,18 +75,36 @@ export function DataTable({ columns, data = [] }) {
             ))}
           </select>
 
+          <select
+            className="border rounded-lg text-gray-800 px-3 py-2 bg-white"
+            value={table.getColumn("available")?.getFilterValue() ?? ""}
+            onChange={(e) =>
+              table.getColumn("available")?.setFilterValue(e.target.value)
+            }
+          >
+            <option value="" disabled selected>
+              Select available status
+            </option>
+            <option value="">ALL</option>
+            <option value={true}>YES</option>
+            <option value={false}>NO</option>
+          </select>
+
           <AddBook />
         </div>
       </div>
 
       <div className="rounded-md border">
         <Table className="p-0">
-          <TableHeader className="border-b-[2px] border-[rgba(0,0,0,0.5)] text-black font-bold">
+          <TableHeader className="border-b-[2px] border-[rgba(0,0,0,0.5)]">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="font-medium">
+                    <TableHead
+                      key={header.id}
+                      className="text-gray-700 font-medium uppercase"
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
