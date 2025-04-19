@@ -24,33 +24,15 @@ import WishList from "./features/User/WishList/WishList";
 import MemberFines from "./features/User/Fines/MemberFines";
 import AllTopBorrowedBooks from "./features/User/Home/AllTopBorrowedBooks";
 import NewArrivalBooks from "./features/User/Home/NewArrivalBooks";
+import { MostPopularCategory } from "./features/Admin/Reports/MostPopularCategory";
+import MostActiveMembers from "./features/Admin/Reports/MostBorrowingMembers";
+import MemberUnpaidFines from "./features/Admin/Reports/MemberUnpaidFines";
+import MostBorrowingMembers from "./features/Admin/Reports/MostBorrowingMembers";
 
 const App = () => {
   const queryClient = new QueryClient();
 
   const router = createBrowserRouter([
-    // {
-    //   path: "/",
-    //   element: <UAppLayout />,
-    //   children: [
-    //     { index: true, element: <Home /> },
-    //     { path: "books/genres/:categoryId", element: <GenreFilteredBooks /> },
-    //     { path: "books/book/:bookId", element: <SpecificBook /> },
-    //     {
-    //       path: "member/profile",
-    //       element: <UPApplayout />,
-    //       children: [
-    //         { index: true, element: <UAccountSettings /> },
-    //         { path: "wish-list", element: <WishList /> },
-    //         { path: "borrowed-books", element: <UBorrowedBooks /> },
-    //         { path: "payments", element: <Payments /> },
-    //         { path: "account-settings", element: <UAccountSettings /> },
-    //         { path: "*", element: <DefaultPage /> },
-    //       ],
-    //     },
-    //   ],
-    // },
-
     {
       path: "/",
       element: <UAppLayout />,
@@ -102,8 +84,18 @@ const App = () => {
         { path: "shelfs", element: <Shelfs /> },
         { path: "fines", element: <Fines /> },
         { path: "librarians", element: <Librarians /> },
-        { path: "reports/members-report", element: <Reports /> },
-        { path: "reports/fines-report", element: <Reports /> },
+        {
+          path: "reports/most-popular-category",
+          element: <MostPopularCategory />,
+        },
+        {
+          path: "reports/most-borrowing-members",
+          element: <MostBorrowingMembers />,
+        },
+        {
+          path: "reports/member-unpaid-fines",
+          element: <MemberUnpaidFines />,
+        },
         { path: "*", element: <DefaultPage /> },
       ],
     },
