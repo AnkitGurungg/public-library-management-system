@@ -28,7 +28,7 @@ const ViewBook = ({ id }) => {
     <div>
       <Dialog>
         <DialogTrigger>
-          <Eye className="text-green-500" />
+          <Eye size={20} />
         </DialogTrigger>
 
         <DialogContent>

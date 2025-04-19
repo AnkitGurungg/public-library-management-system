@@ -94,8 +94,8 @@ const AddBook = () => {
           <hr />
           <ScrollArea className="h-[70vh]">
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="grid gap-3 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
+              <div className="space-y-4 px-3">
+                <div className="flex flex-col gap-1">
                   <Label htmlFor="isbn" className="text-right">
                     ISBN
                   </Label>
@@ -118,7 +118,7 @@ const AddBook = () => {
                   />
                   <p>{errors?.isbn?.message}</p>
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="flex flex-col gap-1">
                   <Label htmlFor="title" className="text-right">
                     Title
                   </Label>
@@ -141,7 +141,7 @@ const AddBook = () => {
                   />
                   <p>{errors?.title?.message}</p>
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="flex flex-col gap-1">
                   <Label htmlFor="title" className="text-right">
                     Author
                   </Label>
@@ -165,7 +165,7 @@ const AddBook = () => {
                   <p>{errors?.author?.message}</p>
                 </div>
 
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="flex flex-col gap-1">
                   <Label htmlFor="category" className="text-right">
                     Category
                   </Label>
@@ -194,7 +194,7 @@ const AddBook = () => {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="flex flex-col gap-3">
                   <Label htmlFor="language" className="text-right">
                     Language
                   </Label>
@@ -217,7 +217,7 @@ const AddBook = () => {
                   />
                   <p>{errors?.language?.message}</p>
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="flex flex-col gap-3">
                   <Label htmlFor="published-date" className="text-right">
                     Published Date
                   </Label>
@@ -240,7 +240,7 @@ const AddBook = () => {
                   />
                   <p>{errors?.publishedDate?.message}</p>
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="flex flex-col gap-3">
                   <Label htmlFor="edition" className="text-right">
                     Edition
                   </Label>
@@ -263,7 +263,7 @@ const AddBook = () => {
                   />
                   <p>{errors?.edition?.message}</p>
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="flex flex-col gap-3">
                   <Label htmlFor="page-count" className="text-right">
                     Page Count
                   </Label>
@@ -286,7 +286,7 @@ const AddBook = () => {
                   />
                   <p>{errors?.pageCount?.message}</p>
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="flex flex-col gap-3">
                   <Label htmlFor="quantity" className="text-right">
                     Quantity
                   </Label>
@@ -309,7 +309,7 @@ const AddBook = () => {
                   />
                   {errors?.quantity?.message}
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="flex flex-col gap-3">
                   <Label htmlFor="per-book-cost" className="text-right">
                     Price
                   </Label>
@@ -332,7 +332,7 @@ const AddBook = () => {
                   />
                   <p>{errors?.price?.message}</p>
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="flex flex-col gap-3">
                   <Label htmlFor="image" className="text-right">
                     Image
                   </Label>
@@ -347,7 +347,7 @@ const AddBook = () => {
                   />
                   <p>{error}</p>
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="flex flex-col gap-3">
                   <Label htmlFor="description" className="text-right">
                     Description
                   </Label>
