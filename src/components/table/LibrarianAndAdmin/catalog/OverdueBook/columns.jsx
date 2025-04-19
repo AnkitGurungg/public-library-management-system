@@ -67,12 +67,12 @@ export const columns = [
     header: "Extended",
     cell: ({ row }) =>
       row?.original?.extended ? (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-sm font-medium text-green-700 bg-green-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-md">
           <CheckCircle size={16} className="text-green-500" />
           YES
         </span>
       ) : (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-sm font-medium text-red-700 bg-red-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-md">
           <XCircle size={16} className="text-red-500" />
           NO
         </span>
@@ -85,12 +85,12 @@ export const columns = [
     header: "Return Status",
     cell: ({ row }) =>
       row?.original?.returnStatus ? (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-sm font-medium text-green-700 bg-green-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-md">
           <CheckCircle size={16} className="text-green-500" />
           YES
         </span>
       ) : (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-sm font-medium text-red-700 bg-red-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-md">
           <XCircle size={16} className="text-red-500" />
           NO
         </span>
