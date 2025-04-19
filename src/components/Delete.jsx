@@ -76,7 +76,7 @@ const Delete = ({ id, name, type }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Trash2 />
+        <Trash2 size={20}/> 
       </DialogTrigger>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>
