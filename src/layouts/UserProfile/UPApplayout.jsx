@@ -5,23 +5,12 @@ import { UserContext } from "@/contexts/UserContext";
 import { useContext, useEffect } from "react";
 
 const UPApplayout = () => {
-  const { token, setToken, loading, userInfo, getUserInfo } =
-    useContext(UserContext);
-  const navigate = useNavigate();
+  const { token, setToken, loading, userInfo, getUserInfo } = useContext(UserContext);
+  
+  console.log(getUserInfo);
 
-  // useEffect(() => {
-  //   setToken(localStorage.getItem("Authorization"));
-  //   getUserInfo();
-  // }, []);
+  
 
-  // useEffect(() => {
-  //   console.log("UApplayout", userInfo);
-  //   if (userInfo && Object.keys(userInfo).length > 0) {
-  //     console.log("Updated user info:", userInfo);
-  //   } else {
-  //     navigate("/");
-  //   }
-  // }, [userInfo]);
 
   return (
     <div className="flex flex-1 overflow-auto">
