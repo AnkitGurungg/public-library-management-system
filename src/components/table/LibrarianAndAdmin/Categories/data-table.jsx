@@ -173,21 +173,31 @@ export function DataTable({ columns, data }) {
 
   return (
     <div>
-      <div className="flex items-center py-4 justify-between">
-        {/* <div className="max-w-sm w-full"></div> */}
-        <div className="flex items-center py-1 justify-between pb-4">
-          <h1 className="text-2xl font-medium">Available Categories</h1>
-          <Input
-            className="w-1/4 h-10 bg-white"
-            placeholder="Search by name..."
-            value={table.getColumn("name")?.getFilterValue() ?? ""}
-            onChange={(event) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
+      <div className="flex items-center py-1 justify-between pb-4">
+        <Input
+          className="w-1/3 h-10 bg-white"
+          placeholder="Search by name..."
+          value={table.getColumn("name")?.getFilterValue() ?? ""}
+          onChange={(event) =>
+            table.getColumn("name")?.setFilterValue(event.target.value)
+          }
+        />
+        <div className="flex gap-2.5">
+          <select
+            className="border rounded-lg text-gray-800 px-3 py-2 bg-white "
+            value={table.getColumn("present")?.getFilterValue() ?? ""}
+            onChange={(e) =>
+              table.getColumn("present")?.setFilterValue(e.target.value)
             }
-          />
-          <div className="flex gap-2.5">
-            <AddCategory />
-          </div>
+          >
+            <option value="" disabled selected>
+              Select available status
+            </option>
+            <option value="">ALL</option>
+            <option value={true}>YES</option>
+            <option value={false}>NO</option>
+          </select>
+          <AddCategory />
         </div>
       </div>
 

@@ -8,7 +8,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { useState, useEffect } from "react";
-import { NotepadText } from "lucide-react";
+import { Eye, NotepadText } from "lucide-react";
 import { useFetchCategory } from "@/hooks/useFetchCategory";
 
 const ViewCategory = ({ id }) => {
@@ -29,7 +29,7 @@ const ViewCategory = ({ id }) => {
     <div>
       <Dialog>
         <DialogTrigger>
-          <NotepadText />
+          <Eye size={20} />
         </DialogTrigger>
 
         <DialogContent aria-describedby={undefined}>

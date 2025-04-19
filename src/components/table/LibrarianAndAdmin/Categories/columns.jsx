@@ -1,7 +1,8 @@
 import Delete from "@/components/Delete";
 import UpdateCategory from "@/features/LibrarianAndAdmin/Categories/UpdateCategory";
 import ViewCategory from "@/features/LibrarianAndAdmin/Categories/ViewCategory";
-import { ChevronsUpDown } from "lucide-react";
+import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
+import { CgKey } from "react-icons/cg";
 
 export const columns = [
   {
@@ -83,19 +84,48 @@ export const columns = [
   },
 
   {
+    id: "present",
+    accessorFn: (row) => String(row?.present) || "",
+    header: "Available",
+    cell: ({ row }) =>
+      row?.original?.present ? (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">
+          <CheckCircle size={16} className="text-[#206ea6]" />
+          YES
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-md">
+          <XCircle size={16} className="text-red-500" />
+          NO
+        </span>
+      ),
+  },
+
+  {
     header: "Action",
     cell: ({ row }) => {
       const category = row.original;
+      const isPresent = category?.present;
       console.log(category);
+      console.log(isPresent);
       return (
-        <div className="flex items-center justify-center gap-2">
-          <ViewCategory id={category?.categoryId} />
-          <UpdateCategory id={category?.categoryId} />
-          <Delete
-            id={category?.categoryId}
-            name={category?.name}
-            type={"category"}
-          />
+        <div className="flex items-center justify-center gap-1">
+          <div className="opacity-90">
+            <ViewCategory id={category?.categoryId} />
+          </div>
+          <div className="opacity-90">
+            <UpdateCategory id={category?.categoryId} />
+          </div>
+          <button
+            className={`cursor-not-allowed ${!isPresent ? "opacity-40" : ""}`}
+            disabled={!isPresent}
+          >
+            <Delete
+              id={category?.categoryId}
+              name={category?.name}
+              type={"category"}
+            />
+          </button>
         </div>
       );
     },

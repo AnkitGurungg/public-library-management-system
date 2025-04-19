@@ -27,7 +27,9 @@ const UpdateCategory = ({ id }) => {
   } = useForm();
 
   useEffect(() => {
-    const selectedCategory = categories?.data?.find((category) => category.categoryId === id);
+    const selectedCategory = categories?.data?.find(
+      (category) => category.categoryId === id
+    );
     if (selectedCategory) {
       setValue("name", selectedCategory.name || "");
       setValue("startingNumber", selectedCategory.startingNumber || "");
@@ -57,7 +59,7 @@ const UpdateCategory = ({ id }) => {
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <PencilLine />
+          <PencilLine size={20} />
         </DialogTrigger>
 
         <DialogContent aria-describedby={undefined}>
