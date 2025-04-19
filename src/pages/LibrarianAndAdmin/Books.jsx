@@ -10,6 +10,11 @@ const Books = () => {
     refetchBooks();
   }, []);
 
+  useEffect(() => {
+    console.log(books);
+    console.log(books?.data);
+  }, [books]);
+
   return (
     <section className="min-h-screen">
       {books?.data && (
