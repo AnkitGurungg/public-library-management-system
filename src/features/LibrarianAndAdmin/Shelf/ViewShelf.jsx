@@ -8,7 +8,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { useFetchShelfs } from "@/hooks/useFetchShelfs";
-import { NotepadText } from "lucide-react";
+import { Eye, NotepadText } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const ViewShelf = ({ id }) => {
@@ -26,7 +26,7 @@ const ViewShelf = ({ id }) => {
     <div>
       <Dialog>
         <DialogTrigger>
-          <NotepadText />
+          <Eye size={20} />
         </DialogTrigger>
 
         <DialogContent aria-describedby={undefined}>

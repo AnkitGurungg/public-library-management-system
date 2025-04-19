@@ -62,7 +62,7 @@ const UpdateShelf = ({ id }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <PencilLine />
+        <PencilLine size={20} />
       </DialogTrigger>
 
       <DialogContent aria-describedby={undefined}>

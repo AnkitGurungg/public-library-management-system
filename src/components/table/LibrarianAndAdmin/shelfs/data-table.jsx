@@ -6,6 +6,7 @@ import {
   getPaginationRowModel,
   useReactTable,
   getFilteredRowModel,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -20,6 +21,11 @@ import AddShelf from "@/features/LibrarianAndAdmin/Shelf/AddShelf";
 
 export function DataTable({ columns, data = [] }) {
   const [columnFilters, setColumnFilters] = useState([]);
+  const [sorting, setSorting] = useState([]);
+
+  const categories = [
+    ...new Set(data.map((shelf) => shelf.category?.name).filter(Boolean)),
+  ];
 
   const table = useReactTable({
     data,
@@ -29,7 +35,11 @@ export function DataTable({ columns, data = [] }) {
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
 
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+
     state: {
+      sorting,
       columnFilters,
     },
   });
@@ -37,9 +47,8 @@ export function DataTable({ columns, data = [] }) {
   return (
     <div>
       <div className="flex items-center py-1 justify-between pb-4">
-        <h1 className="text-2xl font-medium">Shelfs</h1>
         <Input
-          className="w-1/4 h-10 bg-white"
+          className="w-1/3 h-10 bg-white"
           placeholder="Search by title..."
           value={table.getColumn("name")?.getFilterValue() ?? ""}
           onChange={(event) =>
@@ -47,7 +56,37 @@ export function DataTable({ columns, data = [] }) {
           }
         />
         <div className="flex gap-2.5">
-          <Button className="opacity-90">Filter</Button>
+          <select
+            className="border rounded-lg text-gray-800 px-3 py-2 bg-white"
+            value={table.getColumn("category")?.getFilterValue() ?? ""}
+            onChange={(e) =>
+              table.getColumn("category")?.setFilterValue(e.target.value)
+            }
+          >
+            <option value="" disabled selected>
+              Select category
+            </option>
+            <option value="">ALL</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+          <select
+            className="border rounded-lg text-gray-800 px-3 py-2 bg-white"
+            value={table.getColumn("available")?.getFilterValue() ?? ""}
+            onChange={(e) =>
+              table.getColumn("available")?.setFilterValue(e.target.value)
+            }
+          >
+            <option value="" disabled selected>
+              Select available status
+            </option>
+            <option value="">ALL</option>
+            <option value={true}>YES</option>
+            <option value={false}>NO</option>
+          </select>
           <AddShelf />
         </div>
       </div>
@@ -60,7 +99,7 @@ export function DataTable({ columns, data = [] }) {
                   return (
                     <TableHead
                       key={header.id}
-                      className="text-black font-medium  uppercase"
+                      className="text-gray-700 font-medium uppercase"
                     >
                       {header.isPlaceholder
                         ? null
