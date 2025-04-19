@@ -92,7 +92,7 @@ function BorrowBarChart() {
   };
 
   return (
-    <Card className="w-full">
+    <Card className="flex flex-col col-span-1 md:col-span-2 h-full min-h-[400px]">
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <CardTitle>Book Borrowing Statistics</CardTitle>
