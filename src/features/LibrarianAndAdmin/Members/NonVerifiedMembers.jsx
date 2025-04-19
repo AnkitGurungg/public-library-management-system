@@ -11,6 +11,8 @@ import Delete from "@/components/Delete";
 import VerifyMember from "./VerifyMember";
 import ViewMember from "./ViewMember";
 import { useEffect } from "react";
+import { columns } from "@/components/table/LibrarianAndAdmin/members/NonVerifiedMembers/columns";
+import { DataTable } from "@/components/table/LibrarianAndAdmin/members/NonVerifiedMembers/data-table";
 
 const NonVerifiedMembers = () => {
   const { data: nonVerifiedMembers, refetch: refetchNonVerifiedMembers } =
@@ -21,8 +23,8 @@ const NonVerifiedMembers = () => {
   }, []);
 
   return (
-    <div className="bg-white mt-4 rounded-[8px]">
-      <Table>
+    <div className="bg-white mt-3 rounded-[8px]">
+      {/* <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Id</TableHead>
@@ -83,7 +85,11 @@ const NonVerifiedMembers = () => {
             </TableRow>
           )}
         </TableBody>
-      </Table>
+      </Table> */}
+
+      <div>
+        <DataTable columns={columns} data={nonVerifiedMembers?.data || []} />
+      </div>
     </div>
   );
 };

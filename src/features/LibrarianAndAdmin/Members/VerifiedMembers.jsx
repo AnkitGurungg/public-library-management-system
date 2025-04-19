@@ -8,9 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import ViewMember from "./ViewMember";
-import Delete from "@/components/Delete";
 import { useEffect } from "react";
+import { columns } from "@/components/table/LibrarianAndAdmin/members/Members/columns";
+import { DataTable } from "@/components/table/LibrarianAndAdmin/members/Members/data-table";
 
 const VerifiedMembers = () => {
   const { data: verifiedMembers, refetch: refetchVerifiedMembers } =
@@ -21,8 +21,8 @@ const VerifiedMembers = () => {
   }, []);
 
   return (
-    <div className="bg-white mt-4 rounded-[8px]">
-      <Table>
+    <div className="bg-white mt-3 rounded-[8px]">
+      {/* <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Id</TableHead>
@@ -76,7 +76,10 @@ const VerifiedMembers = () => {
             </TableRow>
           )}
         </TableBody>
-      </Table>
+      </Table> */}
+      <div>
+        <DataTable columns={columns} data={verifiedMembers?.data || []} />
+      </div>
     </div>
   );
 };

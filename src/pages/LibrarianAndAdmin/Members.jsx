@@ -1,4 +1,4 @@
-import { CircleX } from "lucide-react";
+import { CircleX, UserRoundX, Users } from "lucide-react";
 import { CircleCheck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,34 +11,30 @@ const Members = () => {
   const [showNONVM, setNONVmShow] = useState(true);
 
   return (
-    <div className="min-h-screen">
-      <div className="flex flex-row items-center gap-4">
-        <Button
-          onClick={() => {
-            setVMShow(false);
-            setNONVmShow(true);
-          }}
-        >
-          <CircleX />
-          Non-Verified Members
-        </Button>
+    <div className="w-full min-h-screen">
+      <div className="flex justify-between">
+        <div className="flex gap-3">
+          <Button
+            onClick={() => {
+              setVMShow(false);
+              setNONVmShow(true);
+            }}
+          >
+            <UserRoundX />
+            Non-Verified Members
+          </Button>
 
-        <Button
-          onClick={() => {
-            setVMShow(true);
-            setNONVmShow(false);
-          }}
-          className="bg-white text-black hover:bg-white"
-        >
-          <CircleCheck className="bg-white border-black" />
-          Verified Members
-        </Button>
-
-        <Input
-          type="number"
-          placeholder="Search here"
-          className="bg-white w-[240px]"
-        />
+          <Button
+            onClick={() => {
+              setVMShow(true);
+              setNONVmShow(false);
+            }}
+            className="bg-white text-black hover:bg-white"
+          >
+            <Users className="bg-white border-black" />
+            Members
+          </Button>
+        </div>
       </div>
 
       {showNONVM && <NonVerifiedMembers />}
