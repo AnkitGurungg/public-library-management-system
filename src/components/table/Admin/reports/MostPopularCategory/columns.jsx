@@ -46,7 +46,7 @@ export const columns = [
           className="flex items-center cursor-pointer"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          EndingNumber Number
+          Ending Number
           <ChevronsUpDown className="ml-2 h-4 w-4" />
         </span>
       </div>
