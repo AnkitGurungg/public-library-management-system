@@ -36,7 +36,7 @@ const VerifyMember = ({ id }) => {
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <Check />
+          <Check size={20} />
         </DialogTrigger>
         <DialogContent aria-describedby={undefined}>
           <DialogHeader>

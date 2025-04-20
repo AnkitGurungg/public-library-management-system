@@ -6,6 +6,7 @@ import {
   getPaginationRowModel,
   useReactTable,
   getFilteredRowModel,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -16,10 +17,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import AddLibrarian from "@/features/Admin/AddLibrarian";
+import AddBook from "@/features/LibrarianAndAdmin/Books/AddBook";
 
 export function DataTable({ columns, data = [] }) {
   const [columnFilters, setColumnFilters] = useState([]);
+  const [sorting, setSorting] = useState([]);
 
   const table = useReactTable({
     data,
@@ -29,17 +31,20 @@ export function DataTable({ columns, data = [] }) {
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
 
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+
     state: {
+      sorting,
       columnFilters,
     },
   });
 
   return (
-    <div>
-      <div className="flex items-center py-1 justify-between pb-4">
-        <h1 className="text-2xl font-medium">Librarians</h1>
+    <div className="">
+      <div className="flex items-center py-1 justify-between pb-4 bg-gray-100">
         <Input
-          className="w-1/4 h-10 bg-white"
+          className="w-1/3 h-[39px] bg-white border border-gray-300"
           placeholder="Search by title..."
           value={table.getColumn("name")?.getFilterValue() ?? ""}
           onChange={(event) =>
@@ -47,20 +52,33 @@ export function DataTable({ columns, data = [] }) {
           }
         />
         <div className="flex gap-2.5">
-          <Button className="opacity-90">Filter</Button>
-          <AddLibrarian />
+          <select
+            className="border rounded-lg text-gray-800 px-3 py-2 bg-white"
+            value={table.getColumn("present")?.getFilterValue() ?? ""}
+            onChange={(e) =>
+              table.getColumn("present")?.setFilterValue(e.target.value)
+            }
+          >
+            <option value="" disabled selected>
+              Select present status
+            </option>
+            <option value="">ALL</option>
+            <option value={true}>YES</option>
+            <option value={false}>NO</option>
+          </select>
         </div>
       </div>
-      <div className="rounded-md">
-        <Table className="">
-          <TableHeader className="border-b-[2px] border-[rgba(0,0,0,0.5)] text-black font-bold">
+
+      <div className="rounded-md border">
+        <Table className="p-0">
+          <TableHeader className="border-b-[2px] border-[rgba(0,0,0,0.5)]">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
                       key={header.id}
-                      className="text-black font-medium  uppercase"
+                      className="text-gray-700 font-medium uppercase"
                     >
                       {header.isPlaceholder
                         ? null
@@ -74,7 +92,7 @@ export function DataTable({ columns, data = [] }) {
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody className="p-0">
+          <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -82,7 +100,7 @@ export function DataTable({ columns, data = [] }) {
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="px-0.5">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

@@ -1,7 +1,132 @@
-const ViewLibrarian = ({id}) => {
-  return (
-    <div>ViewLibrarian</div>
-  )
-}
+import useFetchLibrarian from "@/hooks/useFetchLibrarian";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Eye, NotepadText } from "lucide-react";
 
-export default ViewLibrarian
+const ViewLibrarian = ({ id, type }) => {
+  const { data: librarians, refetch: refetchLibrarians } = useFetchLibrarian();
+
+  const librarian =
+    Array.isArray(librarians?.data) &&
+    librarians?.data?.length > 0 &&
+    librarians?.data?.find((element) => element.userId === id);
+
+  const checkUserType = () => {
+    if (type === "librarian") {
+      return librarian;
+    }
+  };
+
+  return (
+    <div>
+      <Dialog>
+        <DialogTrigger>
+          <Eye size={20} />
+        </DialogTrigger>
+
+        <DialogContent aria-describedby={undefined}>
+          <DialogHeader>
+            <DialogTitle>View Librarian</DialogTitle>
+          </DialogHeader>
+          <hr />
+          {checkUserType() != null && checkUserType() != undefined ? (
+            <div className="flex flex-row w-[vh]">
+              <div className="flex flex-col gap-2">
+                <div>
+                  <p>Name: {checkUserType().name}</p>
+                </div>
+                <div>
+                  <p>Contact: {checkUserType().contactNumber}</p>
+                </div>
+                <div>
+                  <p>Email: {checkUserType().email}</p>
+                </div>
+                <div>
+                  <p>Address: {checkUserType().address}</p>
+                </div>
+                <div className="flex flex-row justify-between">
+                  <div>
+                    <p>Applied Date: {checkUserType().appliedDate}</p>
+                  </div>
+                  <div>
+                    <p>Verified Date: {checkUserType().verifiedDate}</p>
+                  </div>
+                </div>
+              </div>
+
+              {checkUserType()?.evidences?.length > 2 && (
+                <div>
+                  <div>
+                    <a
+                      href={
+                        BACKEND_SERVER_BASE_URL +
+                        checkUserType().evidences[0]?.userImage
+                      }
+                      target="_blank"
+                    >
+                      <img
+                        src={
+                          BACKEND_SERVER_BASE_URL +
+                          checkUserType().evidences[0]?.userImage
+                        }
+                        alt="User Image Loading!!!"
+                      />
+                    </a>
+                  </div>
+
+                  <div>
+                    <div>
+                      <a
+                        href={
+                          BACKEND_SERVER_BASE_URL +
+                          checkUserType().evidences[0]?.evidenceOne
+                        }
+                        target="_blank"
+                      >
+                        <img
+                          src={
+                            BACKEND_SERVER_BASE_URL +
+                            checkUserType().evidences[0]?.evidenceOne
+                          }
+                          alt="Evidence1 Loading!!!"
+                        />
+                      </a>
+                    </div>
+                    <div>
+                      <a
+                        href={
+                          BACKEND_SERVER_BASE_URL +
+                          checkUserType().evidences[0]?.evidenceTwo
+                        }
+                        target="_blank"
+                      >
+                        <img
+                          src={
+                            BACKEND_SERVER_BASE_URL +
+                            checkUserType().evidences[0]?.evidenceTwo
+                          }
+                          alt="Evidence2 Loading!!!"
+                        />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p>Does not exist</p>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default ViewLibrarian;

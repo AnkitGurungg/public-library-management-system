@@ -1,19 +1,5 @@
-import { Input } from "../../components/ui/input";
-import {
-  Table,
-  TableCaption,
-  TableHeader,
-  TableBody,
-  TableCell,
-  TableRow,
-  TableHead,
-} from "../../components/ui/table";
-import Delete from "@/components/Delete";
-import ViewLibrarian from "@/features/Admin/ViewLibrarian";
-import UpdateLibrarian from "@/features/Admin/UpdateLibrarian";
-import useFetchLibrarian from "@/hooks/useFetchLibrarian";
-import AddLibrarian from "@/features/Admin/AddLibrarian";
 import { useEffect } from "react";
+import useFetchLibrarian from "@/hooks/useFetchLibrarian";
 import { DataTable } from "@/components/table/Admin/librarians/data-table";
 import { columns } from "@/components/table/Admin/librarians/columns";
 
@@ -98,9 +84,9 @@ const Librarians = () => {
     //   </div>
     // </section>
 
-    <section>
+    <section className="h-screen">
       {librarians?.data && (
-        <div className="h-screen">
+        <div>
           <DataTable columns={columns} data={librarians?.data} />
         </div>
       )}
