@@ -31,7 +31,7 @@ const ViewBook = ({ id }) => {
           <Eye size={20} />
         </DialogTrigger>
 
-        <DialogContent>
+        <DialogContent aria-describedby={undefined}>
           <DialogHeader>
             <DialogTitle>View Book</DialogTitle>
           </DialogHeader>
