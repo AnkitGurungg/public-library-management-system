@@ -39,10 +39,14 @@ const BorrowBook = () => {
           },
         }
       );
-      reset();
-      refetchBorrowedBooks();
-      (response.status === 201 || response.status === 201) &&
+      if (response.status === 200) {
+        toast.error(response?.data?.message || "Please provide valid details!");
+      }
+      if (response.status === 201) {
         toast.success("Borrow succeed!");
+        reset();
+        refetchBorrowedBooks();
+      }
     } catch (error) {
       if (error.status === 404 || error.status === 400) {
         toast.error(error?.response?.data?.message);

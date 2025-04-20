@@ -23,9 +23,13 @@ export function DataTable({ columns, data = [] }) {
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
 
-  const categories = [
-    ...new Set(data.map((shelf) => shelf.category?.name).filter(Boolean)),
-  ];
+  // const categories = [
+  //   ...new Set(data.map((shelf) => shelf.category?.name).filter(Boolean)),
+  // ];
+
+  const categories = Array.isArray(data)
+    ? [...new Set(data.map((shelf) => shelf.category?.name).filter(Boolean))]
+    : [];
 
   const table = useReactTable({
     data,

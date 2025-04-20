@@ -19,7 +19,7 @@ const Books = () => {
     <section className="min-h-screen">
       {books?.data && (
         <div>
-          <DataTable columns={columns} data={books?.data} />
+          <DataTable columns={columns} data={books?.data || []} />
         </div>
       )}
     </section>

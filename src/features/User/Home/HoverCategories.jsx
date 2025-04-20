@@ -22,8 +22,8 @@ const HoverCategories = () => {
   const [hover, setHover] = useState(false);
 
   return (
-    <HoverCard onOpenChange={setHover} >
-       <HoverCardTrigger asChild>
+    <HoverCard onOpenChange={setHover}>
+      <HoverCardTrigger asChild>
         <Button
           variant="link"
           className="font-medium text-[17px] hover:text-[#206ea6]"
@@ -50,7 +50,9 @@ const HoverCategories = () => {
               </div>
             ))
           ) : (
-            <p>{displayCategory?.data?.message}</p>
+            <p>
+              {displayCategory?.data?.message || "No categories available!"}
+            </p>
           )}
         </div>
       </HoverCardContent>

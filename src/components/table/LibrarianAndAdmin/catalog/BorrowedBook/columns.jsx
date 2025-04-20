@@ -9,13 +9,13 @@ import {
 export const columns = [
   {
     id: "bookId",
-    header: "Book ID",
+    header: "BID",
     cell: ({ row }) => row?.original?.borrowBooks?.bookId || "",
   },
 
   {
     accessorKey: "userId",
-    header: "User ID",
+    header: "UID",
     cell: ({ row }) => row?.original?.borrowUsers?.userId || "",
   },
 

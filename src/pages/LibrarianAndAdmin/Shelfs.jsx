@@ -115,7 +115,7 @@ const Shelfs = () => {
     <section className="min-h-screen">
       {shelfs?.data && (
         <div>
-          <DataTable columns={columns} data={shelfs?.data} />
+          <DataTable columns={columns} data={shelfs?.data || []} />
         </div>
       )}
     </section>

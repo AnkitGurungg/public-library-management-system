@@ -24,9 +24,9 @@ export function DataTable({ columns, data = [] }) {
   const [sorting, setSorting] = useState([]);
 
   // Get unique categories from the data
-  const categories = [
-    ...new Set(data.map((book) => book.category?.name).filter(Boolean)),
-  ];
+  const categories = Array.isArray(data)
+    ? [...new Set(data.map((book) => book.category?.name).filter(Boolean))]
+    : [];
 
   const table = useReactTable({
     data,

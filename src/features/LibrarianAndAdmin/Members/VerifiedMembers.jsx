@@ -77,9 +77,12 @@ const VerifiedMembers = () => {
           )}
         </TableBody>
       </Table> */}
-      <div>
-        <DataTable columns={columns} data={verifiedMembers?.data || []} />
-      </div>
+
+      {verifiedMembers?.data && (
+        <div>
+          <DataTable columns={columns} data={verifiedMembers?.data || []} />
+        </div>
+      )}
     </div>
   );
 };

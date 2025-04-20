@@ -150,7 +150,7 @@ import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import AddCategory from "@/features/LibrarianAndAdmin/Categories/AddCategory";
 
-export function DataTable({ columns, data }) {
+export function DataTable({ columns, data = [] }) {
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
 

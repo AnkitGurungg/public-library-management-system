@@ -22,21 +22,42 @@ export function DataTable({ columns, data = [] }) {
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
 
-  const categories = [
-    ...new Set(
-      data
-        .map((fine) => fine?.returns?.borrows?.borrowBooks?.category?.name)
-        .filter(Boolean)
-    ),
-  ];
+  // const categories = [
+  //   ...new Set(
+  //     data
+  //       .map((fine) => fine?.returns?.borrows?.borrowBooks?.category?.name)
+  //       .filter(Boolean)
+  //   ),
+  // ];
 
-  const books = [
-    ...new Set(
-      data
-        .map((book) => book?.returns?.borrows?.borrowBooks?.title)
-        .filter(Boolean)
-    ),
-  ];
+  // const books = [
+  //   ...new Set(
+  //     data
+  //       .map((book) => book?.returns?.borrows?.borrowBooks?.title)
+  //       .filter(Boolean)
+  //   ),
+  // ];
+
+  let books = [];
+  let categories = [];
+
+  if (Array.isArray(data)) {
+    books = [
+      ...new Set(
+        data
+          .map((book) => book?.returns?.borrows?.borrowBooks?.title)
+          .filter(Boolean)
+      ),
+    ];
+
+    categories = [
+      ...new Set(
+        data
+          .map((fine) => fine?.returns?.borrows?.borrowBooks?.category?.name)
+          .filter(Boolean)
+      ),
+    ];
+  }
 
   const table = useReactTable({
     data,
@@ -45,7 +66,6 @@ export function DataTable({ columns, data = [] }) {
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
 
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),

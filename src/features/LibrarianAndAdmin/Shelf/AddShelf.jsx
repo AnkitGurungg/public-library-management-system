@@ -110,6 +110,8 @@ const AddShelf = () => {
             >
               <option disabled>Select a category</option>
               {categories?.status == 200 &&
+                Array.isArray(categories?.data) &&
+                categories.data.length > 0 &&
                 categories?.data.map((element, index) => (
                   <option
                     key={element.categoryId || index}

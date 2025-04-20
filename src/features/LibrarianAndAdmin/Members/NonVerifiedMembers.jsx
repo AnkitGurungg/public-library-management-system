@@ -87,9 +87,11 @@ const NonVerifiedMembers = () => {
         </TableBody>
       </Table> */}
 
-      <div>
-        <DataTable columns={columns} data={nonVerifiedMembers?.data || []} />
-      </div>
+      {nonVerifiedMembers?.data && (
+        <div>
+          <DataTable columns={columns} data={nonVerifiedMembers?.data || []} />
+        </div>
+      )}
     </div>
   );
 };

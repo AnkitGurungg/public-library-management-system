@@ -87,7 +87,7 @@ const Librarians = () => {
     <section className="h-screen">
       {librarians?.data && (
         <div>
-          <DataTable columns={columns} data={librarians?.data} />
+          <DataTable columns={columns} data={librarians?.data || []} />
         </div>
       )}
     </section>

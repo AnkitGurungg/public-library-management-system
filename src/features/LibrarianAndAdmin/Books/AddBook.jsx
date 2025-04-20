@@ -20,9 +20,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useFetchBooks } from "@/hooks/useFetchBooks";
 import LoadingComponent from "@/components/Loading/LoadingComponent";
 import toast from "react-hot-toast";
+import useFetchDisplayCategory from "@/hooks/useFetchDisplayCategory";
 
 const AddBook = () => {
-  const { data: categories, refetch: refetchCategories } = useFetchCategory();
+  const { data: categories, refetch: refetchCategories } =
+    useFetchDisplayCategory();
   const { data: books, refetch: refetchBooks } = useFetchBooks();
 
   const {
@@ -180,6 +182,8 @@ const AddBook = () => {
                     <option disabled>Please select atleast one category</option>
                     {/* iterate for each of the categories */}
                     {categories?.status == 200 &&
+                      Array.isArray(categories?.data) &&
+                      categories?.data?.length > 0 &&
                       categories?.data.map((element, index) => (
                         <option
                           key={element.categoryId || index}
