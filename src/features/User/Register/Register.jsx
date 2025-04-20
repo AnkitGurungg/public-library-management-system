@@ -14,8 +14,6 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import GlobalService from "@/services/GlobalServices";
 import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
-import VerifyOTP from "./VerifyEmail";
-import Login from "../Login/Login";
 import LoadingComponent from "@/components/Loading/LoadingComponent";
 import { CgSpinner } from "react-icons/cg";
 import VerifyEmail from "./VerifyEmail";
@@ -28,19 +26,32 @@ const Register = ({ isOpenRegister, setIsOpenRegister, setIsOpenLogin }) => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    watch,
     reset,
   } = useForm();
+
+  const password = watch("password");
+
   const { data: nonVerifiedMembers, refetch: refetchNonVerifiedMembers } =
     useFetchNonVerifiedMembers();
 
   const onSubmit = async (data) => {
     try {
-      const response = await GlobalService.post("/auth/register", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
+      console.log("Clicked");
+      const { email, password } = data;
+      console.log(data);
+      console.log(email);
+      console.log(password);
+      const response = await GlobalService.post(
+        "/auth/register",
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
 
       if (response.status === 201) {
         localStorage.setItem(
@@ -57,13 +68,13 @@ const Register = ({ isOpenRegister, setIsOpenRegister, setIsOpenLogin }) => {
       console.log(error);
       if (error.response) {
         if (error.response.status === 400) {
-          alert("400");
+          toast.error("Provide valid details!");
         }
         if (error.response.status === 409) {
-          alert(error.response.data.message);
+          toast.error(error.response.data.message);
         }
         if (error.response.status === 500) {
-          alert("500");
+          toast.error("Server error!");
         }
       }
     }
@@ -98,12 +109,12 @@ const Register = ({ isOpenRegister, setIsOpenRegister, setIsOpenLogin }) => {
                     className="w-full h-[65px] rounded-xl border border-gray-300 bg-white px-4 focus:outline-none focus:ring-1 focus:ring-[#81c7b5]"
                     id="email"
                     type="email"
-                    placeholder="Email Address"
+                    placeholder="Email"
                     {...register("email", {
                       required: "Please enter email!",
                       minLength: {
                         value: 1,
-                        message: "Minimun length is required",
+                        message: "Minimun 5 characters is required",
                       },
                       maxLength: {
                         value: 50,
@@ -123,14 +134,30 @@ const Register = ({ isOpenRegister, setIsOpenRegister, setIsOpenLogin }) => {
                     {...register("password", {
                       required: "Please enter password!",
                       minLength: {
-                        value: 1,
-                        message: "Min length is required",
+                        value: 8,
+                        message: "Use at least 8 characters!",
                       },
                     })}
                     className="w-full h-[65px] rounded-xl border  border-gray-300 bg-white px-4 focus:outline-none focus:ring-1 focus:ring-[#81c7b5]"
                   />
                   <p className="text-red-500 text-[15px] ml-0.5">
                     {errors?.password?.message}
+                  </p>
+                </div>
+                <div>
+                  <Input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Confirm Password"
+                    {...register("confirmPassword", {
+                      required: "Please confirm your password!",
+                      validate: (value) =>
+                        value === password || "Passwords do not match!",
+                    })}
+                    className="w-full h-[65px] rounded-xl border border-gray-300 bg-white px-4 focus:outline-none focus:ring-1 focus:ring-[#81c7b5]"
+                  />
+                  <p className="text-red-500 text-[15px] ml-0.5">
+                    {errors?.confirmPassword?.message}
                   </p>
                 </div>
                 <Button
