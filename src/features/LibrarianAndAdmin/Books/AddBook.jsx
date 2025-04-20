@@ -21,11 +21,15 @@ import { useFetchBooks } from "@/hooks/useFetchBooks";
 import LoadingComponent from "@/components/Loading/LoadingComponent";
 import toast from "react-hot-toast";
 import useFetchDisplayCategory from "@/hooks/useFetchDisplayCategory";
+import { useFetchShelfs } from "@/hooks/useFetchShelfs";
+import { useFetchAvailableShelfs } from "@/hooks/useFetchAvailableShelfs";
 
 const AddBook = () => {
   const { data: categories, refetch: refetchCategories } =
     useFetchDisplayCategory();
   const { data: books, refetch: refetchBooks } = useFetchBooks();
+  const { data: availableShelfs, refetch: refetchAvailableShelfs } =
+    useFetchAvailableShelfs();
 
   const {
     register,
@@ -180,7 +184,6 @@ const AddBook = () => {
                     className="w-[340px] h-[39px] border-2 rounded-[8px]"
                   >
                     <option disabled>Please select atleast one category</option>
-                    {/* iterate for each of the categories */}
                     {categories?.status == 200 &&
                       Array.isArray(categories?.data) &&
                       categories?.data?.length > 0 &&
@@ -195,6 +198,36 @@ const AddBook = () => {
                   </select>
                   <p className="text-sm text-red-500">
                     {errors?.categoryId?.message}
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="shelf" className="text-right">
+                    Shelf
+                  </Label>
+
+                  <select
+                    onChange={(e) => setValue("shelfId", e.target.value)}
+                    {...register("shelfId", {
+                      required: "Please select at least one",
+                    })}
+                    className="w-[340px] h-[39px] border-2 rounded-[8px]"
+                  >
+                    <option disabled>Please select atleast one shelf</option>
+                    {availableShelfs?.status == 200 &&
+                      Array.isArray(availableShelfs?.data) &&
+                      availableShelfs?.data?.length > 0 &&
+                      availableShelfs?.data.map((element, index) => (
+                        <option
+                          key={element.shelfId || index}
+                          value={element.shelfId}
+                        >
+                          {element.name}
+                        </option>
+                      ))}
+                  </select>
+                  <p className="text-sm text-red-500">
+                    {errors?.shelfId?.message}
                   </p>
                 </div>
 
