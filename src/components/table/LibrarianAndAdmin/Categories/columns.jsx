@@ -113,11 +113,20 @@ export const columns = [
           <div className="opacity-90">
             <ViewCategory id={category?.categoryId} />
           </div>
-          <div className="opacity-90">
-            <UpdateCategory id={category?.categoryId} />
-          </div>
+
           <button
-            className={`cursor-not-allowed ${!isPresent ? "opacity-40" : ""}`}
+            className={`cursor-not-allowed ${
+              !isPresent ? "opacity-40" : "opacity-90"
+            }`}
+            disabled={!isPresent}
+          >
+            <UpdateCategory id={category?.categoryId} />
+          </button>
+
+          <button
+            className={`cursor-not-allowed ${
+              !isPresent ? "opacity-40" : "opacity-90"
+            }`}
             disabled={!isPresent}
           >
             <Delete
