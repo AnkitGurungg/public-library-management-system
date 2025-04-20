@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
 import { useFetchVerifiedMembers } from "@/hooks/useFetchVerifiedMembers";
-import { NotepadText } from "lucide-react";
+import { Eye, NotepadText } from "lucide-react";
 
 const ViewMember = ({ id, type }) => {
   const BACKEND_SERVER_BASE_URL = "http://localhost:8080/";
@@ -40,7 +40,7 @@ const ViewMember = ({ id, type }) => {
     <div>
       <Dialog>
         <DialogTrigger>
-          <NotepadText />
+          <Eye size={20} />
         </DialogTrigger>
 
         <DialogContent aria-describedby={undefined}>
@@ -77,12 +77,16 @@ const ViewMember = ({ id, type }) => {
                 <div>
                   <div>
                     <a
-                      href={BACKEND_SERVER_BASE_URL + checkUserType().evidences[0]?.userImage}
+                      href={
+                        BACKEND_SERVER_BASE_URL +
+                        checkUserType().evidences[0]?.userImage
+                      }
                       target="_blank"
                     >
                       <img
                         src={
-                          BACKEND_SERVER_BASE_URL + checkUserType().evidences[0]?.userImage
+                          BACKEND_SERVER_BASE_URL +
+                          checkUserType().evidences[0]?.userImage
                         }
                         alt="User Image Loading!!!"
                       />
@@ -93,7 +97,8 @@ const ViewMember = ({ id, type }) => {
                     <div>
                       <a
                         href={
-                          BACKEND_SERVER_BASE_URL + checkUserType().evidences[0]?.evidenceOne
+                          BACKEND_SERVER_BASE_URL +
+                          checkUserType().evidences[0]?.evidenceOne
                         }
                         target="_blank"
                       >
@@ -109,7 +114,8 @@ const ViewMember = ({ id, type }) => {
                     <div>
                       <a
                         href={
-                          BACKEND_SERVER_BASE_URL + checkUserType().evidences[0]?.evidenceTwo
+                          BACKEND_SERVER_BASE_URL +
+                          checkUserType().evidences[0]?.evidenceTwo
                         }
                         target="_blank"
                       >
