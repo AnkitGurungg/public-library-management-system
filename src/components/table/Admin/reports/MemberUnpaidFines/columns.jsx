@@ -66,8 +66,8 @@ export const columns = [
     header: "Present",
     cell: ({ row }) =>
       row?.original?.user?.present ? (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-md">
-          <CheckCircle size={16} className="text-green-500" />
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-[#206ea6] bg-blue-100 rounded-md">
+          <CheckCircle size={16} className="text-[#206ea6]" />
           YES
         </span>
       ) : (
