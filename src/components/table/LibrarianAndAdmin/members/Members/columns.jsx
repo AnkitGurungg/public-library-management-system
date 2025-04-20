@@ -8,7 +8,7 @@ import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
 export const columns = [
   {
     accessorKey: "userId",
-    header: "MID",
+    header: "ID",
   },
 
   {

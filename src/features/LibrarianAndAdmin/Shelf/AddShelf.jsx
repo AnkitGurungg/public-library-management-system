@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { useFetchCategory } from "@/hooks/useFetchCategory";
 import { useFetchShelfs } from "@/hooks/useFetchShelfs";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
+import { PlusCircle } from "lucide-react";
 
 const AddShelf = () => {
   const {
@@ -48,8 +49,11 @@ const AddShelf = () => {
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button>Add Shelf</Button>
+      <DialogTrigger asChild>
+        <Button>
+          <PlusCircle />
+          Add Shelf
+        </Button>
       </DialogTrigger>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>

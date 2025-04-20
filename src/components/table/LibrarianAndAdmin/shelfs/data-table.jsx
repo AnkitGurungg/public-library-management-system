@@ -52,8 +52,8 @@ export function DataTable({ columns, data = [] }) {
     <div>
       <div className="flex items-center py-1 justify-between pb-4">
         <Input
-          className="w-1/3 h-10 bg-white"
-          placeholder="Search by title..."
+          className="w-1/3 h-10 bg-white border-gray-300"
+          placeholder="Search by name..."
           value={table.getColumn("name")?.getFilterValue() ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -94,7 +94,7 @@ export function DataTable({ columns, data = [] }) {
           <AddShelf />
         </div>
       </div>
-      <div className="rounded-md">
+      <div className="rounded-md border">
         <Table className="">
           <TableHeader className="border-b-[2px] border-[rgba(0,0,0,0.5)] text-black font-bold">
             {table.getHeaderGroups().map((headerGroup) => (

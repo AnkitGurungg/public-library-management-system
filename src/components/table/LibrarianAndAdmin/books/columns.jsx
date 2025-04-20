@@ -49,11 +49,6 @@ export const columns = [
   },
 
   {
-    accessorKey: "edition",
-    header: "Edition",
-  },
-
-  {
     accessorKey: "quantity",
     header: ({ column }) => {
       return (
@@ -68,6 +63,13 @@ export const columns = [
         </div>
       );
     },
+  },
+
+  {
+    id: "shelf",
+    header: "Shelf",
+    accessorFn: (row) => row?.shelf?.name || "",
+    cell: ({ row }) => row.original.shelf?.name || "",
   },
 
   {
