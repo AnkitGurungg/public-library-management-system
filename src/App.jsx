@@ -28,6 +28,9 @@ import { MostPopularCategory } from "./features/Admin/Reports/MostPopularCategor
 import MostActiveMembers from "./features/Admin/Reports/MostBorrowingMembers";
 import MemberUnpaidFines from "./features/Admin/Reports/MemberUnpaidFines";
 import MostBorrowingMembers from "./features/Admin/Reports/MostBorrowingMembers";
+import ViewSpecificBook from "./features/User/Home/ViewSpecificBook";
+import AboutUs from "./layouts/User/About/AboutUs";
+import ContactUs from "./layouts/User/About/ContactUs";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -39,9 +42,11 @@ const App = () => {
       children: [
         { index: true, element: <Home /> },
         { path: "books/genres/:categoryId", element: <GenreFilteredBooks /> },
-        { path: "books/book/:bookId", element: <SpecificBook /> },
+        { path: "books/book/:bookId", element: <ViewSpecificBook /> },
         { path: "top-borrowed-books", element: <AllTopBorrowedBooks /> },
         { path: "new-arrivals", element: <NewArrivalBooks /> },
+        { path: "about-us", element: <AboutUs /> },
+        { path: "contact-us", element: <ContactUs /> },
       ],
     },
 
