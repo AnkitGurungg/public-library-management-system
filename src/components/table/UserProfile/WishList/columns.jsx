@@ -28,17 +28,31 @@ export const columns = (refetchMemberWishList) => [
   {
     id: "title",
     header: "Title",
-    cell: ({ row }) => row.original.book?.title || "",
-    accessorFn: (row) => row.book?.title || "",
+    cell: ({ row }) => row.original.book?.title || "N/A",
+    accessorFn: (row) => row.book?.title || "N/A",
   },
 
+  // {
+  //   header: "Category",
+  //   cell: ({ row }) => row.original.category?.name || "N/A",
+  // },
+
   {
+    id: "category",
     header: "Category",
-    cell: ({ row }) => row.original.category?.name || "N/A",
+    accessorFn: (row) => row?.book?.category?.name || "",
+    cell: ({ row }) => row?.original?.book?.category?.name || "N/A",
   },
 
+  // {
+  //   header: "Language",
+  //   cell: ({ row }) => row.original.book?.language || "N/A",
+  // },
+
   {
+    id: "language",
     header: "Language",
+    accessorFn: (row) => row?.book?.language || "",
     cell: ({ row }) => row.original.book?.language || "N/A",
   },
 
@@ -51,6 +65,7 @@ export const columns = (refetchMemberWishList) => [
     header: "Edition",
     cell: ({ row }) => row.original.book?.edition || "N/A",
   },
+
   {
     header: "Published Date",
     cell: ({ row }) => row.original.book?.publishedDate || "N/A",
