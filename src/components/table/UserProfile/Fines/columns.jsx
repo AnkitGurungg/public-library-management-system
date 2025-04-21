@@ -205,7 +205,7 @@ export const columns = (refetchMemberFines) => [
           <button
             disabled
             // onClick={paymentHandler}
-            className=" rounded-md text-white border border-[#206ea6] bg-[#206ea6] opacity-60 hover:text-[#206ea6] hover:bg-white px-3 py-0.5 text-sm cursor-not-allowed w-14 uppercase"
+            className="rounded-md text-white bg-[#1b5c8c] opacity-60 hover:text-white hover:bg-[#206ea6] px-3 py-0.5 text-sm cursor-not-allowed w-14 uppercase"
           >
             Paid
           </button>
@@ -214,7 +214,7 @@ export const columns = (refetchMemberFines) => [
         return (
           <div>
             <button
-              className="hover:cursor-pointer px-3 py-0.5 text-sm border border-red-500 text-white bg-red-600 opacity-80 hover:bg-white hover:text-red-600 rounded-lg w-14 uppercase"
+              className="hover:cursor-pointer px-3 py-0.5 text-sm text-white bg-red-600 opacity-80 hover:bg-red-400 hover:text-white rounded-md w-14 uppercase"
               onClick={() => paymentHandler(row.original)}
             >
               Pay

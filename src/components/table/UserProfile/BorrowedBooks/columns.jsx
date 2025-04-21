@@ -87,7 +87,7 @@ export const columns = [
       const returnDate = row.getValue("getReturnDate");
       if (!returnDate) {
         return (
-          <span className="bg-red-200 text-red-600 px-1 py-1 rounded-2xl text-[11px]">
+          <span className="bg-red-600 font-medium text-white opacity-80 px-1 py-1 rounded-2xl text-[11px]">
             NOT RETURNED
           </span>
         );
@@ -111,13 +111,13 @@ export const columns = [
     header: "Extended",
     cell: ({ row }) =>
       row?.original?.isExtended ? (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">
-          <CheckCircle size={16} className="text-[#206ea6]" />
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold bg-[#206ea6] text-white rounded-md">
+          <CheckCircle size={16} className="text-white" />
           YES
         </span>
       ) : (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-md">
-          <XCircle size={16} className="text-red-500" />
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold bg-red-600 opacity-80 text-white rounded-md">
+          <XCircle size={16} className="text-white" />
           NO
         </span>
       ),

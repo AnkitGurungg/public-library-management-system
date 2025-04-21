@@ -94,7 +94,7 @@ export const columns = (refetchMemberWishList) => [
           onClick={removeHandler}
           // variant="destructive"
           // className="h-5 px-2 text-[10px] pointer-events-none cursor-default"
-          className="px-3 py-0.5 text-sm border border-red-500 rounded text-red-500 hover:text-white hover:bg-red-500"
+          className="px-2 py-0.5 text-sm rounded-md bg-red-600 opacity-80 text-white hover:text-white hover:bg-red-400 uppercase cursor-pointer"
         >
           Remove
         </button>
