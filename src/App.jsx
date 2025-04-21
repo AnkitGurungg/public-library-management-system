@@ -31,6 +31,7 @@ import MostBorrowingMembers from "./features/Admin/Reports/MostBorrowingMembers"
 import ViewSpecificBook from "./features/User/Home/ViewSpecificBook";
 import AboutUs from "./layouts/User/About/AboutUs";
 import ContactUs from "./layouts/User/About/ContactUs";
+import RecentlyPublishedBooks from "./features/User/Home/RecentlyPublishedBooks";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -45,6 +46,7 @@ const App = () => {
         { path: "books/book/:bookId", element: <ViewSpecificBook /> },
         { path: "top-borrowed-books", element: <AllTopBorrowedBooks /> },
         { path: "new-arrivals", element: <NewArrivalBooks /> },
+        { path: "recently-published", element: <RecentlyPublishedBooks /> },
         { path: "about-us", element: <AboutUs /> },
         { path: "contact-us", element: <ContactUs /> },
       ],

@@ -1,34 +1,34 @@
-import useFetchNewArrivalBooks from "@/hooks/useFetchNewArrivalBooks";
+import { useFetchRecentlyPublished } from "@/hooks/useFetchRecentlyPublished";
 import { useEffect } from "react";
 import BookCard from "./BookCard";
 
-const NewArrivalBooks = () => {
-  const { data: newArrivalBooks, refetch: refetchNewArrivalBooks } =
-    useFetchNewArrivalBooks();
+const RecentlyPublishedBooks = () => {
+  const { data: recentlyPublished, refetch: refetchRecentlyPublished } =
+    useFetchRecentlyPublished();
 
   useEffect(() => {
-    refetchNewArrivalBooks();
+    refetchRecentlyPublished();
   }, []);
 
   useEffect(() => {
-    console.log(newArrivalBooks);
-  }, [newArrivalBooks]);
+    console.log(recentlyPublished);
+  }, [recentlyPublished]);
 
   return (
     <section className="max-w-7xl mx-auto px-4 mt-6">
       <div className="flex flex-grow ">
         <div className="grid grid-cols-5 md:grid-cols-2 lg:grid-cols-6 gap-3">
-          {newArrivalBooks?.status === 200 &&
-          Array.isArray(newArrivalBooks?.data) &&
-          newArrivalBooks?.data?.length !== 0 ? (
-            newArrivalBooks?.data?.map((element) => (
+          {recentlyPublished?.status === 200 &&
+          Array.isArray(recentlyPublished?.data) &&
+          recentlyPublished?.data?.length !== 0 ? (
+            recentlyPublished?.data?.map((element) => (
               <div key={element.bookId}>
                 <BookCard key={element.bookId} curBook={element} />
               </div>
             ))
           ) : (
             <p className="col-span-2">
-              {newArrivalBooks?.data?.message ||
+              {recentlyPublished?.data?.message ||
                 "Books are currently unavailable!!!"}
             </p>
           )}
@@ -38,4 +38,4 @@ const NewArrivalBooks = () => {
   );
 };
 
-export default NewArrivalBooks;
+export default RecentlyPublishedBooks;

@@ -1,6 +1,5 @@
 import { Input } from "@/components/ui/input";
 import BookCard from "@/features/User/Home/BookCard";
-import HoverBookCard from "@/features/User/Home/HoverBookCard";
 import useFetchNewArrivalBooks from "@/hooks/useFetchNewArrivalBooks";
 import { useFetchMemberWishList } from "@/hooks/useFetchMemberWishList";
 import { useFetchTopBorrowedBooks } from "@/hooks/useFetchTopBorrowedBooks";
@@ -15,6 +14,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { useFetchRecentlyPublished } from "@/hooks/useFetchRecentlyPublished";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -27,10 +27,13 @@ const Home = () => {
   } = useFetchNewArrivalBooks();
   const { data: topBorrowedBooks, refetch: refetchTopBorrowedBooks } =
     useFetchTopBorrowedBooks();
+  const { data: recentlyPublished, refetch: refetchRecentlyPublished } =
+    useFetchRecentlyPublished();
 
   useEffect(() => {
     refetchNewArrivalBooks();
     refetchTopBorrowedBooks();
+    refetchRecentlyPublished();
   }, []);
 
   return (
@@ -158,6 +161,34 @@ const Home = () => {
             {newArrivalBooks?.status === 200 &&
               newArrivalBooks?.data?.length > 0 &&
               newArrivalBooks?.data
+                ?.slice(0, 5)
+                .map((curBook) => (
+                  <BookCard key={curBook.bookId} curBook={curBook} />
+                ))}
+          </ul>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-16 py-4 mb-10">
+          <div className="mb-6 flex flex-col gap-1.5">
+            <div className="flex items-center justify-between">
+              <h2 className="font-bold text-2xl opacity-80">
+                Recently Published
+              </h2>
+              <button
+                className="text-gray-500 cursor-pointer"
+                onClick={() => navigate("/recently-published")}
+              >
+                Show all
+              </button>
+            </div>
+            <p className="text-[16px]">
+              Explore Recent Published and Find Your Next Great Read.
+            </p>
+          </div>
+          <ul className="grid grid-cols-5 justify-center items-center gap-5">
+            {recentlyPublished?.status === 200 &&
+              recentlyPublished?.data?.length > 0 &&
+              recentlyPublished?.data
                 ?.slice(0, 5)
                 .map((curBook) => (
                   <BookCard key={curBook.bookId} curBook={curBook} />
