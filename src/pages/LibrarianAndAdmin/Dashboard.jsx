@@ -111,8 +111,7 @@ function Dashboard() {
 
   return (
     <section className="min-h-screen max-w-7xl">
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="flex items-center gap-4  h-[80px]  bg-white  rounded-2xl shadow-md p-4 hover:scale-105 transition-transform duration-200 ease-in-out">
           <div className="flex items-center justify-centerp-2 rounded-full">
             <UserRoundX className="text-red-600 w-6 h-6" />
@@ -128,8 +127,6 @@ function Dashboard() {
           </div>
         </div>
 
-
-
         <div className="flex items-center gap-4  h-[80px] rounded-2xl bg-white shadow-md p-4 hover:scale-105 transition-transform duration-200 ease-in-out">
           <div className="flex items-center justify-center bg-green-100 p-2 rounded-full">
             <UserCheck className="text-green-600 w-6 h-6" />
@@ -144,9 +141,6 @@ function Dashboard() {
             <p className="text-sm text-gray-500">Verified Members</p>
           </div>
         </div>
-
-
-
 
         <div className="flex items-center gap-4 h-[80px] rounded-2xl bg-white shadow-md p-4 hover:scale-105 transition-transform duration-200 ease-in-out">
           <div className="flex items-center justify-center bg-yellow-100 p-2 rounded-full">
@@ -164,8 +158,6 @@ function Dashboard() {
           </div>
         </div>
 
-
-
         <div className="flex items-center gap-4  h-[80px] rounded-2xl bg-white shadow-md p-4 hover:scale-105 transition-transform duration-200 ease-in-out">
           <div className="flex items-center justify-center bg-blue-100 p-2 rounded-full">
             <Book className="text-blue-600 w-6 h-6" />
@@ -182,12 +174,8 @@ function Dashboard() {
         </div>
       </div>
 
-
-
-
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-      <Card className="flex flex-col col-span-1 h-full min-h-[400px]">
+        <Card className="flex flex-col col-span-1 h-full min-h-[400px]">
           <CardHeader className="items-center pb-0">
             <CardTitle>Book Categories</CardTitle>
             <CardDescription>Distribution by Category</CardDescription>
@@ -236,8 +224,7 @@ function Dashboard() {
           </CardFooter>
         </Card>
 
-          <BorrowBarChart />
-       
+        <BorrowBarChart />
       </div>
     </section>
   );
