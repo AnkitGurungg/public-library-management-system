@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import GLOBAL_SERVICE, {
   BACKEND_SERVER_BASE_URL,
 } from "@/services/GlobalServices";
+import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -32,62 +33,141 @@ export const columns = (refetchMemberFines) => [
   },
 
   {
-    accessorKey: "getCategoryName",
+    id: "getCategoryName",
     header: "Category",
+    accessorFn: (row) => row?.getCategoryName || "N/A",
+    cell: ({ row }) => row?.original?.getCategoryName || "N/A",
   },
 
   {
-    accessorKey: "getLanguage",
-    header: "Language",
-  },
-
-  {
-    accessorKey: "getBorrowDate",
-    header: "Borrow Date",
-  },
-
-  {
-    accessorKey: "getDueDate",
-    header: "Due Date",
-  },
-  {
-    accessorKey: "getReturnDate",
-    header: "Returned Date",
-    cell: ({ row }) => {
-      const returnDate = row.getValue("getReturnDate");
-      if (!returnDate) {
-        return (
-          <Button
-            variant="destructive"
-            className="h-5 px-2 text-[10px] pointer-events-none cursor-default"
+    id: "getBorrowDate",
+    cell: ({ row }) => row?.original?.getBorrowDate || "N/A",
+    accessorFn: (row) => row?.getBorrowDate || "",
+    header: ({ column }) => {
+      return (
+        <div className="flex justify-center w-full text-center">
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            NOT RETURNED
-          </Button>
-        );
-      }
-      return <span>{returnDate}</span>;
+            Borrowed Date
+            <ChevronsUpDown className="ml-2 h-4 w-4" />
+          </span>
+        </div>
+      );
     },
   },
+
   {
-    accessorKey: "isExtended",
-    header: "Is Extedned",
-    cell: ({ row }) => {
-      const isExtended = row.getValue("isExtended");
-      return isExtended ? "YES" : "NO";
+    id: "getDueDate",
+    cell: ({ row }) => row?.original?.getDueDate || "N/A",
+    accessorFn: (row) => row?.getDueDate || "N/A",
+    header: ({ column }) => {
+      return (
+        <div className="flex justify-center w-full text-center">
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Due Date
+            <ChevronsUpDown className="ml-2 h-4 w-4" />
+          </span>
+        </div>
+      );
     },
   },
+
+  {
+    id: "getReturnDate",
+    cell: ({ row }) => row?.original?.getReturnDate || "N/A",
+    accessorFn: (row) => row?.getReturnDate || "N/A",
+    header: ({ column }) => {
+      return (
+        <div className="flex justify-center w-full text-center">
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Returned Date
+            <ChevronsUpDown className="ml-2 h-4 w-4" />
+          </span>
+        </div>
+      );
+    },
+  },
+
+  // {
+  //   accessorKey: "getReturnDate",
+  //   header: "Returned Date",
+  //   cell: ({ row }) => {
+  //     const returnDate = row.getValue("getReturnDate");
+  //     if (!returnDate) {
+  //       return (
+  //         <Button
+  //           variant="destructive"
+  //           className="h-5 px-2 text-[10px] pointer-events-none cursor-default"
+  //         >
+  //           NOT RETURNED
+  //         </Button>
+  //       );
+  //     }
+  //     return <span>{returnDate}</span>;
+  //   },
+  // },
+
+  {
+    id: "isExtended",
+    accessorFn: (row) => String(row?.isExtended) || "",
+    header: "Extended",
+    cell: ({ row }) =>
+      row?.original?.isExtended ? (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-white bg-[#206ea6] rounded-md">
+          <CheckCircle size={16} className="text-white" />
+          YES
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-white bg-red-600 opacity-80 rounded-md">
+          <XCircle size={16} className="text-white" />
+          NO
+        </span>
+      ),
+  },
+
   {
     accessorKey: "getTotalFine",
-    header: "Amount",
-  },
-  {
-    accessorKey: "isPaidStatus",
-    header: "Status",
-    cell: ({ row }) => {
-      const isPaid = row.getValue("isPaidStatus");
-      return isPaid ? "YES" : "NO";
+    header: ({ column }) => {
+      return (
+        <div className="flex justify-center w-full text-center">
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Amount
+            <ChevronsUpDown className="ml-2 h-4 w-4" />
+          </span>
+        </div>
+      );
     },
   },
+
+  {
+    id: "isPaidStatus",
+    accessorFn: (row) => String(row?.isPaidStatus) || "",
+    header: "Paid",
+    cell: ({ row }) =>
+      row?.original?.isPaidStatus ? (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-white bg-[#206ea6] rounded-md">
+          <CheckCircle size={16} className="text-white" />
+          YES
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-white bg-red-600 opacity-80 rounded-md">
+          <XCircle size={16} className="text-white" />
+          NO
+        </span>
+      ),
+  },
+
   {
     accessorKey: "paymentAction",
     header: "Action",
@@ -120,12 +200,12 @@ export const columns = (refetchMemberFines) => [
         }
       };
 
-      if (isPaid) {
+      if (isPaid === "true" || isPaid === true) {
         return (
           <button
             disabled
             // onClick={paymentHandler}
-            className="bg-white border border-[#206ea6] text-[#206ea6] opacity-60 hover:bg-[#206ea6] hover:text-white px-3 py-0.5 text-sm rounded cursor-not-allowed w-14 uppercase"
+            className=" rounded-md text-white border border-[#206ea6] bg-[#206ea6] opacity-60 hover:text-[#206ea6] hover:bg-white px-3 py-0.5 text-sm cursor-not-allowed w-14 uppercase"
           >
             Paid
           </button>
@@ -134,7 +214,7 @@ export const columns = (refetchMemberFines) => [
         return (
           <div>
             <button
-              className="hover:cursor-pointer px-3 py-0.5 text-sm border border-red-500 bg-white text-red-500 opacity-90 hover:text-white hover:bg-red-500 rounded w-14 uppercase"
+              className="hover:cursor-pointer px-3 py-0.5 text-sm border border-red-500 text-white bg-red-600 opacity-80 hover:bg-white hover:text-red-600 rounded-lg w-14 uppercase"
               onClick={() => paymentHandler(row.original)}
             >
               Pay

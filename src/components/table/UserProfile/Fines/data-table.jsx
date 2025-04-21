@@ -6,6 +6,7 @@ import {
   getPaginationRowModel,
   useReactTable,
   getFilteredRowModel,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -19,6 +20,15 @@ import { Input } from "@/components/ui/input";
 
 export function DataTable({ columns, data }) {
   const [columnFilters, setColumnFilters] = useState([]);
+  const [sorting, setSorting] = useState([]);
+
+  const categories = Array.isArray(data)
+    ? [
+        ...new Set(
+          data.map((category) => category?.getCategoryName).filter(Boolean)
+        ),
+      ]
+    : [];
 
   const table = useReactTable({
     data,
@@ -28,7 +38,11 @@ export function DataTable({ columns, data }) {
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
 
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+
     state: {
+      sorting,
       columnFilters,
     },
   });
@@ -36,15 +50,70 @@ export function DataTable({ columns, data }) {
   return (
     <div>
       <div className="rounded-md  pt-0 bg-white">
-        <div className="mb-3 px-2">
+        <div className="mb-3 px-2 flex items-center justify-between">
           <Input
-            className="w-2/4 bg-[#f1f1f1] h-11"
+            className="w-1/3 bg-[#f1f1f1] h-11 placeholder:text-sm placeholder:text-gray-500 border border-gray-200"
             placeholder="Search by title..."
             value={table.getColumn("getTitle")?.getFilterValue() ?? ""}
             onChange={(event) =>
               table.getColumn("getTitle")?.setFilterValue(event.target.value)
             }
           />
+          <div className="flex gap-2.5">
+            <select
+              className="border text-base font-normal rounded-lg text-gray-600 px-3 py-2 bg-[#f1f1f1] border-gray-200"
+              value={table.getColumn("getCategoryName")?.getFilterValue() ?? ""}
+              onChange={(e) =>
+                table
+                  .getColumn("getCategoryName")
+                  ?.setFilterValue(e.target.value)
+              }
+            >
+              <option
+                value=""
+                disabled
+                selected
+                className="placeholder:text-sm"
+              >
+                Select category
+              </option>
+              <option value="">ALL</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+            <select
+              className="border text-base font-normal rounded-lg text-gray-600 px-3 py-2 bg-[#f1f1f1] border-gray-200"
+              value={table.getColumn("isExtended")?.getFilterValue() ?? ""}
+              onChange={(e) =>
+                table.getColumn("isExtended")?.setFilterValue(e.target.value)
+              }
+            >
+              <option value="" disabled selected className="plceholder:text-sm">
+                Select extended status
+              </option>
+              <option value="">ALL</option>
+              <option value={true}>YES</option>
+              <option value={false}>NO</option>
+            </select>
+
+            <select
+              className="border text-base font-normal rounded-lg text-gray-600 px-3 py-2 bg-[#f1f1f1] border-gray-200"
+              value={table.getColumn("isPaidStatus")?.getFilterValue() ?? ""}
+              onChange={(e) =>
+                table.getColumn("isPaidStatus")?.setFilterValue(e.target.value)
+              }
+            >
+              <option value="" disabled selected className="plceholder:text-sm">
+                Select paid status
+              </option>
+              <option value="">ALL</option>
+              <option value={true}>YES</option>
+              <option value={false}>NO</option>
+            </select>
+          </div>
         </div>
 
         <Table className="w-full p-0">
