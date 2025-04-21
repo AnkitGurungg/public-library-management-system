@@ -8,7 +8,7 @@ import GLOBAL_SERVICE, {
 import { useContext, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import HoverBookCard from "./HoverBookCard";
+import BookCard from "./BookCard";
 
 const AllTopBorrowedBooks = () => {
   const { data: topBorrowedBooks, refetch: refetchTopBorrowedBooks } =
@@ -23,27 +23,29 @@ const AllTopBorrowedBooks = () => {
   }, [topBorrowedBooks]);
 
   return (
-    <div className="flex flex-grow">
-      <div className="grid grid-cols-5 md:grid-cols-2 lg:grid-cols-5 space-y-0">
-        {topBorrowedBooks?.status === 200 &&
-        Array.isArray(topBorrowedBooks?.data) &&
-        topBorrowedBooks?.data?.length !== 0 ? (
-          topBorrowedBooks?.data?.map((element) => (
-            <div key={element?.borrowBooks?.bookId}>
-              <HoverBookCard
-                key={element?.borrowBooks?.bookId}
-                curBook={element?.borrowBooks}
-              />
-            </div>
-          ))
-        ) : (
-          <p className="col-span-2">
-            {topBorrowedBooks?.data?.message ||
-              "Book are currently unavailble!!1"}
-          </p>
-        )}
+    <section className="max-w-7xl mx-auto px-4 mt-6">
+      <div className="flex flex-grow">
+        <div className="grid grid-cols-5 md:grid-cols-2 lg:grid-cols-6 gap-3">
+          {topBorrowedBooks?.status === 200 &&
+          Array.isArray(topBorrowedBooks?.data) &&
+          topBorrowedBooks?.data?.length !== 0 ? (
+            topBorrowedBooks?.data?.map((element) => (
+              <div key={element?.borrowBooks?.bookId}>
+                <BookCard
+                  key={element?.borrowBooks?.bookId}
+                  curBook={element?.borrowBooks}
+                />
+              </div>
+            ))
+          ) : (
+            <p className="col-span-2">
+              {topBorrowedBooks?.data?.message ||
+                "Book are currently unavailble!!1"}
+            </p>
+          )}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

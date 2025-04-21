@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import useFetchDisplayCategory from "@/hooks/useFetchDisplayCategory";
 import { useNavigate } from "react-router-dom";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
-import HoverBookCard from "./HoverBookCard";
+import BookCard from "./BookCard";
 
 const GenreFilteredBooks = () => {
   const navigate = useNavigate();
@@ -79,19 +79,21 @@ const GenreFilteredBooks = () => {
         </div>
       </div>
 
-      <div className="flex flex-grow">
-        <div className="grid grid-cols-5 md:grid-cols-2 lg:grid-cols-5 space-y-0">
-          {books?.status === 200 &&
-          Array.isArray(books?.data) &&
-          books?.data?.length !== 0 ? (
-            books?.data?.map((element) => (
-              <div key={element.bookId}>
-                <HoverBookCard key={element.bookId} curBook={element} />
-              </div>
-            ))
-          ) : (
-            <p className="col-span-2">{books?.data?.message}</p>
-          )}
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex flex-grow">
+          <div className="grid grid-cols-5 md:grid-cols-2 lg:grid-cols-5 gap-3">
+            {books?.status === 200 &&
+            Array.isArray(books?.data) &&
+            books?.data?.length !== 0 ? (
+              books?.data?.map((element) => (
+                <div key={element.bookId}>
+                  <BookCard key={element.bookId} curBook={element} />
+                </div>
+              ))
+            ) : (
+              <p className="col-span-2">{books?.data?.message}</p>
+            )}
+          </div>
         </div>
       </div>
     </section>

@@ -1,7 +1,5 @@
 const AddToWishList = () => {
-  return (
-    <div>AddToWishList</div>
-  )
-}
+  return <div>AddToWishList</div>;
+};
 
-export default AddToWishList
+export default AddToWishList;

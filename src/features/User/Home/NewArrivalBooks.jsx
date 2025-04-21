@@ -1,6 +1,5 @@
 import useFetchNewArrivalBooks from "@/hooks/useFetchNewArrivalBooks";
 import { useEffect } from "react";
-import HoverBookCard from "./HoverBookCard";
 import BookCard from "./BookCard";
 
 const NewArrivalBooks = () => {
