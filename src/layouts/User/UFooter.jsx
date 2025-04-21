@@ -145,7 +145,7 @@ const UFooter = () => {
                 Top Borrowed
               </Link>
               <Link
-                to="/recently-published-books"
+                to="/recently-published"
                 className="text-gray-800 hover:text-[#206ea6]"
               >
                 Recently Published
