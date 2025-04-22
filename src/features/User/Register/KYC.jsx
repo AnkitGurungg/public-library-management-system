@@ -118,7 +118,7 @@ const KYC = () => {
         </DialogTrigger>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-semibold  flex items-center mb-0">
+            <DialogTitle className="text-2xl font-semibold  flex items-center mb-0 mx-5">
               <div className="h-12 bg-[#d7d7d7] w-12 flex justify-center items-center rounded-md mr-3">
                 <IdCard size={35} />
               </div>
@@ -335,7 +335,7 @@ const KYC = () => {
                   <Button
                     type="button"
                     variant="outline"
-                    className="flex-1 bg-black text-white uppercase font-semibold h-10"
+                    className="flex-1 bg-black text-white uppercase font-semibold h-10 hover:bg-black hover:text-white cursor-pointer"
                     onClick={() => {
                       reset();
                       setUserImage(null);
@@ -351,7 +351,7 @@ const KYC = () => {
                 </DialogClose>
                 <Button
                   type="submit"
-                  className="flex-1 font-semibold uppercase h-10"
+                  className="flex-1 font-semibold uppercase h-10 cursor-pointer"
                 >
                   Submit
                 </Button>
