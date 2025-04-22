@@ -48,9 +48,9 @@ const ASidebar = ({ sidebarToggle }) => {
       <div className="flex flex-col h-full justify-between">
         <div>
           <div className="flex items-center justify-between mb-0">
-            <div className="flex items-center gap-3">
-              <div className="bg-white rounded-lg p-1">
-                <img src="/react.svg" alt="Logo" className="w-7" />
+            <div className="flex items-center gap-3 mb-2">
+              <div className="bg-white rounded-lg flex justify-center items-center p-2 ml-3">
+                <img src="/logo/logo.png" alt="Logo" className="w-48 mx-auto" />
               </div>
               <div className="flex flex-col">
                 <span className="font-semibold text-lg"></span>
