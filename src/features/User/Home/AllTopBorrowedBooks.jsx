@@ -23,9 +23,9 @@ const AllTopBorrowedBooks = () => {
   }, [topBorrowedBooks]);
 
   return (
-    <section className="max-w-7xl mx-auto px-4 mt-6">
+    <section className="max-w-6xl mx-auto px-4 mt-6">
       <div className="flex flex-grow">
-        <div className="grid grid-cols-5 md:grid-cols-2 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-5 md:grid-cols-2 lg:grid-cols-5 gap-3">
           {topBorrowedBooks?.status === 200 &&
           Array.isArray(topBorrowedBooks?.data) &&
           topBorrowedBooks?.data?.length !== 0 ? (
