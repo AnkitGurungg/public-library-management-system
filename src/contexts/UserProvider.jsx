@@ -9,8 +9,8 @@ export function UserProvider({ children }) {
   //   () => localStorage.getItem("Authorization") || ""
   // );
 
-  const [token, setToken] = useState("");
-  const [userInfo, setUserInfo] = useState({});
+  const [token, setToken] = useState(localStorage.getItem("Authorization"));
+  const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const getUserInfo = async () => {
@@ -25,7 +25,6 @@ export function UserProvider({ children }) {
           //   },
           // }
         );
-        setLoading(false);
         setUserInfo(response.data);
       } catch (error) {
         if (error.status === 404) {
@@ -34,21 +33,15 @@ export function UserProvider({ children }) {
         }
       } finally {
         setLoading(false);
+        console.log(userInfo);
       }
     }
   };
 
   useEffect(() => {
-    setToken(localStorage.getItem("Authorization"));
-    console.log("Token setted");
-  }, []);
-
-  useEffect(() => {
-    console.log("Token changed");
     if (token) {
       getUserInfo();
     } else {
-      setUserInfo({});
       setLoading(false);
     }
   }, [token]);

@@ -11,13 +11,8 @@ import { Button } from "@/components/ui/button";
 import { useFetchAllAvailableBooks } from "@/hooks/useFetchAllAvailableBooks";
 
 const UHeader = () => {
-  const {
-    token,
-    setToken,
-    loading,
-    userInfo = {},
-    getUserInfo,
-  } = useContext(UserContext); // Default userInfo to {}
+  const { token, setToken, loading, userInfo, getUserInfo } =
+    useContext(UserContext);
   const { data: books, refetch: refetchBooks } = useFetchAllAvailableBooks();
   const [isOpenLogin, setIsOpenLogin] = useState(false);
   const [filteredBooks, setFilteredBooks] = useState([]);
@@ -106,17 +101,10 @@ const UHeader = () => {
           </div>
 
           <div className="flex flex-row items-center gap-5">
-            {/* {userInfo && Object.keys(userInfo).length === 0 && <Login />} */}
-
-            {/* {(!userInfo ||
-            Object.keys(userInfo).length === 0 ||
-            !userInfo.present ||
-            !userInfo.active) && <Login />} */}
-
             {(!userInfo ||
               Object.keys(userInfo).length === 0 ||
-              !userInfo.present ||
-              !userInfo.active) && (
+              !userInfo?.present ||
+              !userInfo?.active) && (
               <div>
                 <Button variant="none" onClick={() => setIsOpenLogin(true)}>
                   Login
@@ -124,7 +112,7 @@ const UHeader = () => {
               </div>
             )}
 
-            {userInfo.role === "ROLE_MEMBER" &&
+            {userInfo?.role === "ROLE_MEMBER" &&
               userInfo?.active &&
               userInfo?.present && (
                 <>
@@ -138,10 +126,10 @@ const UHeader = () => {
               userInfo?.role === "ROLE_LIBRARIAN") && (
               <button
                 onClick={() => {
-                  if (userInfo.role === "ROLE_ADMIN") {
+                  if (userInfo?.role === "ROLE_ADMIN") {
                     navigate("/admin");
                     window.location.href = "/admin";
-                  } else if (userInfo.role === "ROLE_LIBRARIAN") {
+                  } else if (userInfo?.role === "ROLE_LIBRARIAN") {
                     navigate("/librarian");
                   }
                 }}

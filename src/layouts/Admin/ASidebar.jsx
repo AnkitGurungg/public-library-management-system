@@ -26,18 +26,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const ASidebar = ({ sidebarToggle }) => {
-  const { userInfo, loading } = useContext(UserContext);
-  const [userRole, setUserRole] = useState(userInfo.role);
   const navigate = useNavigate();
   const [reportsOpen, setReportsOpen] = useState(false);
-
-  useEffect(() => {
-    if (userInfo?.role) {
-      setUserRole(userInfo.role);
-    }
-  }, [userInfo]);
-
-  if (loading) return <p>Loading...</p>;
 
   return (
     <div
@@ -230,9 +220,9 @@ const ASidebar = ({ sidebarToggle }) => {
           </div>
         </div>
 
-        <div className="pt-6 border-t border-white/10 text-center text-xs text-white/40 bg-red-700">
-          bijj hhkhk jj
-        </div>
+        {/* <div className="pt-6 border-t border-white/10 text-center text-xs text-white/40 bg-red-700">
+          
+        </div> */}
       </div>
     </div>
   );

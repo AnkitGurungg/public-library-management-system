@@ -1,15 +1,22 @@
 import { UserContext } from "@/contexts/UserContext";
-import { Menu } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import { useState, useEffect, useContext } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-
-const Header = ({sidebarToggle, setSidebarToggle}) => {
+const Header = ({ sidebarToggle, setSidebarToggle }) => {
   const [currentDate, setCurrentDate] = useState("");
   const [currentTime, setCurrentTime] = useState("");
 
-  useEffect(() => {
-    // const {}= useContext(UserContext);
+  const { userInfo } = useContext(UserContext);
 
+  useEffect(() => {
     const updateDateTime = () => {
       const now = new Date();
       const formattedDate = now.toLocaleDateString("en-US", {
@@ -35,19 +42,39 @@ const Header = ({sidebarToggle, setSidebarToggle}) => {
   }, []);
 
   return (
-    <div className="px-8 flex justify-between border-l-1 border-grey-900 items-center bg-white drop-shadow-sm h-16">
-      <div className="cursor-pointer"
-      onClick={()=> setSidebarToggle(!sidebarToggle)}>
+    <div className="flex justify-between border-l-1 border-grey-900 items-center bg-white drop-shadow-sm h-16">
+      <div
+        className="cursor-pointer ml-8"
+        onClick={() => setSidebarToggle(!sidebarToggle)}
+      >
         <Menu />
       </div>
 
-      <div className="flex items-center gap-3">
-        <img src="/9781786330895-3407.webp" className="w-8 h-8 rounded-full overflow-hidden object-cover" alt="" />
-        
-      </div>
-      
+      {userInfo && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="flex items-center gap-3 cursor-pointer px-3 py-2 rounded-lg transition mr-1.5">
+              <img
+                src={userInfo?.imageURL || "/user/default-user.png"}
+                className="w-8 h-8 rounded-full object-cover"
+                alt="User"
+              />
+              <div className="flex flex-col text-left">
+                <p className="text-sm font-medium">{userInfo?.email}</p>
+                <p className="text-xs text-gray-500 capitalize">
+                  {userInfo?.role}
+                </p>
+              </div>
+              <ChevronDown className="w-4 h-4 text-gray-500" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-48">
+            <DropdownMenuItem>Change password</DropdownMenuItem>
+            <DropdownMenuItem>Logout</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
     </div>
-    
   );
 };
 
