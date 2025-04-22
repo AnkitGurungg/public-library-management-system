@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PlusCircle } from "lucide-react";
+import { BookOpenText, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
@@ -65,16 +65,23 @@ const BorrowBook = () => {
           </Button>
         </DialogTrigger>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Borrow Book</DialogTitle>
+          <DialogHeader className="sm:max-w-[500px]">
+            <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-6">
+              <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
+                <BookOpenText size={27} />
+              </div>
+              <span className="text-lg">Borrow Book</span>
+            </DialogTitle>
+            <div className="my-0 h-px bg-gray-800 mx-5" />
           </DialogHeader>
-          <hr />
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
-              <div>
-                <Label>Book Id</Label>
+          <form onSubmit={handleSubmit(onSubmit)} className="mx-5">
+            <div className="space-y-4">
+              <div className="space-y-1 px-1">
+                <Label className="text-base font-medium pl-0.5">Book Id</Label>
                 <Input
                   type="text"
+                  placeholder="Enter book id"
+                  className="h-11 border border-gray-300 mb-0"
                   {...register("bookId", {
                     required: "Please enter book id!",
                     pattern: {
@@ -91,13 +98,19 @@ const BorrowBook = () => {
                     },
                   })}
                 />
-                <p>{errors?.bookId?.message}</p>
+                {errors?.bookId?.message && (
+                  <p className="text-sm text-red-500 mt-0.5">
+                    {errors?.bookId?.message}
+                  </p>
+                )}
               </div>
 
-              <div>
-                <Label>User Id</Label>
+              <div className="space-y-1 px-1">
+                <Label className="text-base font-medium pl-0.5">User Id</Label>
                 <Input
                   type="text"
+                  placeholder="Enter user id"
+                  className="h-11 border border-gray-300 mb-0"
                   {...register("userId", {
                     required: "Please enter user id!",
                     pattern: {
@@ -114,12 +127,19 @@ const BorrowBook = () => {
                     },
                   })}
                 />
-                <p>{errors?.userId?.message}</p>
+                {errors?.userId?.message && (
+                  <p className="text-sm text-red-500 mt-0.5">
+                    {errors?.userId?.message}
+                  </p>
+                )}
               </div>
-              <div>
-                <Label>Due date</Label>
+
+              <div className="space-y-1 px-1">
+                <Label className="text-base font-medium pl-0.5">Due date</Label>
                 <Input
                   type="date"
+                  placeholder="Select due date"
+                  className="h-11 border border-gray-300 mb-0"
                   {...register("dueDate", {
                     required: "Please choose due date!",
                     validate: (value) => {
@@ -132,12 +152,19 @@ const BorrowBook = () => {
                     },
                   })}
                 />
-                <p>{errors?.dueDate?.message}</p>
+                {errors?.dueDate?.message && (
+                  <p className="text-sm text-red-500 mt-0.5">
+                    {errors?.dueDate?.message}
+                  </p>
+                )}
               </div>
-              <div>
-                <Label>Note</Label>
+
+              <div className="space-y-1 px-1">
+                <Label className="text-base font-medium pl-0.5">Note</Label>
                 <Input
                   type="text"
+                  placeholder="Enter note"
+                  className="h-11 border border-gray-300 mb-0"
                   {...register("note", {
                     required: "Please enter description!",
                     minLength: {
@@ -146,11 +173,15 @@ const BorrowBook = () => {
                     },
                   })}
                 />
-                <p>{errors?.note?.message}</p>
+                {errors?.note?.message && (
+                  <p className="text-sm text-red-500 mt-0.5">
+                    {errors?.note?.message}
+                  </p>
+                )}
               </div>
             </div>
 
-            <DialogFooter className="grid grid-cols-2 mt-2">
+            <DialogFooter className="grid grid-cols-2 mt-2 px-1">
               <Button className="w-full" onClick={() => reset()}>
                 Clear
               </Button>
