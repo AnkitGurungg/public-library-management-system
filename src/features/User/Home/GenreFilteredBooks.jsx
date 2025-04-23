@@ -4,6 +4,7 @@ import useFetchDisplayCategory from "@/hooks/useFetchDisplayCategory";
 import { useNavigate } from "react-router-dom";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import BookCard from "./BookCard";
+import { ChevronRight } from "lucide-react";
 
 const GenreFilteredBooks = () => {
   const navigate = useNavigate();
@@ -45,11 +46,11 @@ const GenreFilteredBooks = () => {
     <section className="flex my-9">
       <div className="w-65 max-h-80 overflow-y-auto">
         <button onClick={handleShowGenre}>
-          <div>
-            <p>All Genres</p>
+          <div className="ml-2 text-lg font-bold opacity-80 cursor-pointer">
+            <p></p>
             {displayCategory?.status === 200 &&
             Array.isArray(displayCategory?.data) ? (
-              <p>{displayCategory.data.length} Genres</p>
+              <p>All Genres ({displayCategory.data.length})</p>
             ) : (
               <p>{displayCategory?.data?.message || "No Genres Found"}</p>
             )}
@@ -61,15 +62,19 @@ const GenreFilteredBooks = () => {
           Array.isArray(displayCategory?.data) &&
           displayCategory?.data?.length !== 0 ? (
             displayCategory?.data?.map((element) => (
-              <div className="" key={element.categoryId}>
+              <div className="ml-2 " key={element.categoryId}>
                 <button
                   key={element.categoryId}
                   value={element.categoryId}
                   onClick={() =>
                     navigate(`/books/genres/${element.categoryId}`)
                   }
+                  className="flex items-center my-1"
                 >
-                  <h4 className="text-[20px] font-semibold">{element.name}</h4>
+                  <ChevronRight />
+                  <h4 className="text-[17px] font-semibold cursor-pointer">
+                    {element.name}
+                  </h4>
                 </button>
               </div>
             ))
