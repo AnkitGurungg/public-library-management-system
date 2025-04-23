@@ -3,6 +3,7 @@ import { useFetchMemberWishList } from "@/hooks/useFetchMemberWishList";
 import GLOBAL_SERVICE, {
   BACKEND_SERVER_BASE_URL,
 } from "@/services/GlobalServices";
+import { CheckCircle, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
 
 export const columns = (refetchMemberWishList) => [
@@ -32,44 +33,57 @@ export const columns = (refetchMemberWishList) => [
     accessorFn: (row) => row.book?.title || "N/A",
   },
 
-  // {
-  //   header: "Category",
-  //   cell: ({ row }) => row.original.category?.name || "N/A",
-  // },
-
-  {
-    id: "category",
-    header: "Category",
-    accessorFn: (row) => row?.book?.category?.name || "",
-    cell: ({ row }) => row?.original?.book?.category?.name || "N/A",
-  },
-
-  // {
-  //   header: "Language",
-  //   cell: ({ row }) => row.original.book?.language || "N/A",
-  // },
-
-  {
-    id: "language",
-    header: "Language",
-    accessorFn: (row) => row?.book?.language || "",
-    cell: ({ row }) => row.original.book?.language || "N/A",
-  },
-
   {
     header: "Author",
     cell: ({ row }) => row.original.book?.author || "N/A",
   },
 
   {
-    header: "Edition",
-    cell: ({ row }) => row.original.book?.edition || "N/A",
+    id: "category",
+    header: "Category",
+    accessorFn: (row) => row?.book?.category?.name || "N/A",
+    cell: ({ row }) => row?.original?.book?.category?.name || "N/A",
+  },
+
+  {
+    id: "language",
+    header: "Language",
+    accessorFn: (row) => row?.book?.language || "N/A",
+    cell: ({ row }) => row.original.book?.language || "N/A",
   },
 
   {
     header: "Published Date",
     cell: ({ row }) => row.original.book?.publishedDate || "N/A",
   },
+
+  {
+    id: "inStock",
+    accessorFn: (row) => ((row?.book?.quantity ?? 0) > 0 ? "YES" : "NO"),
+    header: "In Stock",
+    cell: ({ row }) => {
+      const quantity = row.original.book?.quantity || 0;
+      return quantity > 0 ? (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold bg-[#206ea6] text-white rounded-md">
+          <CheckCircle size={16} className="text-white" />
+          YES
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold bg-red-600 opacity-80 text-white rounded-md">
+          <XCircle size={16} className="text-white" />
+          NO
+        </span>
+      );
+    },
+  },
+
+  {
+    id: "shelf",
+    header: "Shelf",
+    accessorFn: (row) => row?.book?.shelf?.name || "N/A",
+    cell: ({ row }) => row?.original?.book?.shelf?.name || "N/A",
+  },
+
   {
     header: "Action",
     cell: ({ row }) => {
@@ -92,8 +106,6 @@ export const columns = (refetchMemberWishList) => [
       return (
         <button
           onClick={removeHandler}
-          // variant="destructive"
-          // className="h-5 px-2 text-[10px] pointer-events-none cursor-default"
           className="px-2 py-0.5 text-sm rounded-md bg-red-600 opacity-80 text-white hover:text-white hover:bg-red-400 uppercase cursor-pointer"
         >
           Remove

@@ -113,6 +113,21 @@ export function DataTable({ columns, data }) {
                 </option>
               ))}
             </select>
+
+            <select
+              className="border text-base font-normal rounded-lg text-gray-600 px-3 py-2 bg-[#f1f1f1] border-gray-200"
+              value={table.getColumn("inStock")?.getFilterValue() ?? ""}
+              onChange={(e) =>
+                table.getColumn("inStock")?.setFilterValue(e.target.value)
+              }
+            >
+              <option value="" disabled selected className="plceholder:text-sm">
+                Select stock status
+              </option>
+              <option value="">ALL</option>
+              <option value="YES">YES</option>
+              <option value="NO">NO</option>
+            </select>
           </div>
         </div>
 

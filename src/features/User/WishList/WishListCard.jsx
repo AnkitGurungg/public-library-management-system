@@ -83,6 +83,7 @@ const WishListCard = ({ currWishListBook }) => {
   //               )}
   //             </p>
   //           </div>
+  
   //           <button
   //             onClick={removeHandler}
   //             className="px-4 py-2 border border-gray-300 rounded text-red-500 hover:text-red-700 hover:bg-red-50"
