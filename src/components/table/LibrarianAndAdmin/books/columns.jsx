@@ -1,5 +1,5 @@
 import Delete from "@/components/Delete";
-import RestoreBook from "@/features/LibrarianAndAdmin/Books/RestoreBook";
+import Restore from "@/components/Restore";
 import UpdateBook from "@/features/LibrarianAndAdmin/Books/UpdateBook";
 import ViewBook from "@/features/LibrarianAndAdmin/Books/ViewBook";
 import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
@@ -98,13 +98,15 @@ export const columns = [
       const isAvailable = book?.available;
       return (
         <div className="flex items-center justify-center gap-1">
-          <div className="opacity-90">
+          <div className={`opacity-90 cursor-pointer`}>
             <ViewBook id={book.bookId} />
           </div>
 
           <button
             className={`cursor-not-allowed ${
-              !isAvailable ? "opacity-40" : "opacity-90"
+              !isAvailable
+                ? "opacity-40 cursor-not-allowed"
+                : "opacity-90 cursor-pointer"
             }`}
             disabled={!isAvailable}
           >
@@ -112,8 +114,10 @@ export const columns = [
           </button>
 
           <button
-            className={`cursor-not-allowed ${
-              !isAvailable ? "opacity-40" : "opacity-90"
+            className={`${
+              !isAvailable
+                ? "opacity-40 cursor-not-allowed"
+                : "opacity-90 cursor-pointer"
             }`}
             disabled={!isAvailable}
           >
@@ -121,17 +125,12 @@ export const columns = [
           </button>
 
           <button
-            className={`cursor-not-allowed ${
-              isAvailable ? "opacity-40" : "opacity-90"
+            className={`${
+              isAvailable ? "opacity-40" : "opacity-90 cursor-pointer"
             }`}
             disabled={isAvailable}
           >
-            <RestoreBook
-              Delete
-              id={book.bookId}
-              name={book.title}
-              type={"book"}
-            />
+            <Restore Delete id={book.bookId} name={book.title} type={"book"} />
           </button>
         </div>
       );
