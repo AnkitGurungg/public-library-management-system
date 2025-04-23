@@ -31,10 +31,10 @@ const BookCard = ({ curBook }) => {
       return;
     }
 
-    if (userInfo?.role !== "ROLE_MEMBER") {
-      toast.error("Not allowed!");
-      return;
-    }
+    // if (userInfo?.role !== "ROLE_MEMBER") {
+    //   toast.error("Not allowed!");
+    //   return;
+    // }
 
     try {
       const response = await GLOBAL_SERVICE.post(

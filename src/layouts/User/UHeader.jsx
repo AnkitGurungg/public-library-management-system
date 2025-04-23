@@ -116,16 +116,14 @@ const UHeader = () => {
               </div>
             )}
 
-            {userInfo?.role === "ROLE_MEMBER" &&
-              userInfo?.active &&
-              userInfo?.present && (
-                <>
-                  <NavLink to="/member/profile/wish-list">
-                    <Heart />
-                  </NavLink>
-                  <ProfilePopover />
-                </>
-              )}
+            {userInfo?.active && userInfo?.present && (
+              <>
+                <NavLink to="/member/profile/wish-list">
+                  <Heart />
+                </NavLink>
+                <ProfilePopover />
+              </>
+            )}
             {(userInfo?.role === "ROLE_ADMIN" ||
               userInfo?.role === "ROLE_LIBRARIAN") && (
               <button
@@ -137,9 +135,9 @@ const UHeader = () => {
                     navigate("/librarian");
                   }
                 }}
-                className="text-[#206ea6] cursor-pointer"
+                className="text-black cursor-pointer"
               >
-                Go to Dashboard
+                Dashboard
               </button>
             )}
           </div>
