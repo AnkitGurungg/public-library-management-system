@@ -9,6 +9,7 @@ import { UserContext } from "@/contexts/UserContext";
 import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
 import { Button } from "@/components/ui/button";
 import { useFetchAllAvailableBooks } from "@/hooks/useFetchAllAvailableBooks";
+import toast from "react-hot-toast";
 
 const UHeader = () => {
   const { token, setToken, loading, userInfo, getUserInfo } =
@@ -48,6 +49,14 @@ const UHeader = () => {
       : [];
     setFilteredBooks(result);
     setShowDropdown(true);
+  };
+
+  const handleWishlistClick = () => {
+    if (userInfo?.active && userInfo?.present) {
+      navigate("/member/profile/wish-list");
+    } else {
+      toast.error("Please login!");
+    }
   };
 
   return (
@@ -100,7 +109,11 @@ const UHeader = () => {
             )}
           </div>
 
-          <div className="flex flex-row items-center gap-5">
+          <div className="flex flex-row items-center gap-4">
+            <div onClick={handleWishlistClick} className="cursor-pointer">
+              <Heart />
+            </div>
+
             {(!userInfo ||
               Object.keys(userInfo).length === 0 ||
               !userInfo?.present ||
@@ -116,11 +129,14 @@ const UHeader = () => {
               </div>
             )}
 
+            {/* {userInfo?.active && userInfo?.present && (
+              <NavLink to="/member/profile/wish-list">
+                <Heart />
+              </NavLink>
+            )} */}
+
             {userInfo?.active && userInfo?.present && (
               <>
-                <NavLink to="/member/profile/wish-list">
-                  <Heart />
-                </NavLink>
                 <ProfilePopover />
               </>
             )}
