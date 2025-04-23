@@ -60,7 +60,7 @@ export const columns = (refetchMemberWishList) => [
   {
     id: "inStock",
     accessorFn: (row) => ((row?.book?.quantity ?? 0) > 0 ? "YES" : "NO"),
-    header: "In Stock",
+    header: "Stock Status",
     cell: ({ row }) => {
       const quantity = row.original.book?.quantity || 0;
       return quantity > 0 ? (
