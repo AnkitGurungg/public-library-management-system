@@ -29,14 +29,14 @@ export default function ProfilePopover() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <div className="relative group">
+        <div className="relative group hover:cursor-pointer">
           <UserRoundCheck className="opacity-80" />
           <span className="absolute bottom-full mt-0.5 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Profile
           </span>
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-80">
+      <PopoverContent className="w-60">
         <div className="grid gap-4">
           <div className="space-y-2">
             <NavLink to="/member/profile/wish-list">

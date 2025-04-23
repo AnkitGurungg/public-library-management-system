@@ -1,6 +1,13 @@
 import { useFetchUserProfile } from "@/hooks/useFetchUserProfile";
 import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
-import { Book, BookOpen, CreditCard, Settings, User } from "lucide-react";
+import {
+  Book,
+  BookOpen,
+  CreditCard,
+  Heart,
+  Settings,
+  User,
+} from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -60,7 +67,7 @@ const UPSidebar = () => {
             to="/member/profile/wish-list"
             className="flex items-center p-2 hover:bg-[#206ea6] hover:text-white rounded"
           >
-            <BookOpen className="mr-2 h-5 w-5" />
+            <Heart className="mr-2 h-5 w-5" />
             Wish List
           </NavLink>
           <NavLink

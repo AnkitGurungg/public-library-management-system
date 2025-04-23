@@ -1,7 +1,7 @@
 import Login from "@/features/User/Login/Login";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
-import { Bookmark, ShoppingCart } from "lucide-react";
+import { Bookmark, Heart, ShoppingCart } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import HoverCategories from "@/features/User/Home/HoverCategories";
 import ProfilePopover from "@/features/User/Profiile/ProfilePopover";
@@ -117,7 +117,7 @@ const UHeader = () => {
               userInfo?.present && (
                 <>
                   <NavLink to="/member/profile/wish-list">
-                    <Bookmark />
+                    <Heart />
                   </NavLink>
                   <ProfilePopover />
                 </>
