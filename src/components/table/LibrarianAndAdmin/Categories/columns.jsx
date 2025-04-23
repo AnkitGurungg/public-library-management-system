@@ -1,4 +1,5 @@
 import Delete from "@/components/Delete";
+import RestoreBook from "@/components/Restore";
 import UpdateCategory from "@/features/LibrarianAndAdmin/Categories/UpdateCategory";
 import ViewCategory from "@/features/LibrarianAndAdmin/Categories/ViewCategory";
 import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
@@ -116,7 +117,9 @@ export const columns = [
 
           <button
             className={`cursor-not-allowed ${
-              !isPresent ? "opacity-40" : "opacity-90"
+              !isPresent
+                ? "opacity-40 cursor-not-allowed"
+                : "opacity-90 cursor-pointer"
             }`}
             disabled={!isPresent}
           >
@@ -125,11 +128,28 @@ export const columns = [
 
           <button
             className={`cursor-not-allowed ${
-              !isPresent ? "opacity-40" : "opacity-90"
+              !isPresent
+                ? "opacity-40 cursor-not-allowed"
+                : "opacity-90 cursor-pointer"
             }`}
             disabled={!isPresent}
           >
             <Delete
+              id={category?.categoryId}
+              name={category?.name}
+              type={"category"}
+            />
+          </button>
+
+          <button
+            className={`cursor-not-allowed ${
+              isPresent
+                ? "opacity-40 cursor-not-allowed"
+                : "opacity-90 cursor-pointer"
+            }`}
+            disabled={isPresent}
+          >
+            <RestoreBook
               id={category?.categoryId}
               name={category?.name}
               type={"category"}

@@ -51,6 +51,10 @@ const BorrowBook = () => {
       if (error.status === 404 || error.status === 400) {
         toast.error(error?.response?.data?.message);
       }
+
+      if (error.status === 409) {
+        toast.error(error?.response?.data?.message || "Conflict");
+      }
       console.log(error);
     }
   };
