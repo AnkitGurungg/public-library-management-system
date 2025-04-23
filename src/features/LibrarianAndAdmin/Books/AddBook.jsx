@@ -75,7 +75,9 @@ const AddBook = () => {
         refetchBooks();
         toast.success("Book added");
       } catch (error) {
-        // console.log(error);
+        if (error?.status === 409) {
+          toast.error(error?.response?.data?.message)
+        }
       } finally {
         setLoading(false);
       }

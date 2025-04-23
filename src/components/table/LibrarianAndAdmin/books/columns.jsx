@@ -1,4 +1,5 @@
 import Delete from "@/components/Delete";
+import RestoreBook from "@/features/LibrarianAndAdmin/Books/RestoreBook";
 import UpdateBook from "@/features/LibrarianAndAdmin/Books/UpdateBook";
 import ViewBook from "@/features/LibrarianAndAdmin/Books/ViewBook";
 import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
@@ -117,6 +118,20 @@ export const columns = [
             disabled={!isAvailable}
           >
             <Delete Delete id={book.bookId} name={book.title} type={"book"} />
+          </button>
+
+          <button
+            className={`cursor-not-allowed ${
+              isAvailable ? "opacity-40" : "opacity-90"
+            }`}
+            disabled={isAvailable}
+          >
+            <RestoreBook
+              Delete
+              id={book.bookId}
+              name={book.title}
+              type={"book"}
+            />
           </button>
         </div>
       );

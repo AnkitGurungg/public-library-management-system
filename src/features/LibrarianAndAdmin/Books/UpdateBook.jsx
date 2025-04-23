@@ -17,6 +17,7 @@ import GlobalService from "@/services/GlobalServices";
 import { useFetchBooks } from "@/hooks/useFetchBooks";
 import { useFetchCategory } from "@/hooks/useFetchCategory";
 import { BsPencilSquare } from "react-icons/bs";
+import toast from "react-hot-toast";
 
 const UpdateBook = ({ id }) => {
   const [open, setOpen] = useState(false);
@@ -79,7 +80,10 @@ const UpdateBook = ({ id }) => {
       refetchBooks();
       refetchCategories();
     } catch (error) {
-      // console.log("the error is ", error);
+      console.log(error)
+      if (error.status === 409) {
+        toast.error(error?.response?.data?.message || "Error!")
+      }
     }
   };
 
