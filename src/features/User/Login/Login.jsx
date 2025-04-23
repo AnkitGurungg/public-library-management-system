@@ -118,10 +118,9 @@ const Login = ({ isOpenLogin, setIsOpenLogin }) => {
   return (
     <div>
       <ForgotPassword
-   setIsForgotPasswordOpen={setIsForgotPasswordOpen}
-   isForgotPasswordOpen={isForgotPasswordOpen}
-   setIsOpenLogin ={setIsOpenLogin }
-      
+        setIsForgotPasswordOpen={setIsForgotPasswordOpen}
+        isForgotPasswordOpen={isForgotPasswordOpen}
+        setIsOpenLogin={setIsOpenLogin}
       />
 
       <Register
@@ -137,7 +136,7 @@ const Login = ({ isOpenLogin, setIsOpenLogin }) => {
         <DialogContent className="w-390" aria-describedby={undefined}>
           <DialogHeader className="flex justify-center items-center">
             <DialogTitle className=" opacity-75 text-4xl font-bold text-[#2d3436]">
-              You must login
+              Login
             </DialogTitle>
           </DialogHeader>
           <hr />
@@ -216,10 +215,13 @@ const Login = ({ isOpenLogin, setIsOpenLogin }) => {
                 </a>
               </div>
               <div className="flex justify-center">
-                <span className="text-[#196489] cursor-pointer mt-1"
-                onClick={()=> {setIsForgotPasswordOpen(true)
-                  setIsOpenLogin(false) }
-                }>
+                <span
+                  className="text-[#196489] cursor-pointer mt-1"
+                  onClick={() => {
+                    setIsForgotPasswordOpen(true);
+                    setIsOpenLogin(false);
+                  }}
+                >
                   Forgot Password ?
                 </span>
               </div>

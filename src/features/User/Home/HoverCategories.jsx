@@ -26,7 +26,7 @@ const HoverCategories = () => {
       <HoverCardTrigger asChild>
         <Button
           variant="link"
-          className="font-medium text-[17px] hover:text-[#206ea6]"
+          className="font-medium text-[19px] hover:text-[#206ea6]"
         >
           Books {hover ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </Button>

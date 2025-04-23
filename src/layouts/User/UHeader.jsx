@@ -58,7 +58,7 @@ const UHeader = () => {
         <div className="h-[4.5rem] bg-white flex flex-row justify-around items-center drop-shadow-sm w-full px-4">
           <div className="flex flex-row gap-4 items-center relative">
             <NavLink to="/">
-              <h1 className="font-medium text-[17px]">Booksmandala</h1>
+              <img src="/logo/logo.png" className="object-cover w-48 h-7"></img>
             </NavLink>
             <HoverCategories className="w-[329px] h-[378px]" />
           </div>
@@ -106,7 +106,11 @@ const UHeader = () => {
               !userInfo?.present ||
               !userInfo?.active) && (
               <div>
-                <Button variant="none" onClick={() => setIsOpenLogin(true)}>
+                <Button
+                  variant="none"
+                  onClick={() => setIsOpenLogin(true)}
+                  className="text-[16px] cursor-pointer"
+                >
                   Login
                 </Button>
               </div>
