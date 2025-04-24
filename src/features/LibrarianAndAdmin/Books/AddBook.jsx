@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
-import { PlusCircle } from "lucide-react";
+import { BookOpenText, PlusCircle } from "lucide-react";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useFetchBooks } from "@/hooks/useFetchBooks";
@@ -76,7 +76,7 @@ const AddBook = () => {
         toast.success("Book added");
       } catch (error) {
         if (error?.status === 409) {
-          toast.error(error?.response?.data?.message)
+          toast.error(error?.response?.data?.message);
         }
       } finally {
         setLoading(false);
@@ -96,13 +96,18 @@ const AddBook = () => {
           </Button>
         </DialogTrigger>
         <DialogContent className="w-390" aria-describedby={undefined}>
-          <DialogHeader>
-            <DialogTitle>Add Book</DialogTitle>
+          <DialogHeader className="sm:max-w-[500px]">
+            <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-6">
+              <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
+                <BookOpenText size={27} />
+              </div>
+              <span className="text-lg">Add Book</span>
+            </DialogTitle>
+            <div className="my-0 h-px bg-gray-800 mx-5" />
           </DialogHeader>
-          <hr />
-          <ScrollArea className="h-[70vh]">
+          <ScrollArea className="h-[70vh] mx-2 mb-3">
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="space-y-4 px-3">
+              <div className="space-y-4 px-3 mb-5">
                 <div className="flex flex-col gap-1">
                   <Label htmlFor="isbn" className="text-right">
                     ISBN
@@ -111,7 +116,8 @@ const AddBook = () => {
                     id="isbn"
                     type="text"
                     defaultValue=""
-                    className="col-span-3"
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter isbn"
                     {...register("isbn", {
                       required: "Please enter ISBN",
                       minLength: {
@@ -134,7 +140,8 @@ const AddBook = () => {
                     id="title"
                     type="text"
                     defaultValue=""
-                    className="col-span-3"
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter title"
                     {...register("title", {
                       required: "Please enter title",
                       minLength: {
@@ -157,7 +164,8 @@ const AddBook = () => {
                     id="author"
                     type="text"
                     defaultValue=""
-                    className="col-span-3"
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter author"
                     {...register("author", {
                       required: "Please enter author name",
                       minLength: {
@@ -183,7 +191,7 @@ const AddBook = () => {
                     {...register("categoryId", {
                       required: "Please select at least one",
                     })}
-                    className="w-[340px] h-[39px] border-2 rounded-[8px]"
+                    className="w-[420px] border rounded-[8px] border-gray-300 mb-0 h-11"
                   >
                     <option disabled>Please select atleast one category</option>
                     {categories?.status == 200 &&
@@ -213,7 +221,7 @@ const AddBook = () => {
                     {...register("shelfId", {
                       required: "Please select at least one",
                     })}
-                    className="w-[340px] h-[39px] border-2 rounded-[8px]"
+                    className="w-[420px] border rounded-[8px] border-gray-300 mb-0 h-11"
                   >
                     <option disabled>Please select atleast one shelf</option>
                     {availableShelfs?.status == 200 &&
@@ -241,7 +249,8 @@ const AddBook = () => {
                     id="language"
                     type="text"
                     defaultValue=""
-                    className="col-span-3"
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter language"
                     {...register("language", {
                       required: "Please enter is langauge",
                       minLength: {
@@ -264,17 +273,18 @@ const AddBook = () => {
                     id="published-date"
                     type="date"
                     defaultValue=""
-                    className="col-span-3"
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Choose published date"
                     {...register("publishedDate", {
                       required: "Date is required",
-                      validate: (value) => {
-                        const selectedDate = new Date(value);
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-                        return (
-                          selectedDate >= today || "Date must be today or later"
-                        );
-                      },
+                      // validate: (value) => {
+                      //   const selectedDate = new Date(value);
+                      //   const today = new Date();
+                      //   today.setHours(0, 0, 0, 0);
+                      //   return (
+                      //     selectedDate >= today || "Date must be today or later"
+                      //   );
+                      // },
                     })}
                   />
                   <p>{errors?.publishedDate?.message}</p>
@@ -287,7 +297,8 @@ const AddBook = () => {
                     id="edition"
                     type="text"
                     defaultValue=""
-                    className="col-span-3"
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter edition"
                     {...register("edition", {
                       required: "Please enter edition",
                       minLength: {
@@ -310,7 +321,8 @@ const AddBook = () => {
                     id="page-count"
                     type="text"
                     defaultValue=""
-                    className="col-span-3"
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter page count"
                     {...register("pageCount", {
                       required: "Enter a number",
                       pattern: {
@@ -333,7 +345,8 @@ const AddBook = () => {
                     id="quantity"
                     type="text"
                     defaultValue=""
-                    className="col-span-3"
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter quantity"
                     {...register("quantity", {
                       required: "Please enter quantity",
                       pattern: {
@@ -356,7 +369,8 @@ const AddBook = () => {
                     id="per-book-cost"
                     type="text"
                     defaultValue=""
-                    className="col-span-3"
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter price"
                     {...register("price", {
                       required: "Please enter price",
                       pattern: {
@@ -394,7 +408,8 @@ const AddBook = () => {
                     id="description"
                     type="text"
                     defaultValue=""
-                    className="col-span-3"
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter description"
                     {...register("description", {
                       required: "Please enter description",
                       minLength: {
@@ -405,7 +420,7 @@ const AddBook = () => {
                   />
                 </div>
               </div>
-              <DialogFooter className="grid grid-cols-4">
+              <DialogFooter className="grid grid-cols-4 mx-2 mb-3">
                 <DialogClose asChild>
                   <Button className="grid col-span-2">Close</Button>
                 </DialogClose>
