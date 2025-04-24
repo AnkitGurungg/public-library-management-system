@@ -393,7 +393,7 @@ const AddBook = () => {
                     id="image"
                     type="file"
                     defaultValue=""
-                    className="col-span-3"
+                    className="col-span-3 h-11 border border-gray-300"
                     onChange={handleBookImage}
                     accept="image/jpeg, image/png"
                     required

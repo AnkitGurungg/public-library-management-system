@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
-import { BookOpenText, PlusCircle } from "lucide-react";
+import { BookOpenText, Component, PlusCircle } from "lucide-react";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import toast from "react-hot-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -64,9 +64,9 @@ const AddCategory = () => {
           <DialogHeader className="sm:max-w-[500px]">
             <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-6">
               <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
-                <BookOpenText size={27} />
+                <Component size={27} />
               </div>
-              <span className="text-lg">Add Book</span>
+              <span className="text-lg">Add Category</span>
             </DialogTitle>
             <div className="my-0 h-px bg-gray-800 mx-5" />
           </DialogHeader>

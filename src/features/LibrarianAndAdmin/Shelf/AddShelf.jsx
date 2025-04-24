@@ -14,7 +14,9 @@ import { useForm } from "react-hook-form";
 import { useFetchCategory } from "@/hooks/useFetchCategory";
 import { useFetchShelfs } from "@/hooks/useFetchShelfs";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
-import { PlusCircle } from "lucide-react";
+import { BookOpenText, PlusCircle, SquareLibrary } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import toast from "react-hot-toast";
 
 const AddShelf = () => {
   const {
@@ -39,6 +41,7 @@ const AddShelf = () => {
           },
         }
       );
+      toast.success("Shelf added!")
       reset();
       refetchShelfs();
       // console.log(response);
@@ -56,98 +59,118 @@ const AddShelf = () => {
         </Button>
       </DialogTrigger>
       <DialogContent aria-describedby={undefined}>
-        <DialogHeader>
-          <DialogTitle>Add Shelf</DialogTitle>
+        <DialogHeader className="sm:max-w-[500px]">
+          <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-6">
+            <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
+              <SquareLibrary size={27} />
+            </div>
+            <span className="text-lg">Add Shelf</span>
+          </DialogTitle>
+          <div className="my-0 h-px bg-gray-800 mx-5" />
         </DialogHeader>
-        <hr />
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <Label>Name</Label>
-            <Input
-              type="text"
-              placeholder="Enter name"
-              {...register("name", {
-                required: "Please enter name!",
-                minLength: {
-                  value: 5,
-                  message: "Please enter atleast 5 characters!",
-                },
-              })}
-            />
-            <p>{errors?.name?.message}</p>
-          </div>
-          <div>
-            <Label>Capacity</Label>
-            <Input
-              type="text"
-              placeholder="Enter capacity"
-              {...register("capacity", {
-                required: "Please enter capacity!",
-                pattern: {
-                  value: /^\d+$/,
-                  message: "Please enter a number!",
-                },
-                min: {
-                  value: 0,
-                  message: "Please enter valid capacity!",
-                },
-                minLength: {
-                  value: 1,
-                  message: "Please enter atleast 1 character!",
-                },
-              })}
-            />
-            <p>{errors?.capacity?.message}</p>
-          </div>
-          <div>
-            <Label>Category</Label>
-            <select
-              name="categoryId"
-              onValueChange={(value) =>
-                setValue("categoryId", value, { shouldValidate: true })
-              }
-              {...register("categoryId", {
-                required: "Please select at least one",
-              })}
-              required
-              className="border-2 rounded-[7px] h-[40px] w-[460px]"
-            >
-              <option disabled>Select a category</option>
-              {categories?.status == 200 &&
-                Array.isArray(categories?.data) &&
-                categories.data.length > 0 &&
-                categories?.data.map((element, index) => (
-                  <option
-                    key={element.categoryId || index}
-                    value={element.categoryId}
-                  >
-                    {element.name}
-                  </option>
-                ))}
-            </select>
-          </div>
-          <div>
-            <Label>Description</Label>
-            <Input
-              type="text"
-              placeholder="Type here"
-              {...register("description", {
-                required: "Please enter description!",
-                minLength: {
-                  value: 5,
-                  message: "Please enter atleast 5 characters!",
-                },
-              })}
-            />
-            <p>{errors?.description?.message}</p>
-          </div>
-          <DialogFooter>
-            <DialogClose>
-              <Button>Close</Button>
-            </DialogClose>
-            <Button type="submit">Add</Button>
-          </DialogFooter>
-        </form>
+        <ScrollArea className="mx-2 mb-3">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-4 px-3 mb-5">
+              <div className="flex flex-col gap-1">
+                <Label>Name</Label>
+                <Input
+                  type="text"
+                  className="col-span-3 border-gray-300 mb-0 h-11"
+                  placeholder="Enter name"
+                  {...register("name", {
+                    required: "Please enter name!",
+                    minLength: {
+                      value: 5,
+                      message: "Please enter atleast 5 characters!",
+                    },
+                  })}
+                />
+                <p className="text-sm text-red-500">{errors?.name?.message}</p>
+              </div>
+              <div className="flex flex-col gap-1">
+                <Label>Capacity</Label>
+                <Input
+                  type="text"
+                  className="col-span-3 border-gray-300 mb-0 h-11"
+                  placeholder="Enter capacity"
+                  {...register("capacity", {
+                    required: "Please enter capacity!",
+                    pattern: {
+                      value: /^\d+$/,
+                      message: "Please enter a number!",
+                    },
+                    min: {
+                      value: 0,
+                      message: "Please enter valid capacity!",
+                    },
+                    minLength: {
+                      value: 1,
+                      message: "Please enter atleast 1 character!",
+                    },
+                  })}
+                />
+                <p className="text-sm text-red-500">
+                  {errors?.capacity?.message}
+                </p>
+              </div>
+              <div className="flex flex-col gap-1">
+                <Label>Category</Label>
+                <select
+                  name="categoryId"
+                  onValueChange={(value) =>
+                    setValue("categoryId", value, { shouldValidate: true })
+                  }
+                  {...register("categoryId", {
+                    required: "Please select at least one",
+                  })}
+                  required
+                  // className="border rounded-[7px] h-[40px] w-[460px]"
+                  className="w-[420px] border rounded-[8px] border-gray-300 mb-0 h-11"
+                >
+                  <option disabled>Select a category</option>
+                  {categories?.status == 200 &&
+                    Array.isArray(categories?.data) &&
+                    categories.data.length > 0 &&
+                    categories?.data.map((element, index) => (
+                      <option
+                        key={element.categoryId || index}
+                        value={element.categoryId}
+                      >
+                        {element.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1">
+                <Label>Description</Label>
+                <Input
+                  type="text"
+                  className="col-span-3 border-gray-300 mb-0 h-11"
+                  placeholder="Enter description"
+                  {...register("description", {
+                    required: "Please enter description!",
+                    minLength: {
+                      value: 5,
+                      message: "Please enter atleast 5 characters!",
+                    },
+                  })}
+                />
+                <p className="text-sm text-red-500">
+                  {errors?.description?.message}
+                </p>
+                <p></p>
+              </div>
+              <DialogFooter className="grid grid-cols-4 mb-3">
+                <DialogClose asChild>
+                  <Button className="grid col-span-2">Clear</Button>
+                </DialogClose>
+                <Button type="submit" className="grid col-span-2">
+                  Add
+                </Button>
+              </DialogFooter>
+            </div>
+          </form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
