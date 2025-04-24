@@ -1,4 +1,4 @@
-import { CircleEllipsis, RotateCw } from "lucide-react";
+import { CircleEllipsis, RefreshCw, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -83,7 +83,7 @@ const RestoreBook = ({ id, name, type }) => {
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <RotateCw size={20} />
+          <RefreshCw size={20} />
         </DialogTrigger>
         <DialogContent aria-describedby={undefined}>
           <DialogHeader>

@@ -3,6 +3,7 @@ import {
   CheckCircle,
   ChevronsUpDown,
   CircleCheckBig,
+  RotateCwIcon,
   XCircle,
 } from "lucide-react";
 import ExtendDueDate from "../ExtendDueDate";
@@ -71,12 +72,12 @@ export const columns = [
     header: "Extended",
     cell: ({ row }) =>
       row?.original?.extended ? (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-[#206ea6] bg-blue-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">
           <CheckCircle size={16} className="text-[#206ea6]" />
           YES
         </span>
       ) : (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-md">
           <XCircle size={16} className="text-red-500" />
           NO
         </span>
@@ -89,12 +90,12 @@ export const columns = [
     header: "Return Status",
     cell: ({ row }) =>
       row?.original?.returnStatus ? (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-[#206ea6] bg-blue-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">
           <CheckCircle size={16} className="text-[#206ea6]" />
           YES
         </span>
       ) : (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-md">
           <XCircle size={16} className="text-red-500" />
           NO
         </span>
@@ -110,7 +111,7 @@ export const columns = [
         <div className="flex items-center justify-center gap-1">
           {borrow.returnStatus ? (
             <div className="relative group flex items-center justify-center">
-              <CircleCheckBig className=" opacity-40" size={20} />
+              <RotateCwIcon className=" opacity-40" size={20} />
               <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 Already Returned
               </span>

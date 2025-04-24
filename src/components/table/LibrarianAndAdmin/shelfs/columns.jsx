@@ -1,4 +1,5 @@
 import Delete from "@/components/Delete";
+import RestoreBook from "@/components/Restore";
 import UpdateBook from "@/features/LibrarianAndAdmin/Books/UpdateBook";
 import ViewBook from "@/features/LibrarianAndAdmin/Books/ViewBook";
 import UpdateShelf from "@/features/LibrarianAndAdmin/Shelf/UpdateShelf";
@@ -104,6 +105,16 @@ export const columns = [
             disabled={!isPresent}
           >
             <Delete id={shelf.shelfId} name={shelf.name} type={"shelf"} />
+          </button>
+          <button
+            className={`cursor-not-allowed ${
+              isPresent
+                ? "opacity-40 cursor-not-allowed"
+                : "opacity-90 cursor-pointer"
+            }`}
+            disabled={isPresent}
+          >
+            <RestoreBook id={shelf.shelfId} name={shelf.name} type={"shelf"} />
           </button>
         </div>
       );

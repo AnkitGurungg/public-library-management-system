@@ -54,12 +54,12 @@ export const columns = [
     header: "Available",
     cell: ({ row }) =>
       row?.original?.present ? (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-[#206ea6] bg-blue-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">
           <CheckCircle size={16} className="text-[#206ea6]" />
           YES
         </span>
       ) : (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-md">
           <XCircle size={16} className="text-red-500" />
           NO
         </span>
@@ -77,16 +77,6 @@ export const columns = [
           <div className="opacity-90">
             <ViewLibrarian id={member.userId} type={"librarian"} />
           </div>
-
-          <button
-            className={`cursor-not-allowed ${
-              isVerified || !isPresent ? "opacity-40" : "opacity-90"
-            }`}
-            disabled={isVerified || !isPresent}
-          >
-            <VerifyMember id={member.userId} />
-          </button>
-
           <button
             className={`cursor-not-allowed ${
               !isPresent ? "opacity-40" : "opacity-90"
