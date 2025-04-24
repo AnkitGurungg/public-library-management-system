@@ -7,6 +7,7 @@ import {
   XCircle,
 } from "lucide-react";
 import ExtendDueDate from "../ExtendDueDate";
+import Delete from "@/components/Delete";
 
 export const columns = [
   {
@@ -127,7 +128,7 @@ export const columns = [
 
           <div className="relative group flex items-center justify-center">
             <button
-              className={` flex items-center mb-0.5 ${
+              className={`flex items-center mt-0.5 ${
                 borrow?.extended || borrow?.returnStatus
                   ? "opacity-40 cursor-not-allowed"
                   : "opacity-90 cursor-pointer"
@@ -138,6 +139,22 @@ export const columns = [
             </button>
             <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               Extend Due Date
+            </span>
+          </div>
+
+          <div className="relative group flex items-center justify-center">
+            <button
+              className={` flex items-center mb-0.5 ${
+                borrow?.returnStatus
+                  ? "opacity-40 cursor-not-allowed"
+                  : "opacity-90 cursor-pointer"
+              }`}
+              disabled={borrow?.returnStatus}
+            >
+              <Delete id={borrow.borrowId} name={"book"} type="borrowed" />
+            </button>
+            <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              Delete borrow record!
             </span>
           </div>
         </div>

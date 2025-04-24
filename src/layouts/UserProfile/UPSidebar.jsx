@@ -30,7 +30,7 @@ const UPSidebar = () => {
 
   return (
     <div className="bg-[#f1f1f1] top-0 ml-0 h-full w-64">
-      <div className="p-4">
+      <div className="p-4 pt-9">
         <div className="flex justify-center mb-4">
           {Array.isArray(userProfile?.data?.evidences) &&
           userProfile.data.evidences.length > 0 &&
@@ -47,7 +47,7 @@ const UPSidebar = () => {
               className="rounded-full object-cover"
             />
           ) : (
-            <div className="w-[150px] h-[150px] bg-[#206ea6] rounded-full flex items-center justify-center">
+            <div className="w-[150px] h-[150px] bg-black rounded-full flex items-center justify-center">
               <User className="h-16 w-16 text-white" />
             </div>
           )}

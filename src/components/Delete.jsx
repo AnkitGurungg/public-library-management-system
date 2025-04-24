@@ -18,6 +18,7 @@ import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
 import { useFetchVerifiedMembers } from "@/hooks/useFetchVerifiedMembers";
 import useFetchLibrarian from "@/hooks/useFetchLibrarian";
 import toast from "react-hot-toast";
+import { useFetchBorrowedBooks } from "@/hooks/useFetchBorrowedBooks";
 
 const Delete = ({ id, name, type }) => {
   const { data: books, refetch: refetchBooks } = useFetchBooks();
@@ -28,6 +29,8 @@ const Delete = ({ id, name, type }) => {
   const { data: nonVerifiedMembers, refetch: refetchNonVerifiedMembers } =
     useFetchNonVerifiedMembers();
   const { data: librarian, refetch: refetchLibrarians } = useFetchLibrarian();
+  const { data: borrowedBooks, refetch: refetchBorrowedBooks } =
+    useFetchBorrowedBooks();
 
   const [open, setOpen] = useState(false);
 
@@ -46,6 +49,9 @@ const Delete = ({ id, name, type }) => {
       }
       if (type === "user") {
         endpoint = `/api/v1/la/user/delete/${id}`;
+      }
+      if (type === "borrowed") {
+        endpoint = `/api/v1/la/borrow/delete/${id}`;
       }
 
       if (endpoint) {
@@ -72,6 +78,10 @@ const Delete = ({ id, name, type }) => {
           refetchNonVerifiedMembers();
           refetchLibrarians();
         }
+        if (type === "borrowed") {
+          useFetchBorrowedBooks();
+          toast.success("Borrow record deleted!");
+        }
       }
     } catch (error) {
       console.log(error);
@@ -92,22 +102,27 @@ const Delete = ({ id, name, type }) => {
           Are you sure want to procceed with the deletion of
           {type === "book" && (
             <p>
-              {type} {name} in id {id}?
+              {type} {name} in id {id} ?
             </p>
           )}
           {type === "category" && (
             <p>
-              {type} {name} in id {id}?
+              {type} {name} in id {id} ?
             </p>
           )}
           {type === "shelf" && (
             <p>
-              {type} {name} in id {id}?
+              {type} {name} in id {id} ?
             </p>
           )}
           {type === "user" && (
             <p>
-              {type} {name} in id {id}?
+              {type} {name} in id {id} ?
+            </p>
+          )}
+          {type === "borrowed" && (
+            <p>
+              {type} {name} in id {id} ?
             </p>
           )}
         </p>
