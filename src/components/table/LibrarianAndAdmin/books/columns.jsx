@@ -121,7 +121,7 @@ export const columns = [
             }`}
             disabled={!isAvailable}
           >
-            <Delete Delete id={book.bookId} name={book.title} type={"book"} />
+            <Delete id={book.bookId} name={book.title} type={"book"} />
           </button>
 
           <button
@@ -130,7 +130,7 @@ export const columns = [
             }`}
             disabled={isAvailable}
           >
-            <Restore Delete id={book.bookId} name={book.title} type={"book"} />
+            <Restore id={book.bookId} name={book.title} type={"book"} />
           </button>
         </div>
       );

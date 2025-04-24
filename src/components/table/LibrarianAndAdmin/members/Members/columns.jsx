@@ -1,6 +1,5 @@
 import Delete from "@/components/Delete";
-import UpdateBook from "@/features/LibrarianAndAdmin/Books/UpdateBook";
-import ViewBook from "@/features/LibrarianAndAdmin/Books/ViewBook";
+import RestoreBook from "@/components/Restore";
 import VerifyMember from "@/features/LibrarianAndAdmin/Members/VerifyMember";
 import ViewMember from "@/features/LibrarianAndAdmin/Members/ViewMember";
 import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
@@ -32,12 +31,12 @@ export const columns = [
     header: "Verified",
     cell: ({ row }) =>
       row?.original?.verified ? (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-[#206ea6] bg-blue-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">
           <CheckCircle size={16} className="text-[#206ea6]" />
           YES
         </span>
       ) : (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-md">
           <XCircle size={16} className="text-red-500" />
           NO
         </span>
@@ -50,12 +49,12 @@ export const columns = [
     header: "Present",
     cell: ({ row }) =>
       row?.original?.present ? (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-[#206ea6] bg-blue-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">
           <CheckCircle size={16} className="text-[#206ea6]" />
           YES
         </span>
       ) : (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-md">
           <XCircle size={16} className="text-red-500" />
           NO
         </span>
@@ -132,6 +131,20 @@ export const columns = [
               id={member.userId}
               name={member.name}
               type={"user"}
+            />
+          </button>
+
+          <button
+            className={`${
+              isPresent ? "opacity-40" : "opacity-90 cursor-pointer"
+            }`}
+            disabled={isPresent}
+          >
+            <RestoreBook
+              id={member?.userId}
+              name={member?.name}
+              type={"user"}
+              whatUser={"member"}
             />
           </button>
         </div>

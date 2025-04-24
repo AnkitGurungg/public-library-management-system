@@ -127,7 +127,7 @@ export const columns = [
 
           <div className="relative group flex items-center justify-center">
             <button
-              className={` flex items-center ${
+              className={` flex items-center mb-0.5 ${
                 borrow?.extended || borrow?.returnStatus
                   ? "opacity-40 cursor-not-allowed"
                   : "opacity-90 cursor-pointer"

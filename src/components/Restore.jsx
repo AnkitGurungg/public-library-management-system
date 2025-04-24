@@ -20,7 +20,7 @@ import { useFetchVerifiedMembers } from "@/hooks/useFetchVerifiedMembers";
 import useFetchLibrarian from "@/hooks/useFetchLibrarian";
 import toast from "react-hot-toast";
 
-const RestoreBook = ({ id, name, type }) => {
+const RestoreBook = ({ id, name, type, whatUser }) => {
   const { data: books, refetch: refetchBooks } = useFetchBooks();
   const { data: categories, refetch: refetchCategories } = useFetchCategory();
   const { data: shelfs, refetch: refetchShelfs } = useFetchShelfs();
@@ -44,8 +44,11 @@ const RestoreBook = ({ id, name, type }) => {
       if (type === "shelf") {
         endpoint = `/api/v1/la/shelf/restore/${id}`;
       }
-      if (type === "user") {
-        endpoint = `/api/v1/la/user/delete/${id}`;
+      if (type === "user" && whatUser === "member") {
+        endpoint = `/api/v1/la/user/restore/${id}`;
+      }
+      if (type === "user" && whatUser === "librarian") {
+        endpoint = `/api/v1/la/user/restore/${id}`;
       }
 
       if (endpoint) {

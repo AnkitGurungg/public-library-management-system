@@ -17,6 +17,7 @@ import { useFetchShelfs } from "@/hooks/useFetchShelfs";
 import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
 import { useFetchVerifiedMembers } from "@/hooks/useFetchVerifiedMembers";
 import useFetchLibrarian from "@/hooks/useFetchLibrarian";
+import toast from "react-hot-toast";
 
 const Delete = ({ id, name, type }) => {
   const { data: books, refetch: refetchBooks } = useFetchBooks();
@@ -53,16 +54,20 @@ const Delete = ({ id, name, type }) => {
         setOpen(false);
 
         if (type === "book") {
+          toast.success("Book deleted!");
           refetchBooks();
         }
         if (type === "category") {
+          toast.success("Category deleted!");
           refetchCategories();
           refetchBooks();
         }
         if (type === "shelf") {
+          toast.success("Shelf deleted!");
           refetchShelfs();
         }
         if (type === "user") {
+          toast.success("User deleted!");
           refetchVerifiedMembers();
           refetchNonVerifiedMembers();
           refetchLibrarians();

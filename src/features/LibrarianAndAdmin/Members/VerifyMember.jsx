@@ -8,7 +8,14 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import { useState } from "react";
-import { Check } from "lucide-react";
+import {
+  BadgeCent,
+  BadgeCheck,
+  Check,
+  CircleCheck,
+  CircleCheckBig,
+  Fingerprint,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
 import { useFetchVerifiedMembers } from "@/hooks/useFetchVerifiedMembers";
@@ -36,7 +43,7 @@ const VerifyMember = ({ id }) => {
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <Check size={20} />
+          <CircleCheckBig size={18} />
         </DialogTrigger>
         <DialogContent aria-describedby={undefined}>
           <DialogHeader>

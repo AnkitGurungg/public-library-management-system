@@ -1,4 +1,5 @@
 import Delete from "@/components/Delete";
+import RestoreBook from "@/components/Restore";
 import ViewLibrarian from "@/features/Admin/ViewLibrarian";
 import VerifyMember from "@/features/LibrarianAndAdmin/Members/VerifyMember";
 import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
@@ -84,6 +85,20 @@ export const columns = [
             disabled={!isPresent}
           >
             <Delete id={member.userId} name={member.name} type={"user"} />
+          </button>
+
+          <button
+            className={`${
+              isPresent ? "opacity-40" : "opacity-90 cursor-pointer"
+            }`}
+            disabled={isPresent}
+          >
+            <RestoreBook
+              id={member?.userId}
+              name={member?.name}
+              type={"user"}
+              whatUser={"librarian"}
+            />
           </button>
         </div>
       );

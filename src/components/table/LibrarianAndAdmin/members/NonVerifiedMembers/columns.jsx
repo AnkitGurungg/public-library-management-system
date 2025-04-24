@@ -31,12 +31,12 @@ export const columns = [
     header: "Verified",
     cell: ({ row }) =>
       row?.original?.verified ? (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-[#206ea6] bg-blue-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">
           <CheckCircle size={16} className="text-[#206ea6]" />
           YES
         </span>
       ) : (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-md">
           <XCircle size={16} className="text-red-500" />
           NO
         </span>
@@ -49,12 +49,12 @@ export const columns = [
     header: "Present",
     cell: ({ row }) =>
       row?.original?.present ? (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-[#206ea6] bg-blue-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">
           <CheckCircle size={16} className="text-[#206ea6]" />
           YES
         </span>
       ) : (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-md">
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-md">
           <XCircle size={16} className="text-red-500" />
           NO
         </span>
@@ -112,8 +112,8 @@ export const columns = [
           </div>
 
           <button
-            className={`cursor-not-allowed ${
-              isVerified || !isPresent ? "opacity-40" : "opacity-90"
+            className={`${
+              isVerified || !isPresent ? "opacity-40 cursor-not-allowed" : "opacity-90 font-bold cursor-pointer"
             }`}
             disabled={isVerified || !isPresent}
           >
