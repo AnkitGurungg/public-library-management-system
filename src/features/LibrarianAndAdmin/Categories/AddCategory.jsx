@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { PlusCircle } from "lucide-react";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
+import toast from "react-hot-toast";
 
 const AddCategory = () => {
   const {
@@ -39,7 +40,9 @@ const AddCategory = () => {
       reset();
       refetchCategories();
     } catch (error) {
-      alert(error);
+      if (error?.status === 409) {
+        toast.error(error?.response?.data?.message || "Try again!");
+      }
     }
   };
 

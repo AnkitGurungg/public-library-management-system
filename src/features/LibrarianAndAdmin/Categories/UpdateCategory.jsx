@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { useFetchCategory } from "@/hooks/useFetchCategory";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
+import toast from "react-hot-toast";
 
 const UpdateCategory = ({ id }) => {
   const { data: categories, refetch: refetchCategories } = useFetchCategory();
@@ -52,9 +53,12 @@ const UpdateCategory = ({ id }) => {
       setOpen(false);
       refetchCategories();
     } catch (error) {
-      console.log(error);
+      if (error?.status === 409) {
+        toast.error(error?.response?.data?.message || "Try again!");
+      }
     }
   };
+
   return (
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
