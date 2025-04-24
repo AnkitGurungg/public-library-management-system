@@ -10,7 +10,6 @@ import {
 import { NavLink } from "react-router-dom";
 
 const LSidebar = ({ sidebarToggle }) => {
-    
   return (
     <div
       className={`fixed top-0 p-3 left-0 z-40 h-screen w-64 transition-transform duration-300 ease-in-out shadow-lg bg-white text-black ${
@@ -19,18 +18,21 @@ const LSidebar = ({ sidebarToggle }) => {
     >
       <div className="flex flex-col h-full justify-between">
         <div>
-          <div className="flex items-center justify-between mb-0">
-            <div className="flex items-center gap-3">
-              <div className="bg-white rounded-lg p-1">
-                <img src="/react.svg" alt="Logo" className="w-7" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-semibold text-lg"></span>
-              </div>
+          <div className="flex items-center justify-between mt-1">
+            <div className="flex items-center gap-3 mb-2">
+              <NavLink to="/librarian">
+                <div className="bg-white rounded-lg flex justify-center items-center pt-2 px-2 ml-3">
+                  <img
+                    src="/logo/logo.png"
+                    alt="Logo"
+                    className="w-48 mx-auto"
+                  />
+                </div>
+              </NavLink>
             </div>
           </div>
 
-          <div className="flex flex-col gap-6 overflow-y-auto">
+          <div className="flex flex-col gap-6 overflow-y-auto mt-0.5">
             <div className="flex flex-col gap-1 text-black/80">
               <NavLink
                 to="/librarian"
@@ -124,10 +126,6 @@ const LSidebar = ({ sidebarToggle }) => {
               </NavLink>
             </div>
           </div>
-        </div>
-
-        <div className="pt-6 border-t border-white/10 text-center text-xs text-white/40 bg-red-700">
-          bijj hhkhk jj
         </div>
       </div>
     </div>

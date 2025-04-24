@@ -37,18 +37,21 @@ const ASidebar = ({ sidebarToggle }) => {
     >
       <div className="flex flex-col h-full justify-between">
         <div>
-          <div className="flex items-center justify-between mb-0">
+          <div className="flex items-center justify-between mt-1">
             <div className="flex items-center gap-3 mb-2">
-              <div className="bg-white rounded-lg flex justify-center items-center p-2 ml-3">
-                <img src="/logo/logo.png" alt="Logo" className="w-48 mx-auto" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-semibold text-lg"></span>
-              </div>
+              <NavLink to="/admin">
+                <div className="bg-white rounded-lg flex justify-center items-center pt-2 px-2 ml-3">
+                  <img
+                    src="/logo/logo.png"
+                    alt="Logo"
+                    className="w-48 mx-auto"
+                  />
+                </div>
+              </NavLink>
             </div>
           </div>
 
-          <div className="flex flex-col gap-6 overflow-y-auto">
+          <div className="flex flex-col gap-6 overflow-y-auto mt-0.5">
             <div className="flex flex-col gap-1 text-black/80">
               <NavLink
                 to="/admin"
