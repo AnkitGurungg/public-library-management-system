@@ -50,7 +50,7 @@ const ReturnBook = ({ id }) => {
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
-          <RotateCwIcon className="border-b-2" />
+          <RotateCwIcon className="border-b-2" size={22} />
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
