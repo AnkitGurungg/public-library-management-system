@@ -5,6 +5,7 @@ import {
   CircleCheckBig,
   XCircle,
 } from "lucide-react";
+import ExtendDueDate from "../ExtendDueDate";
 
 export const columns = [
   {
@@ -70,8 +71,8 @@ export const columns = [
     header: "Extended",
     cell: ({ row }) =>
       row?.original?.extended ? (
-        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-md">
-          <CheckCircle size={16} className="text-green-500" />
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-[#206ea6] bg-blue-100 rounded-md">
+          <CheckCircle size={16} className="text-[#206ea6]" />
           YES
         </span>
       ) : (
@@ -105,19 +106,39 @@ export const columns = [
     cell: ({ row }) => {
       const borrow = row?.original;
 
-      return borrow.returnStatus ? (
-        <div className="relative group flex items-center justify-center">
-          <CircleCheckBig className="text-[#206ea6]" size={20} />
-          <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Already Returned
-          </span>
-        </div>
-      ) : (
-        <div className="relative group flex items-center justify-center">
-          <ReturnBook id={borrow.borrowId} size={20} />
-          <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Return Book
-          </span>
+      return (
+        <div className="flex items-center justify-center gap-1">
+          {borrow.returnStatus ? (
+            <div className="relative group flex items-center justify-center">
+              <CircleCheckBig className=" opacity-40" size={20} />
+              <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Already Returned
+              </span>
+            </div>
+          ) : (
+            <div className="relative group flex items-center justify-center">
+              <ReturnBook id={borrow.borrowId} />
+              <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Return Book
+              </span>
+            </div>
+          )}
+
+          <div className="relative group flex items-center justify-center">
+            <button
+              className={` flex items-center ${
+                borrow?.extended || borrow?.returnStatus
+                  ? "opacity-40 cursor-not-allowed"
+                  : "opacity-90 cursor-pointer"
+              }`}
+              disabled={borrow?.extended}
+            >
+              <ExtendDueDate id={borrow.borrowId} />
+            </button>
+            <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              Extend Due Date
+            </span>
+          </div>
         </div>
       );
     },
