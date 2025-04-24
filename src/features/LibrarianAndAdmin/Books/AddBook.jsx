@@ -422,7 +422,7 @@ const AddBook = () => {
               </div>
               <DialogFooter className="grid grid-cols-4 mx-2 mb-3">
                 <DialogClose asChild>
-                  <Button className="grid col-span-2">Close</Button>
+                  <Button className="grid col-span-2">Clear</Button>
                 </DialogClose>
                 <Button type="submit" className="grid col-span-2">
                   Add
