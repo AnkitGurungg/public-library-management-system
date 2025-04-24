@@ -43,8 +43,8 @@ const GenreFilteredBooks = () => {
   if (isDisplayCategoryLoading) return <p>Loading genres...</p>;
 
   return (
-    <section className="flex my-9">
-      <div className="w-65 max-h-80 overflow-y-auto">
+    <section className="flex my-9 ">
+      <div className="w-auto min-w-60 max-h-80 overflow-y-auto mr-0.5">
         <button onClick={handleShowGenre}>
           <div className="ml-2 text-lg font-bold opacity-80 cursor-pointer">
             <p></p>
@@ -62,17 +62,17 @@ const GenreFilteredBooks = () => {
           Array.isArray(displayCategory?.data) &&
           displayCategory?.data?.length !== 0 ? (
             displayCategory?.data?.map((element) => (
-              <div className="ml-2 " key={element.categoryId}>
+              <div className="ml-2.5" key={element.categoryId}>
                 <button
                   key={element.categoryId}
                   value={element.categoryId}
                   onClick={() =>
                     navigate(`/books/genres/${element.categoryId}`)
                   }
-                  className="flex items-center my-1"
+                  className="flex items-center my-1 opacity-75 space-y-0.5"
                 >
                   <ChevronRight />
-                  <h4 className="text-[17px] font-semibold cursor-pointer">
+                  <h4 className="text-[16px] font-semibold cursor-pointer">
                     {element.name}
                   </h4>
                 </button>

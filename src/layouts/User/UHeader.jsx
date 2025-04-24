@@ -1,7 +1,7 @@
 import Login from "@/features/User/Login/Login";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
-import { Bookmark, Heart, ShoppingCart } from "lucide-react";
+import { Bookmark, GaugeCircle, Heart, ShoppingCart } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import HoverCategories from "@/features/User/Home/HoverCategories";
 import ProfilePopover from "@/features/User/Profiile/ProfilePopover";
@@ -65,14 +65,14 @@ const UHeader = () => {
 
       <div className="z-50 fixed w-full">
         <div className="h-[4.5rem] bg-white flex flex-row justify-around items-center drop-shadow-sm w-full px-4">
-          <div className="flex flex-row gap-4 items-center relative">
+          <div className="flex flex-row gap-7 items-center relative mr-10">
             <NavLink to="/">
               <img src="/logo/logo.png" className="object-cover w-48 h-7"></img>
             </NavLink>
             <HoverCategories className="w-[329px] h-[378px]" />
           </div>
 
-          <div className="relative w-96">
+          <div className="relative w-96 mr-20">
             <Input
               placeholder="What do you want to read?"
               className="w-full h-11 bg-[#f1f1f1] rounded-md border-none px-3 p-2 placeholder:text-gray-500 placeholder:text-sm placeholder:font-medium"
@@ -122,7 +122,7 @@ const UHeader = () => {
                 <Button
                   variant="none"
                   onClick={() => setIsOpenLogin(true)}
-                  className="text-[16px] cursor-pointer"
+                  className="text-[17px] cursor-pointer"
                 >
                   Login
                 </Button>
@@ -153,7 +153,7 @@ const UHeader = () => {
                 }}
                 className="text-black cursor-pointer"
               >
-                Dashboard
+                <GaugeCircle />
               </button>
             )}
           </div>
