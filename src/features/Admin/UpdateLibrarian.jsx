@@ -58,7 +58,7 @@ const UpdateLibrarian = ({ id }) => {
   return (
     <Dialog open={open} setOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <PencilLine />
+        <PencilLine size={20} />
       </DialogTrigger>
       <DialogContent className="w-390" aria-describedby={undefined}>
         <DialogHeader>
