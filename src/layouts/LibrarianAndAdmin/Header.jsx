@@ -1,5 +1,5 @@
 import { UserContext } from "@/contexts/UserContext";
-import { ChevronDown, Menu } from "lucide-react";
+import { ChevronDown, Home, LogOut, Menu } from "lucide-react";
 import { useState, useEffect, useContext } from "react";
 import {
   DropdownMenu,
@@ -9,12 +9,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Header = ({ sidebarToggle, setSidebarToggle }) => {
   const [currentDate, setCurrentDate] = useState("");
   const [currentTime, setCurrentTime] = useState("");
 
-  const { userInfo } = useContext(UserContext);
+  const { setToken, loading, userInfo, getUserInfo, setUserInfo } =
+    useContext(UserContext);
+  const navigate = useNavigate();
+
+  const logoutHandler = () => {
+    localStorage.removeItem("Authorization");
+    setToken("");
+    setUserInfo(null);
+    refetchMemberWishList();
+    // localStorage.removeItem("x-refresh-token");
+    navigate("/");
+  };
 
   useEffect(() => {
     const updateDateTime = () => {
@@ -68,9 +80,20 @@ const Header = ({ sidebarToggle, setSidebarToggle }) => {
               <ChevronDown className="w-4 h-4 text-gray-500" />
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-48">
-            <DropdownMenuItem>Change password</DropdownMenuItem>
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+          <DropdownMenuContent className="w-48 px-2 py-2">
+            <NavLink to="/">
+              <DropdownMenuItem className="w-full text-[16px]">
+                <Home size={20} />
+                Home
+              </DropdownMenuItem>
+            </NavLink>
+            <DropdownMenuItem
+              className="w-full text-[16px]"
+              onClick={logoutHandler}
+            >
+              <LogOut size={20} />
+              Logout
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )}
