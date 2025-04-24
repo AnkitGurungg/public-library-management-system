@@ -15,6 +15,8 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import useFetchLibrarian from "@/hooks/useFetchLibrarian";
+import { PlusCircle, ShieldUserIcon } from "lucide-react";
+import toast from "react-hot-toast";
 
 const AddLibrarian = () => {
   const {
@@ -78,6 +80,7 @@ const AddLibrarian = () => {
       console.log(response.headers.getContentType());
 
       if (response.status === 201) {
+        toast.success("Librarian added!");
         reset();
         setUserImage(null);
         setEvidenceImages([]);
@@ -98,22 +101,33 @@ const AddLibrarian = () => {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button>Add Librarian</Button>
+          <Button className="opacity-90">
+            <PlusCircle></PlusCircle>
+            Add Librarian
+          </Button>
         </DialogTrigger>
+
         <DialogContent className="w-390" aria-describedby={undefined}>
-          <DialogHeader>
-            <DialogTitle>Add Librarian</DialogTitle>
+          <DialogHeader className="sm:max-w-[500px]">
+            <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-6">
+              <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
+                <ShieldUserIcon size={27} />
+              </div>
+              <span className="text-lg">Add librarian</span>
+            </DialogTitle>
+            <div className="my-0 h-px bg-gray-800 mx-5" />
           </DialogHeader>
-          <hr />
-          <ScrollArea className="h-[70vh]">
+          <ScrollArea className="h-[70vh] mx-2 mb-3">
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div>
-                <div>
+              <div className="space-y-4 px-3 mb-5">
+                <div className="flex flex-col gap-1">
                   <Label htmlFor="name">Name</Label>
                   <Input
                     id="name"
                     type="text"
                     defaultValue=""
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter name"
                     {...register("name", {
                       required: "Please enter name!",
                       minLength: {
@@ -129,12 +143,14 @@ const AddLibrarian = () => {
                   <p>{errors?.name?.message}</p>
                 </div>
 
-                <div>
+                <div className="flex flex-col gap-1">
                   <Label htmlFor="title">Contact</Label>
                   <Input
                     id="contact"
                     type="text"
                     defaultValue=""
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter contact"
                     {...register("contactNumber", {
                       required: "Please enter contact!",
                       minLength: {
@@ -150,12 +166,14 @@ const AddLibrarian = () => {
                   <p>{errors?.contactNumber?.message}</p>
                 </div>
 
-                <div>
+                <div className="flex flex-col gap-1">
                   <Label htmlFor="title">Email</Label>
                   <Input
                     id="email"
                     type="email"
                     defaultValue=""
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter email"
                     {...register("email", {
                       required: "Please enter email!",
                       minLength: {
@@ -171,12 +189,14 @@ const AddLibrarian = () => {
                   <p>{errors?.email?.message}</p>
                 </div>
 
-                <div>
+                <div className="flex flex-col gap-1">
                   <Label htmlFor="address">Address</Label>
                   <Input
                     id="address"
                     type="text"
                     defaultValue=""
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter address"
                     {...register("address", {
                       required: "Please enter is address!",
                       minLength: {
@@ -192,12 +212,14 @@ const AddLibrarian = () => {
                   <p>{errors?.address?.message}</p>
                 </div>
 
-                <div>
+                <div className="flex flex-col gap-1">
                   <Label htmlFor="address">Password</Label>
                   <Input
                     id="password"
                     type="text"
                     defaultValue=""
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter password"
                     {...register("password", {
                       required: "Please enter password!",
                       minLength: {
@@ -213,12 +235,13 @@ const AddLibrarian = () => {
                   <p>{errors?.password?.message}</p>
                 </div>
 
-                <div>
+                <div className="flex flex-col gap-1">
                   <Label htmlFor="image">Image</Label>
                   <Input
                     id="image"
                     type="file"
                     defaultValue=""
+                    className="col-span-3 h-11 border border-gray-300"
                     onChange={handleUserImage}
                     accept="image/jpeg, image/png"
                     required
@@ -226,12 +249,13 @@ const AddLibrarian = () => {
                   <p>{error}</p>
                 </div>
 
-                <div>
+                <div className="flex flex-col gap-1">
                   <Label htmlFor="image">Evidence One</Label>
                   <Input
                     id="e1-image"
                     type="file"
                     defaultValue=""
+                    className="col-span-3 h-11 border border-gray-300"
                     onChange={handleEvidenceImage}
                     accept="image/jpeg, image/png"
                     required
@@ -239,12 +263,13 @@ const AddLibrarian = () => {
                   <p>{error}</p>
                 </div>
 
-                <div>
+                <div className="flex flex-col gap-1">
                   <Label htmlFor="image">Evidence Two</Label>
                   <Input
                     id="e2-image"
                     type="file"
                     defaultValue=""
+                    className="col-span-3 h-11 border border-gray-300"
                     onChange={handleEvidenceImage}
                     accept="image/jpeg, image/png"
                     required
@@ -252,12 +277,14 @@ const AddLibrarian = () => {
                   <p>{error}</p>
                 </div>
 
-                <div>
+                <div className="flex flex-col gap-1">
                   <Label htmlFor="description">Description</Label>
                   <Input
                     id="description"
                     type="text"
                     defaultValue=""
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter description"
                     {...register("description", {
                       required: "Please enter description",
                       minLength: {
@@ -269,9 +296,17 @@ const AddLibrarian = () => {
                   <p>{errors?.description?.message}</p>
                 </div>
               </div>
-              <DialogFooter className="grid grid-cols-4">
+              {/* <DialogFooter className="grid grid-cols-4">
                 <DialogClose asChild>
                   <Button className="grid col-span-2">Close</Button>
+                </DialogClose>
+                <Button type="submit" className="grid col-span-2">
+                  Add
+                </Button>
+              </DialogFooter> */}
+              <DialogFooter className="grid grid-cols-4 mx-2 mb-3">
+                <DialogClose asChild>
+                  <Button className="grid col-span-2">Clear</Button>
                 </DialogClose>
                 <Button type="submit" className="grid col-span-2">
                   Add

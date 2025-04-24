@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import AddBook from "@/features/LibrarianAndAdmin/Books/AddBook";
+import AddLibrarian from "@/features/Admin/AddLibrarian";
 
 export function DataTable({ columns, data = [] }) {
   const [columnFilters, setColumnFilters] = useState([]);
@@ -66,6 +67,7 @@ export function DataTable({ columns, data = [] }) {
             <option value={true}>YES</option>
             <option value={false}>NO</option>
           </select>
+          <AddLibrarian />
         </div>
       </div>
 
