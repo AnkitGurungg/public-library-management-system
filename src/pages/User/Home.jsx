@@ -110,22 +110,20 @@ const Home = () => {
         <CarouselNext /> */}
       </Carousel>
 
-      <div className="max-w-7xl">
+      <div className="max-w-7xl mt-9">
         <div className="max-w-7xl mx-auto px-16 py-4">
           <div className="mb-5 flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
-              <h2 className="font-bold text-2xl opacity-80">
-                Top Borrowed Books
-              </h2>
+              <h2 className="font-bold text-2xl opacity-80">Popular Choices</h2>
               <button
                 className="text-gray-500 cursor-pointer"
-                onClick={() => navigate("/top-borrowed-books")}
+                onClick={() => navigate("/popular-choices")}
               >
                 Show all
               </button>
             </div>
             <p className="text-[16px]">
-              Find Your Next Great Read Among Our Top Borrowed Books
+              Discover What Everyone's Reading Right Now.
             </p>
           </div>
           <ul className="grid grid-cols-5 justify-center items-center gap-5">
@@ -182,7 +180,7 @@ const Home = () => {
               </button>
             </div>
             <p className="text-[16px]">
-              Explore Recent Published and Find Your Next Great Read.
+              Check Out the Latest Titles Now Available in Our Library.
             </p>
           </div>
           <ul className="grid grid-cols-5 justify-center items-center gap-5">

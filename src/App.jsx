@@ -44,7 +44,7 @@ const App = () => {
         { index: true, element: <Home /> },
         { path: "books/genres/:categoryId", element: <GenreFilteredBooks /> },
         { path: "books/book/:bookId", element: <ViewSpecificBook /> },
-        { path: "top-borrowed-books", element: <AllTopBorrowedBooks /> },
+        { path: "popular-choices", element: <AllTopBorrowedBooks /> },
         { path: "new-arrivals", element: <NewArrivalBooks /> },
         { path: "recently-published", element: <RecentlyPublishedBooks /> },
         { path: "about-us", element: <AboutUs /> },
