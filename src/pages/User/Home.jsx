@@ -123,7 +123,7 @@ const Home = () => {
               </button>
             </div>
             <p className="text-[16px]">
-              Discover What Everyone's Reading Right Now.
+              Find Your Next Great Read Among Our Reader Favorites.
             </p>
           </div>
           <ul className="grid grid-cols-5 justify-center items-center gap-5">
@@ -180,7 +180,7 @@ const Home = () => {
               </button>
             </div>
             <p className="text-[16px]">
-              Check Out the Latest Titles Now Available in Our Library.
+              Check Out the Latest Titles Available in Our Collection.
             </p>
           </div>
           <ul className="grid grid-cols-5 justify-center items-center gap-5">
