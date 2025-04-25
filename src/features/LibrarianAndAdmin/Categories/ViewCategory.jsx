@@ -8,8 +8,9 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { useState, useEffect } from "react";
-import { Eye, NotepadText } from "lucide-react";
+import { BookOpenText, Component, Eye, NotepadText } from "lucide-react";
 import { useFetchCategory } from "@/hooks/useFetchCategory";
+import { Button } from "@/components/ui/button";
 
 const ViewCategory = ({ id }) => {
   const BACKEND_SERVER_BASE_URL = "http://localhost:8080/";
@@ -32,48 +33,71 @@ const ViewCategory = ({ id }) => {
           <Eye size={20} />
         </DialogTrigger>
 
-        <DialogContent aria-describedby={undefined}>
-          <DialogHeader>
-            <DialogTitle className="flex flex-row justify-items-start items-center gap-2">
-              <NotepadText />
-              View Category
+        <DialogContent aria-describedby={undefined} className="w-full">
+          <DialogHeader className="sm:max-w-[500px]">
+            <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-2">
+              <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
+                <Component size={27} />
+              </div>
+              <span className="text-lg">View Category</span>
             </DialogTitle>
+            <div className="my-0 h-px bg-gray-800 mx-2" />
           </DialogHeader>
-          <hr className="border border-black " />
+
           {category ? (
-            <div className="w-full h-full flex flex-col gap-4">
-              <div>
-                <p>Name: {category.name}</p>
-              </div>
+            <div className="flex flex-col items-center justify-center">
+              <div className="h-full flex flex-col gap-4 mx-2 border border-gray-300 rounded-xl w-full p-2 mb-0">
+                <div>
+                  <p>
+                    {" "}
+                    <strong>Name:</strong> {category.name}
+                  </p>
+                </div>
 
-              <div className="grid grid-cols-2">
-                <div className="col-span-1">
-                  <p>Starting Number: {category.startingNumber}</p>
+                <div className="grid grid-cols-2">
+                  <div className="col-span-1">
+                    <p>
+                      <strong>Starting Number:</strong>{" "}
+                      {category.startingNumber}
+                    </p>
+                  </div>
+                  <div className="col-span-1">
+                    <p>
+                      {" "}
+                      <strong>Ending Number:</strong> {category.endingNumber}
+                    </p>
+                  </div>
                 </div>
-                <div className="col-span-1">
-                  <p>Ending Number: {category.endingNumber}</p>
-                </div>
-              </div>
 
-              <div className="grid grid-cols-2">
-                <div className="col-span-1">
-                  <p>Added Date: {category.addedDate}</p>
+                <div className="grid grid-cols-2">
+                  <div className="col-span-1">
+                    <p>
+                      {" "}
+                      <strong>Added Date:</strong> {category.addedDate}
+                    </p>
+                  </div>
+                  <div className="col-span-1">
+                    <p>
+                      {" "}
+                      <strong>Updated Date:</strong> {category.updatedDate}
+                    </p>
+                  </div>
                 </div>
-                <div className="col-span-1">
-                  <p>Updated Date: {category.updatedDate}</p>
+                <div className="h-11 overflow-auto w-[400px]">
+                  <p className="w-full">
+                    <strong>Description:</strong> {category.description}
+                  </p>
                 </div>
               </div>
-              <div>
-                <p>Description: {category.description}</p>
-              </div>
+              <DialogFooter className="w-full mt-2">
+                <DialogClose className="w-full">
+                  <Button className="w-full">Close</Button>
+                </DialogClose>
+              </DialogFooter>
             </div>
           ) : (
-            <p>Does not exist</p>
+            <p className="mb-0">Does not exist</p>
           )}
-          <hr />
-          <DialogFooter>
-            <DialogClose>Close</DialogClose>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
