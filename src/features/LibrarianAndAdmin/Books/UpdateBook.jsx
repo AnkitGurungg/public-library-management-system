@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useForm } from "react-hook-form";
-import { PencilLine } from "lucide-react";
+import { BookOpenText, PencilLine } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +18,7 @@ import { useFetchBooks } from "@/hooks/useFetchBooks";
 import { useFetchCategory } from "@/hooks/useFetchCategory";
 import { BsPencilSquare } from "react-icons/bs";
 import toast from "react-hot-toast";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const UpdateBook = ({ id }) => {
   const [open, setOpen] = useState(false);
@@ -80,9 +81,9 @@ const UpdateBook = ({ id }) => {
       refetchBooks();
       refetchCategories();
     } catch (error) {
-      console.log(error)
+      console.log(error);
       if (error.status === 409) {
-        toast.error(error?.response?.data?.message || "Error!")
+        toast.error(error?.response?.data?.message || "Error!");
       }
     }
   };
@@ -93,215 +94,388 @@ const UpdateBook = ({ id }) => {
         <PencilLine size={20} />
       </DialogTrigger>
       <DialogContent aria-describedby={undefined}>
-        <DialogHeader>
-          <DialogTitle>Update Book</DialogTitle>
+        <DialogHeader className="sm:max-w-[500px]">
+          <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-2">
+            <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
+              <BookOpenText size={27} />
+            </div>
+            <span className="text-lg">Update Book</span>
+          </DialogTitle>
+          <div className="my-0 h-px bg-gray-800 mx-2 mr-7" />
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {Array.isArray(books?.data) &&
-            books?.data
-              .filter((book) => book.bookId == id)
-              .map((element, index) => (
-                <div key={element.bookId || index}>
-                  <div>
-                    <Label>ISBN</Label>
-                    <Input
-                      type="text"
-                      {...register("isbn", {
-                        required: "Please enter ISBN!",
-                        minLength: {
-                          value: 5,
-                          message: "Please enter atleast 5 character!",
-                        },
-                      })}
-                    />
-                    <p>{errors?.isbn?.message}</p>
-                  </div>
-                  <div>
-                    <Label>Title</Label>
-                    <Input
-                      type="text"
-                      {...register("title", {
-                        required: "Please enter title!",
-                        minLength: {
-                          value: 5,
-                          message: "Please enter atleast 5 characters!",
-                        },
-                      })}
-                    />
-                    <p>{errors?.title?.message}</p>
-                  </div>
-                  <div>
-                    <Label>Author</Label>
-                    <Input
-                      type="text"
-                      {...register("author", {
-                        required: "Please enter author!",
-                        minLength: {
-                          value: 5,
-                          message: "Please enter atleast 5 characters!",
-                        },
-                      })}
-                    />
-                    <p>{errors?.author?.message}</p>
-                  </div>
-                  <div>
-                    <Label>Category</Label>
-                    <select
-                      name="categoryId"
-                      id="category"
-                      className="border-2 w-115 h-9 rounded-[8px]"
-                      required
-                      onValueChange={(value) => setValue("categoryId", value)}
-                      {...register("categoryId")}
-                    >
-                      <option disabled>Select at category</option>
-                      {categories?.data.map((element, index) => (
-                        <option
-                          key={element.categoryId || index}
-                          value={element.categoryId}
-                        >
-                          {element.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <Label>Language</Label>
-                    <Input
-                      type="text"
-                      {...register("language", {
-                        required: "Please enter language!",
-                        minLength: {
-                          value: 5,
-                          message: "Please enter atleast 5 characters!",
-                        },
-                      })}
-                    />
-                    <p>{errors?.language?.message}</p>
-                  </div>
-                  <div>
-                    <Label>Published Date</Label>
-                    <Input
-                      type="date"
-                      {...register("publishedDate", {
-                        required: "Please enter published date!",
-                      })}
-                    ></Input>
-                  </div>
-                  <div>
-                    <Label>Edition</Label>
-                    <Input
-                      type="text"
-                      {...register("edition", {
-                        required: "Please enter edition!",
-                        minLength: {
-                          value: 1,
-                          message: "Please enter atleast 1 character!",
-                        },
-                      })}
-                    />
-                    <p>{errors?.edition?.message}</p>
-                  </div>
-                  <div>
-                    <Label>Page count</Label>
-                    <Input
-                      type="text"
-                      {...register("pageCount", {
-                        required: "Please enter page count!",
-                        pattern: {
-                          value: /^\d+$/,
-                          message: "Please enter a number!",
-                        },
-                        min: {
-                          value: 0,
-                          message: "Please enter valid page count!",
-                        },
-                        minLength: {
-                          value: 1,
-                          message: "Please enter atleast 1 character!",
-                        },
-                      })}
-                    />
-                    <p>{errors?.pageCount?.message}</p>
-                  </div>
-                  <div>
-                    <Label>Quantity</Label>
-                    <Input
-                      type="text"
-                      {...register("quantity", {
-                        required: "Please enter quantity!",
-                        pattern: {
-                          value: /^\d+$/,
-                          message: "Please enter a number!",
-                        },
-                        min: {
-                          value: 0,
-                          message: "Please enter valid quantity!",
-                        },
-                        minLength: {
-                          value: 1,
-                          message: "Please enter atleast 1 character!",
-                        },
-                      })}
-                    />
-                    <p>{errors?.quantity?.message}</p>
-                  </div>
-                  <div>
-                    <Label>Price</Label>
-                    <Input
-                      type="text"
-                      {...register("price", {
-                        required: "Please enter price!",
-                        pattern: {
-                          value: /^\d+$/,
-                          message: "Please enter a number!",
-                        },
-                        min: {
-                          value: 0,
-                          message: "Please enter valid price!",
-                        },
-                        minLength: {
-                          value: 1,
-                          message: "Please enter atleast 1 character!",
-                        },
-                      })}
-                    />
-                    <p>{errors?.price?.message}</p>
-                  </div>
-                  <div>
-                    <Label>Image</Label>
-                    <Input
-                      type="file"
-                      onChange={handleBookImage}
-                      accept="image/jpeg, image/png"
-                      required
-                    ></Input>
-                  </div>
-                  <div>
-                    <Label>Descriptoin</Label>
-                    <Input
-                      type="text"
-                      {...register("description", {
-                        required: "Please enter description!",
-                        minLength: {
-                          value: 5,
-                          message: "Please enter atleast 5 characters!",
-                        },
-                      })}
-                    ></Input>
-                  </div>
-                </div>
-              ))}
-          {/* ))} */}
+        <ScrollArea className="h-[70vh] mb-3 ">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {Array.isArray(books?.data) &&
+              books?.data
+                .filter((book) => book.bookId == id)
+                .map((element, index) => (
+                  <div
+                    key={element.bookId || index}
+                    className="space-y-4 mb-5 pr-5 pl-1"
+                  >
+                    <div>
+                      <Label>ISBN</Label>
+                      <Input
+                        id="isbn"
+                        type="text"
+                        defaultValue=""
+                        className="col-span-3 border-gray-300 mb-0 h-11"
+                        placeholder="Enter isbn"
+                        {...register("isbn", {
+                          required: "Please enter isbn.",
+                          minLength: {
+                            value: 3,
+                            message: "Please enter at least 3 characters.",
+                          },
+                          maxLength: {
+                            value: 20,
+                            message:
+                              "Please enter no more than 100 characters.",
+                          },
+                        })}
+                      />
+                      {errors?.isbn?.message && (
+                        <p className="text-sm text-red-500 mt-0.5">
+                          {errors?.isbn?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label>Title</Label>
+                      <Input
+                        id="title"
+                        type="text"
+                        defaultValue=""
+                        className="col-span-3 border-gray-300 mb-0 h-11"
+                        placeholder="Enter title"
+                        {...register("title", {
+                          required: "Please enter title.",
+                          minLength: {
+                            value: 3,
+                            message: "Please enter at least 3 characters.",
+                          },
+                          maxLength: {
+                            value: 30,
+                            message:
+                              "Please enter no more than 100 characters.",
+                          },
+                        })}
+                      />
+                      {errors?.title?.message && (
+                        <p className="text-sm text-red-500 mt-0.5">
+                          {errors?.title?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label>Author</Label>
+                      <Input
+                        id="author"
+                        type="text"
+                        defaultValue=""
+                        className="col-span-3 border-gray-300 mb-0 h-11"
+                        placeholder="Enter author"
+                        {...register("author", {
+                          required: "Please enter author.",
+                          minLength: {
+                            value: 3,
+                            message: "Please enter at least 3 characters.",
+                          },
+                          maxLength: {
+                            value: 30,
+                            message:
+                              "Please enter no more than 100 characters.",
+                          },
+                        })}
+                      />
+                      {errors?.author?.message && (
+                        <p className="text-sm text-red-500 mt-0.5">
+                          {errors?.author?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label>Category</Label>
+                      <select
+                        name="categoryId"
+                        id="category"
+                        className="border-2 w-115 h-9 rounded-[8px]"
+                        required
+                        onValueChange={(value) => setValue("categoryId", value)}
+                        {...register("categoryId")}
+                      >
+                        <option disabled>Select at category</option>
+                        {categories?.data.map((element, index) => (
+                          <option
+                            key={element.categoryId || index}
+                            value={element.categoryId}
+                          >
+                            {element.name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors?.categoryId?.message && (
+                        <p className="text-sm text-red-500 mt-0.5">
+                          {errors?.categoryId?.message}
+                        </p>
+                      )}
+                    </div>
 
-          <DialogFooter>
-            <DialogClose>
-              <Button>Close</Button>
-            </DialogClose>
-            <Button type="submit">Update</Button>
-          </DialogFooter>
-        </form>
+                    <div>
+                      <Label>Shelf</Label>
+                      <select
+                        name="categoryId"
+                        id="category"
+                        className="border-2 w-115 h-9 rounded-[8px]"
+                        required
+                        onValueChange={(value) => setValue("categoryId", value)}
+                        {...register("categoryId")}
+                      >
+                        <option disabled>Select at shelf</option>
+                        {categories?.data.map((element, index) => (
+                          <option
+                            key={element.categoryId || index}
+                            value={element.categoryId}
+                          >
+                            {element.name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors?.categoryId?.message && (
+                        <p className="text-sm text-red-500 mt-0.5">
+                          {errors?.categoryId?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label>Language</Label>
+                      <Input
+                        id="language"
+                        type="text"
+                        defaultValue=""
+                        className="col-span-3 border-gray-300 mb-0 h-11"
+                        placeholder="Enter language"
+                        {...register("language", {
+                          required: "Please enter langauge.",
+                          minLength: {
+                            value: 3,
+                            message: "Please enter at least 3 characters.",
+                          },
+                          maxLength: {
+                            value: 30,
+                            message:
+                              "Please enter no more than 100 characters.",
+                          },
+                        })}
+                      />
+                      {errors?.language?.message && (
+                        <p className="text-sm text-red-500 mt-0.5">
+                          {errors?.language?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label>Published Date</Label>
+                      <Input
+                        id="published-date"
+                        type="date"
+                        defaultValue=""
+                        className="col-span-3 border-gray-300 mb-0 h-11"
+                        placeholder="Choose published date"
+                        {...register("publishedDate", {
+                          required: "Please select a date",
+                        })}
+                      ></Input>
+                      {errors?.publishedDate?.message && (
+                        <p className="text-sm text-red-500 mt-0.5">
+                          {errors?.publishedDate?.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <Label>Edition</Label>
+                      <Input
+                        id="edition"
+                        type="text"
+                        defaultValue=""
+                        className="col-span-3 border-gray-300 mb-0 h-11"
+                        placeholder="Enter edition"
+                        {...register("edition", {
+                          required: "Please enter edition.",
+                          minLength: {
+                            value: 3,
+                            message: "Please enter at least 3 characters.",
+                          },
+                          maxLength: {
+                            value: 15,
+                            message:
+                              "Please enter no more than 100 characters.",
+                          },
+                        })}
+                      />
+                      {errors?.edition?.message && (
+                        <p className="text-sm text-red-500 mt-0.5">
+                          {errors?.edition?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label>Page count</Label>
+                      <Input
+                        id="page-count"
+                        type="text"
+                        defaultValue=""
+                        className="col-span-3 border-gray-300 mb-0 h-11"
+                        placeholder="Enter page count"
+                        {...register("pageCount", {
+                          required: "Enter a page count.",
+                          pattern: {
+                            value: /^\d+$/,
+                            message: "Please enter a number.",
+                          },
+                          min: {
+                            value: 0,
+                            message: "Please enter valid page count.",
+                          },
+                          minLength: {
+                            value: 1,
+                            message: "Please enter at least one number.",
+                          },
+                          maxLength: {
+                            value: 9,
+                            message:
+                              "Please enter a number with no more than 9 digits.",
+                          },
+                        })}
+                      />
+                      {errors?.pageCount?.message && (
+                        <p className="text-sm text-red-500 mt-0.5">
+                          {errors?.pageCount?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label>Quantity</Label>
+                      <Input
+                        id="quantity"
+                        type="text"
+                        defaultValue=""
+                        className="col-span-3 border-gray-300 mb-0 h-11"
+                        placeholder="Enter quantity"
+                        {...register("quantity", {
+                          required: "Please enter quantity.",
+                          pattern: {
+                            value: /^\d+$/,
+                            message: "Please enter a number.",
+                          },
+                          min: {
+                            value: 0,
+                            message: "Please enter valid quantity.",
+                          },
+                          minLength: {
+                            value: 1,
+                            message: "Please enter at least one number.",
+                          },
+                          maxLength: {
+                            value: 9,
+                            message:
+                              "Please enter a number with no more than 9 digits.",
+                          },
+                        })}
+                      />
+                      {errors?.quantity?.message && (
+                        <p className="text-sm text-red-500 mt-0.5">
+                          {errors?.quantity?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label>Price</Label>
+                      <Input
+                        id="per-book-cost"
+                        type="text"
+                        defaultValue=""
+                        className="col-span-3 border-gray-300 mb-0 h-11"
+                        placeholder="Enter price"
+                        {...register("price", {
+                          required: "Please enter price.",
+                          pattern: {
+                            value: /^\d+$/,
+                            message: "Please enter a number.",
+                          },
+                          min: {
+                            value: 0,
+                            message: "Please enter valid price.",
+                          },
+                          minLength: {
+                            value: 1,
+                            message: "Please enter at least one number.",
+                          },
+                          maxLength: {
+                            value: 9,
+                            message:
+                              "Please enter a number with no more than 9 digits.",
+                          },
+                        })}
+                      />
+                      {errors?.price?.message && (
+                        <p className="text-sm text-red-500 mt-0.5">
+                          {errors?.price?.message}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label>Image</Label>
+                      <Input
+                        type="file"
+                        onChange={handleBookImage}
+                        accept="image/jpeg, image/png"
+                        required
+                      ></Input>
+                    </div>
+                    <div>
+                      <Label>Descriptoin</Label>
+                      <Input
+                        id="description"
+                        type="text"
+                        defaultValue=""
+                        className="col-span-3 border-gray-300 mb-0 h-11"
+                        placeholder="Enter description."
+                        {...register("description", {
+                          required: "Please enter description.",
+                          minLength: {
+                            value: 3,
+                            message: "Please enter at least 3 characters.",
+                          },
+                          maxLength: {
+                            value: 100,
+                            message:
+                              "Please enter no more than 100 characters.",
+                          },
+                        })}
+                      />
+                      {errors?.description?.message && (
+                        <p className="text-sm text-red-500 mt-0.5">
+                          {errors?.description?.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+            {/* ))} */}
+
+            <DialogFooter className="grid grid-cols-4 mx-2 mb-3 pr-3.5">
+              <DialogClose asChild className="w-full">
+                <Button className="grid col-span-2">Clear</Button>
+              </DialogClose>
+              <Button type="submit" className="grid col-span-2">
+                Add
+              </Button>
+            </DialogFooter>
+          </form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
