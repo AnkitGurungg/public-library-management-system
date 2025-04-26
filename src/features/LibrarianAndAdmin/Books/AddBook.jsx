@@ -119,18 +119,22 @@ const AddBook = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter isbn"
                     {...register("isbn", {
-                      required: "Please enter ISBN",
+                      required: "Please enter isbn.",
                       minLength: {
-                        value: 5,
-                        message: "Max lenght should be 5",
+                        value: 3,
+                        message: "Please enter at least 3 characters.",
                       },
                       maxLength: {
                         value: 20,
-                        message: "Max lenght should be 20",
+                        message: "Please enter no more than 100 characters.",
                       },
                     })}
                   />
-                  <p>{errors?.isbn?.message}</p>
+                  {errors?.isbn?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.isbn?.message}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-1">
                   <Label htmlFor="title" className="text-right">
@@ -143,18 +147,22 @@ const AddBook = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter title"
                     {...register("title", {
-                      required: "Please enter title",
+                      required: "Please enter title.",
                       minLength: {
-                        value: 1,
-                        message: "Mininmum length is required",
+                        value: 3,
+                        message: "Please enter at least 3 characters.",
                       },
                       maxLength: {
-                        value: 50,
-                        message: "Max length should be 50",
+                        value: 30,
+                        message: "Please enter no more than 100 characters.",
                       },
                     })}
                   />
-                  <p>{errors?.title?.message}</p>
+                  {errors?.title?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.title?.message}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-1">
                   <Label htmlFor="title" className="text-right">
@@ -167,18 +175,22 @@ const AddBook = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter author"
                     {...register("author", {
-                      required: "Please enter author name",
+                      required: "Please enter author.",
                       minLength: {
-                        value: 1,
-                        message: "Minimun length is required",
+                        value: 3,
+                        message: "Please enter at least 3 characters.",
                       },
                       maxLength: {
-                        value: 50,
-                        message: "Max length should be 50",
+                        value: 30,
+                        message: "Please enter no more than 100 characters.",
                       },
                     })}
                   />
-                  <p>{errors?.author?.message}</p>
+                  {errors?.author?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.author?.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-1">
@@ -189,11 +201,11 @@ const AddBook = () => {
                   <select
                     onChange={(e) => setValue("categoryId", e.target.value)}
                     {...register("categoryId", {
-                      required: "Please select at least one",
+                      required: "Please select a category.",
                     })}
                     className="w-[420px] border rounded-[8px] border-gray-300 mb-0 h-11"
                   >
-                    <option disabled>Please select atleast one category</option>
+                    <option disabled>Please select a category</option>
                     {categories?.status == 200 &&
                       Array.isArray(categories?.data) &&
                       categories?.data?.length > 0 &&
@@ -206,9 +218,12 @@ const AddBook = () => {
                         </option>
                       ))}
                   </select>
-                  <p className="text-sm text-red-500">
-                    {errors?.categoryId?.message}
-                  </p>
+
+                  {errors?.categoryId?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.categoryId?.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-1">
@@ -219,11 +234,11 @@ const AddBook = () => {
                   <select
                     onChange={(e) => setValue("shelfId", e.target.value)}
                     {...register("shelfId", {
-                      required: "Please select at least one",
+                      required: "Please select a shelf.",
                     })}
                     className="w-[420px] border rounded-[8px] border-gray-300 mb-0 h-11"
                   >
-                    <option disabled>Please select atleast one shelf</option>
+                    <option disabled>Please select a shelf</option>
                     {availableShelfs?.status == 200 &&
                       Array.isArray(availableShelfs?.data) &&
                       availableShelfs?.data?.length > 0 &&
@@ -236,9 +251,11 @@ const AddBook = () => {
                         </option>
                       ))}
                   </select>
-                  <p className="text-sm text-red-500">
-                    {errors?.shelfId?.message}
-                  </p>
+                  {errors?.shelfId?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.shelfId?.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-3">
@@ -252,18 +269,22 @@ const AddBook = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter language"
                     {...register("language", {
-                      required: "Please enter is langauge",
+                      required: "Please enter langauge.",
                       minLength: {
-                        value: 1,
-                        message: "Minimum length is required",
+                        value: 3,
+                        message: "Please enter at least 3 characters.",
                       },
                       maxLength: {
-                        value: 50,
-                        message: "Max length should be 50",
+                        value: 30,
+                        message: "Please enter no more than 100 characters.",
                       },
                     })}
                   />
-                  <p>{errors?.language?.message}</p>
+                  {errors?.language?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.language?.message}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="published-date" className="text-right">
@@ -276,7 +297,7 @@ const AddBook = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Choose published date"
                     {...register("publishedDate", {
-                      required: "Date is required",
+                      required: "Please select a date.",
                       // validate: (value) => {
                       //   const selectedDate = new Date(value);
                       //   const today = new Date();
@@ -287,7 +308,11 @@ const AddBook = () => {
                       // },
                     })}
                   />
-                  <p>{errors?.publishedDate?.message}</p>
+                  {errors?.publishedDate?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.publishedDate?.message}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="edition" className="text-right">
@@ -300,18 +325,22 @@ const AddBook = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter edition"
                     {...register("edition", {
-                      required: "Please enter edition",
+                      required: "Please enter edition.",
                       minLength: {
-                        value: 1,
-                        message: "Min length is required",
+                        value: 3,
+                        message: "Please enter at least 3 characters.",
                       },
                       maxLength: {
-                        value: 50,
-                        message: "Max length should be 50",
+                        value: 15,
+                        message: "Please enter no more than 100 characters.",
                       },
                     })}
                   />
-                  <p>{errors?.edition?.message}</p>
+                  {errors?.edition?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.edition?.message}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="page-count" className="text-right">
@@ -324,18 +353,31 @@ const AddBook = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter page count"
                     {...register("pageCount", {
-                      required: "Enter a number",
+                      required: "Enter a page count.",
                       pattern: {
                         value: /^\d+$/,
-                        message: "Only numbers are allowed",
+                        message: "Please enter a number.",
                       },
                       min: {
                         value: 0,
-                        message: "Page number can not be negative",
+                        message: "Please enter valid page count.",
+                      },
+                      minLength: {
+                        value: 1,
+                        message: "Please enter at least one number.",
+                      },
+                      maxLength: {
+                        value: 9,
+                        message:
+                          "Please enter a number with no more than 9 digits.",
                       },
                     })}
                   />
-                  <p>{errors?.pageCount?.message}</p>
+                  {errors?.pageCount?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.pageCount?.message}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="quantity" className="text-right">
@@ -348,18 +390,31 @@ const AddBook = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter quantity"
                     {...register("quantity", {
-                      required: "Please enter quantity",
+                      required: "Please enter quantity.",
                       pattern: {
                         value: /^\d+$/,
-                        message: "Only numbers are allowed",
+                        message: "Please enter a number.",
                       },
                       min: {
                         value: 0,
-                        message: "Quantity is can not be negative",
+                        message: "Please enter valid quantity.",
+                      },
+                      minLength: {
+                        value: 1,
+                        message: "Please enter at least one number.",
+                      },
+                      maxLength: {
+                        value: 9,
+                        message:
+                          "Please enter a number with no more than 9 digits.",
                       },
                     })}
                   />
-                  {errors?.quantity?.message}
+                  {errors?.quantity?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.quantity?.message}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="per-book-cost" className="text-right">
@@ -372,18 +427,31 @@ const AddBook = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter price"
                     {...register("price", {
-                      required: "Please enter price",
+                      required: "Please enter price.",
                       pattern: {
                         value: /^\d+$/,
-                        message: "Only numbers are allowed",
+                        message: "Please enter a number.",
                       },
                       min: {
                         value: 0,
-                        message: "Price can not be negative",
+                        message: "Please enter valid price.",
+                      },
+                      minLength: {
+                        value: 1,
+                        message: "Please enter at least one number.",
+                      },
+                      maxLength: {
+                        value: 9,
+                        message:
+                          "Please enter a number with no more than 9 digits.",
                       },
                     })}
                   />
-                  <p>{errors?.price?.message}</p>
+                  {errors?.price?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.price?.message}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="image" className="text-right">
@@ -409,15 +477,24 @@ const AddBook = () => {
                     type="text"
                     defaultValue=""
                     className="col-span-3 border-gray-300 mb-0 h-11"
-                    placeholder="Enter description"
+                    placeholder="Enter description."
                     {...register("description", {
-                      required: "Please enter description",
+                      required: "Please enter description.",
                       minLength: {
-                        value: 1,
-                        message: "Min length is required",
+                        value: 3,
+                        message: "Please enter at least 3 characters.",
+                      },
+                      maxLength: {
+                        value: 100,
+                        message: "Please enter no more than 100 characters.",
                       },
                     })}
                   />
+                  {errors?.description?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.description?.message}
+                    </p>
+                  )}
                 </div>
               </div>
               <DialogFooter className="grid grid-cols-4 mx-2 mb-3">

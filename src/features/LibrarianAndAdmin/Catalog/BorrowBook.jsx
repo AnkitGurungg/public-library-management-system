@@ -40,10 +40,10 @@ const BorrowBook = () => {
         }
       );
       if (response.status === 200) {
-        toast.error(response?.data?.message || "Please provide valid details!");
+        toast.error(response?.data?.message || "Please provide valid details.");
       }
       if (response.status === 201) {
-        toast.success("Borrow succeed!");
+        toast.success("Borrow succeed");
         reset();
         refetchBorrowedBooks();
       }
@@ -87,18 +87,23 @@ const BorrowBook = () => {
                   placeholder="Enter book id"
                   className="h-11 border border-gray-300 mb-0"
                   {...register("bookId", {
-                    required: "Please enter book id!",
+                    required: "Please enter book id.",
                     pattern: {
                       value: /^\d+$/,
-                      message: "Please enter a number!",
+                      message: "Please enter a number.",
                     },
                     min: {
                       value: 0,
-                      message: "Please enter valid book id!",
+                      message: "Please enter valid book id.",
                     },
                     minLength: {
                       value: 1,
-                      message: "Please enter atleast 1 character!",
+                      message: "Please enter at least one number.",
+                    },
+                    maxLength: {
+                      value: 9,
+                      message:
+                        "Please enter a number with no more than 9 digits.",
                     },
                   })}
                 />
@@ -116,18 +121,23 @@ const BorrowBook = () => {
                   placeholder="Enter user id"
                   className="h-11 border border-gray-300 mb-0"
                   {...register("userId", {
-                    required: "Please enter user id!",
+                    required: "Please enter user id.",
                     pattern: {
                       value: /^\d+$/,
-                      message: "Please enter a number!",
+                      message: "Please enter a number.",
                     },
                     min: {
                       value: 0,
-                      message: "Please enter valid user id!",
+                      message: "Please enter valid user id.",
                     },
                     minLength: {
                       value: 1,
-                      message: "Please enter atleast 1 character!",
+                      message: "Please enter at least one number.",
+                    },
+                    maxLength: {
+                      value: 9,
+                      message:
+                        "Please enter a number with no more than 9 digits.",
                     },
                   })}
                 />
@@ -145,7 +155,7 @@ const BorrowBook = () => {
                   placeholder="Select due date"
                   className="h-11 border border-gray-300 mb-0"
                   {...register("dueDate", {
-                    required: "Please choose due date!",
+                    required: "Please choose due date.",
                     validate: (value) => {
                       const selectedDate = new Date(value);
                       const today = new Date();
@@ -170,10 +180,14 @@ const BorrowBook = () => {
                   placeholder="Enter note"
                   className="h-11 border border-gray-300 mb-0"
                   {...register("note", {
-                    required: "Please enter description!",
+                    required: "Please enter description.",
                     minLength: {
-                      value: 5,
-                      message: "Please enter atleast 5 characters!",
+                      value: 3,
+                      message: "Please enter at least 3 characters.",
+                    },
+                    maxLength: {
+                      value: 100,
+                      message: "Please enter no more than 100 characters.",
                     },
                   })}
                 />
@@ -185,7 +199,7 @@ const BorrowBook = () => {
               </div>
             </div>
 
-            <DialogFooter className="grid grid-cols-2 mt-2 px-1">
+            <DialogFooter className="grid grid-cols-2 mt-4 mb-1 px-1">
               <Button className="w-full" onClick={() => reset()}>
                 Clear
               </Button>
