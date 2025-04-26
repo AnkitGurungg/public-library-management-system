@@ -41,7 +41,7 @@ const AddShelf = () => {
           },
         }
       );
-      toast.success("Shelf added!")
+      toast.success("Shelf added!");
       reset();
       refetchShelfs();
       // console.log(response);
@@ -78,10 +78,14 @@ const AddShelf = () => {
                   className="col-span-3 border-gray-300 mb-0 h-11"
                   placeholder="Enter name"
                   {...register("name", {
-                    required: "Please enter name!",
+                    required: "Please enter name.",
                     minLength: {
-                      value: 5,
-                      message: "Please enter atleast 5 characters!",
+                      value: 3,
+                      message: "Please enter at least 3 characters.",
+                    },
+                    maxLength: {
+                      value: 20,
+                      message: "Please enter no more than 100 characters.",
                     },
                   })}
                 />
@@ -94,18 +98,23 @@ const AddShelf = () => {
                   className="col-span-3 border-gray-300 mb-0 h-11"
                   placeholder="Enter capacity"
                   {...register("capacity", {
-                    required: "Please enter capacity!",
+                    required: "Please enter capacity.",
                     pattern: {
                       value: /^\d+$/,
-                      message: "Please enter a number!",
+                      message: "Please enter a number.",
                     },
                     min: {
                       value: 0,
-                      message: "Please enter valid capacity!",
+                      message: "Please enter valid capacity",
                     },
                     minLength: {
                       value: 1,
-                      message: "Please enter atleast 1 character!",
+                      message: "Please enter at least one number.",
+                    },
+                    maxLength: {
+                      value: 9,
+                      message:
+                        "Please enter a number with no more than 9 digits.",
                     },
                   })}
                 />
@@ -127,7 +136,7 @@ const AddShelf = () => {
                   // className="border rounded-[7px] h-[40px] w-[460px]"
                   className="w-[420px] border rounded-[8px] border-gray-300 mb-0 h-11"
                 >
-                  <option disabled>Select a category</option>
+                  <option disabled>Please select a category</option>
                   {categories?.status == 200 &&
                     Array.isArray(categories?.data) &&
                     categories.data.length > 0 &&
@@ -148,17 +157,20 @@ const AddShelf = () => {
                   className="col-span-3 border-gray-300 mb-0 h-11"
                   placeholder="Enter description"
                   {...register("description", {
-                    required: "Please enter description!",
+                    required: "Please enter description.",
                     minLength: {
-                      value: 5,
-                      message: "Please enter atleast 5 characters!",
+                      value: 3,
+                      message: "Please enter at least 3 characters.",
+                    },
+                    maxLength: {
+                      value: 50,
+                      message: "Please enter no more than 50 characters.",
                     },
                   })}
                 />
                 <p className="text-sm text-red-500">
                   {errors?.description?.message}
                 </p>
-                <p></p>
               </div>
               <DialogFooter className="grid grid-cols-4 mb-3">
                 <DialogClose asChild>

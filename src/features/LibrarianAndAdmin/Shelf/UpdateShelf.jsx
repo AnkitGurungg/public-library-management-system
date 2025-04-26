@@ -10,12 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PencilLine } from "lucide-react";
+import { PencilLine, SquareLibrary } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { useFetchCategory } from "@/hooks/useFetchCategory";
 import { useFetchShelfs } from "@/hooks/useFetchShelfs";
 import GlobalService from "@/services/GlobalServices";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const UpdateShelf = ({ id }) => {
   const [open, setOpen] = useState(false);
@@ -66,97 +67,144 @@ const UpdateShelf = ({ id }) => {
       </DialogTrigger>
 
       <DialogContent aria-describedby={undefined}>
-        <DialogHeader>
-          <DialogTitle>Update Shelf</DialogTitle>
-          <hr />
+        <DialogHeader className="sm:max-w-[500px]">
+          <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-6">
+            <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
+              <SquareLibrary size={27} />
+            </div>
+            <span className="text-lg">Update Shelf</span>
+          </DialogTitle>
+          <div className="my-0 h-px bg-gray-800 mx-5" />
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {Array.isArray(shelfs?.data) &&
-            shelfs?.data
-              .filter((shelf) => shelf.shelfId == id)
-              .map((element, index) => (
-                <div key={element.shelfId || index}>
-                  <div>
-                    <Label>Name</Label>
-                    <Input
-                      type="text"
-                      {...register("name", {
-                        required: "Please enter name!",
-                        minLength: {
-                          value: 5,
-                          message: "Please enter atleast 5 characters!",
-                        },
-                      })}
-                    />
-                    <p>{errors?.name?.message}</p>
+        <ScrollArea className="mx-2 mb-3">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {Array.isArray(shelfs?.data) &&
+              shelfs?.data
+                .filter((shelf) => shelf.shelfId == id)
+                .map((element, index) => (
+                  <div
+                    key={element.shelfId || index}
+                    className="space-y-4 px-3 mb-5"
+                  >
+                    <div className="flex flex-col gap-1">
+                      <Label>Name</Label>
+                      <Input
+                        type="text"
+                        className="col-span-3 border-gray-300 mb-0 h-11"
+                        placeholder="Enter name"
+                        {...register("name", {
+                          required: "Please enter name.",
+                          minLength: {
+                            value: 3,
+                            message: "Please enter at least 3 characters.",
+                          },
+                          maxLength: {
+                            value: 20,
+                            message:
+                              "Please enter no more than 100 characters.",
+                          },
+                        })}
+                      />
+                      <p className="text-sm text-red-500">
+                        {errors?.name?.message}
+                      </p>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <Label>Capacity</Label>
+                      <Input
+                        type="text"
+                        className="col-span-3 border-gray-300 mb-0 h-11"
+                        placeholder="Enter capacity"
+                        {...register("capacity", {
+                          required: "Please enter capacity.",
+                          pattern: {
+                            value: /^\d+$/,
+                            message: "Please enter a number.",
+                          },
+                          min: {
+                            value: 0,
+                            message: "Please enter valid capacity",
+                          },
+                          minLength: {
+                            value: 1,
+                            message: "Please enter at least one number.",
+                          },
+                          maxLength: {
+                            value: 9,
+                            message:
+                              "Please enter a number with no more than 9 digits.",
+                          },
+                        })}
+                      />
+                      <p className="text-sm text-red-500">
+                        {errors?.capacity?.message}
+                      </p>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <Label>Category</Label>
+                      <select
+                        name="categoryId"
+                        onValueChange={(value) =>
+                          setValue("categoryId", value, {
+                            shouldValidate: true,
+                          })
+                        }
+                        {...register("categoryId", {
+                          required: "Please select at least one",
+                        })}
+                        required
+                        // className="border rounded-[7px] h-[40px] w-[460px]"
+                        className="w-[420px] border rounded-[8px] border-gray-300 mb-0 h-11"
+                      >
+                        <option disabled>Please select a category</option>
+                        {categories?.status == 200 &&
+                          Array.isArray(categories?.data) &&
+                          categories.data.length > 0 &&
+                          categories?.data.map((element, index) => (
+                            <option
+                              key={element.categoryId || index}
+                              value={element.categoryId}
+                            >
+                              {element.name}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <Label>Description</Label>
+                      <Input
+                        type="text"
+                        className="col-span-3 border-gray-300 mb-0 h-11"
+                        placeholder="Enter description"
+                        {...register("description", {
+                          required: "Please enter description.",
+                          minLength: {
+                            value: 3,
+                            message: "Please enter at least 3 characters.",
+                          },
+                          maxLength: {
+                            value: 50,
+                            message: "Please enter no more than 50 characters.",
+                          },
+                        })}
+                      />
+                      <p className="text-sm text-red-500">
+                        {errors?.description?.message}
+                      </p>
+                    </div>
+                    <DialogFooter className="grid grid-cols-4 mb-3">
+                      <DialogClose asChild>
+                        <Button className="grid col-span-2">Clear</Button>
+                      </DialogClose>
+                      <Button type="submit" className="grid col-span-2">
+                        Update
+                      </Button>
+                    </DialogFooter>
                   </div>
-                  <div>
-                    <Label>Capacity</Label>
-                    <Input
-                      type="text"
-                      {...register("capacity", {
-                        required: "Please enter capacity!",
-                        pattern: {
-                          value: /^\d+$/,
-                          message: "Please enter a number!",
-                        },
-                        min: {
-                          value: 0,
-                          message: "Please enter valid capacity!",
-                        },
-                        minLength: {
-                          value: 1,
-                          message: "Please enter atleast 1 character!",
-                        },
-                      })}
-                    />
-                    <p>{errors?.capacity?.message}</p>
-                  </div>
-
-                  <div>
-                    <Label>Category</Label>
-                    <select
-                      name="categoryId"
-                      required
-                      className="border-2 w-115 h-9 rounded-[8px]"
-                      onChange={(e) => setValue("categoryId", e.target.value)}
-                      {...register("categoryId")}
-                    >
-                      <option disabled>Select a Category</option>
-                      {categories?.data?.map((element, index) => (
-                        <option
-                          key={element.categoryId || index}
-                          value={element.categoryId}
-                        >
-                          {element.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <Label>Description</Label>
-                    <Input
-                      type="text"
-                      {...register("description", {
-                        required: "Please enter description!",
-                        minLength: {
-                          value: 5,
-                          message: "Please enter atleast 5 characters!",
-                        },
-                      })}
-                    />
-                    <p>{errors?.description?.message}</p>
-                  </div>
-                  <DialogFooter>
-                    <DialogClose>
-                      <Button>Close</Button>
-                    </DialogClose>
-                    <Button type="submit">Update</Button>
-                  </DialogFooter>
-                </div>
-              ))}
-        </form>
+                ))}
+          </form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

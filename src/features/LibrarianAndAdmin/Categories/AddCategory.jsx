@@ -81,8 +81,8 @@ const AddCategory = () => {
                     {...register("name", {
                       required: "Please enter name!",
                       minLength: {
-                        value: 5,
-                        message: "Please enter atleast 5 characters!",
+                        value: 3,
+                        message: "Please enter atleast 3 characters!",
                       },
                     })}
                   />

@@ -95,8 +95,8 @@ const UpdateCategory = ({ id }) => {
                         {...register("name", {
                           required: "Please enter name!",
                           minLength: {
-                            value: 5,
-                            message: "Please enter atleast 5 characters!",
+                            value: 3,
+                            message: "Please enter atleast 3 characters!",
                           },
                         })}
                       />
@@ -189,7 +189,7 @@ const UpdateCategory = ({ id }) => {
                         <Button className="">Clear</Button>
                       </DialogClose>
                       <Button type="submit" className="grid col-span-2">
-                        Add
+                        Update
                       </Button>
                     </DialogFooter>
                   </div>
