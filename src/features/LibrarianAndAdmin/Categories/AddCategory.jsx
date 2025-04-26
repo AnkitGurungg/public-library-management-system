@@ -94,18 +94,23 @@ const AddCategory = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter starting number"
                     {...register("startingNumber", {
-                      required: "Please enter starting number!",
+                      required: "Please enter starting number.",
                       pattern: {
                         value: /^\d+$/,
-                        message: "Please enter a number!",
+                        message: "Please enter a number.",
                       },
                       min: {
                         value: 0,
-                        message: "Please enter valid number!",
+                        message: "Please enter valid starting number.",
                       },
                       minLength: {
                         value: 1,
-                        message: "Please enter atleast 1 character!",
+                        message: "Please enter at least one number.",
+                      },
+                      maxLength: {
+                        value: 9,
+                        message:
+                          "Please enter a number with no more than 9 digits.",
                       },
                     })}
                   />
@@ -119,18 +124,23 @@ const AddCategory = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter ending number"
                     {...register("endingNumber", {
-                      required: "Please enter ending number!",
+                      required: "Please enter ending number.",
                       pattern: {
                         value: /^\d+$/,
-                        message: "Please enter a number!",
+                        message: "Please enter a number.",
                       },
                       min: {
                         value: 0,
-                        message: "Please enter valid number!",
+                        message: "Please enter valid ending number.",
                       },
                       minLength: {
                         value: 1,
-                        message: "Please enter atleast 1 character!",
+                        message: "Please enter at least one number.",
+                      },
+                      maxLength: {
+                        value: 9,
+                        message:
+                          "Please enter a number with no more than 9 digits.",
                       },
                     })}
                   />
@@ -139,16 +149,20 @@ const AddCategory = () => {
                   </p>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <Label>Descriptoin</Label>
+                  <Label>Description</Label>
                   <Input
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter description"
                     type="text"
                     {...register("description", {
-                      required: "Please enter description!",
+                      required: "Please enter description.",
                       minLength: {
-                        value: 5,
-                        message: "Please enter atleast 5 characters!",
+                        value: 3,
+                        message: "Please enter at least 3 characters.",
+                      },
+                      maxLength: {
+                        value: 50,
+                        message: "Please enter no more than 50 characters.",
                       },
                     })}
                   />

@@ -180,14 +180,14 @@ const BorrowBook = () => {
                   placeholder="Enter note"
                   className="h-11 border border-gray-300 mb-0"
                   {...register("note", {
-                    required: "Please enter description.",
+                    required: "Please enter note.",
                     minLength: {
                       value: 3,
                       message: "Please enter at least 3 characters.",
                     },
                     maxLength: {
-                      value: 100,
-                      message: "Please enter no more than 100 characters.",
+                      value: 50,
+                      message: "Please enter no more than 50 characters.",
                     },
                   })}
                 />
