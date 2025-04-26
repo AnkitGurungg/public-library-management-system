@@ -22,6 +22,11 @@ export function DataTable({ columns, data = [] }) {
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
 
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 11,
+  });
+
   const table = useReactTable({
     data,
     columns,
@@ -33,7 +38,12 @@ export function DataTable({ columns, data = [] }) {
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
 
+    pageCount: Math.ceil(data?.length / pagination?.pageSize),
+
+    onPaginationChange: setPagination,
+
     state: {
+      pagination,
       sorting,
       columnFilters,
     },
@@ -129,6 +139,7 @@ export function DataTable({ columns, data = [] }) {
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
+            className="bg-white text-black"
           >
             Previous
           </Button>
@@ -137,6 +148,7 @@ export function DataTable({ columns, data = [] }) {
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
+            className="bg-white text-black"
           >
             Next
           </Button>
