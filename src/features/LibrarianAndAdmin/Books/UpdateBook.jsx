@@ -464,9 +464,7 @@ const UpdateBook = ({ id }) => {
                     </div>
                   </div>
                 ))}
-            {/* ))} */}
-
-            <DialogFooter className="grid grid-cols-4 mx-2 mb-3 pr-3.5">
+            <DialogFooter className="grid grid-cols-4 mx-1 mb-3 pr-3.5">
               <DialogClose asChild className="w-full">
                 <Button className="grid col-span-2">Clear</Button>
               </DialogClose>

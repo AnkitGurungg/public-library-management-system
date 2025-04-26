@@ -129,18 +129,22 @@ const AddLibrarian = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter name"
                     {...register("name", {
-                      required: "Please enter name!",
+                      required: "Please enter name.",
                       minLength: {
-                        value: 5,
-                        message: "Min lenght should be 5",
+                        value: 3,
+                        message: "Please enter at least 3 characters.",
                       },
                       maxLength: {
                         value: 20,
-                        message: "Max lenght should be 20",
+                        message: "Please enter no more than 100 characters.",
                       },
                     })}
                   />
-                  <p>{errors?.name?.message}</p>
+                  {errors?.name?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.name?.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-1">
@@ -152,18 +156,22 @@ const AddLibrarian = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter contact"
                     {...register("contactNumber", {
-                      required: "Please enter contact!",
+                      required: "Please enter contact.",
                       minLength: {
                         value: 10,
-                        message: "Please enter atleast 10 characters",
+                        message: "Please enter atleast 10 characters.",
                       },
                       maxLength: {
-                        value: 50,
-                        message: "Max length should be 50",
+                        value: 20,
+                        message: "Please enter no more than 20 characters.",
                       },
                     })}
                   />
-                  <p>{errors?.contactNumber?.message}</p>
+                  {errors?.contactNumber?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.contactNumber?.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-1">
@@ -177,16 +185,20 @@ const AddLibrarian = () => {
                     {...register("email", {
                       required: "Please enter email!",
                       minLength: {
-                        value: 10,
+                        value: 5,
                         message: "Please enter atleast 5 characters",
                       },
                       maxLength: {
-                        value: 50,
-                        message: "Max length should be 50",
+                        value: 20,
+                        message: "Please enter no more than 20 characters.",
                       },
                     })}
                   />
-                  <p>{errors?.email?.message}</p>
+                  {errors?.email?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.email?.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-1">
@@ -198,21 +210,25 @@ const AddLibrarian = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter address"
                     {...register("address", {
-                      required: "Please enter is address!",
+                      required: "Please enter address.",
                       minLength: {
-                        value: 1,
-                        message: "Minimum length is required",
+                        value: 3,
+                        message: "Please enter atleast 3 characters",
                       },
                       maxLength: {
-                        value: 50,
-                        message: "Max length should be 50",
+                        value: 20,
+                        message: "Please enter no more than 20 characters.",
                       },
                     })}
                   />
-                  <p>{errors?.address?.message}</p>
+                  {errors?.address?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.address?.message}
+                    </p>
+                  )}
                 </div>
 
-                <div className="flex flex-col gap-1">
+                {/* <div className="flex flex-col gap-1">
                   <Label htmlFor="address">Password</Label>
                   <Input
                     id="password"
@@ -233,7 +249,7 @@ const AddLibrarian = () => {
                     })}
                   />
                   <p>{errors?.password?.message}</p>
-                </div>
+                </div> */}
 
                 <div className="flex flex-col gap-1">
                   <Label htmlFor="image">Image</Label>
@@ -286,14 +302,22 @@ const AddLibrarian = () => {
                     className="col-span-3 border-gray-300 mb-0 h-11"
                     placeholder="Enter description"
                     {...register("description", {
-                      required: "Please enter description",
+                      required: "Please enter description.",
                       minLength: {
-                        value: 1,
-                        message: "Min length is required",
+                        value: 3,
+                        message: "Please enter at least 3 characters.",
+                      },
+                      maxLength: {
+                        value: 100,
+                        message: "Please enter no more than 100 characters.",
                       },
                     })}
                   />
-                  <p>{errors?.description?.message}</p>
+                  {errors?.description?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      {errors?.description?.message}
+                    </p>
+                  )}
                 </div>
               </div>
               {/* <DialogFooter className="grid grid-cols-4">
