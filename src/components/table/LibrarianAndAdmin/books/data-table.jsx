@@ -44,13 +44,9 @@ export function DataTable({ columns, data = [] }) {
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
 
-    pageCount: Math.ceil(data.length / pagination.pageSize),
-    state: {
-      pagination,
-    },
+    pageCount: Math.ceil(data?.length / pagination?.pageSize),
+
     onPaginationChange: setPagination,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
 
     state: {
       pagination,
@@ -162,12 +158,13 @@ export function DataTable({ columns, data = [] }) {
         </Table>
       </div>
 
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-2 py-0 mt-1.5">
         <Button
           variant="outline"
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
+          className="bg-white text-black"
         >
           Previous
         </Button>
@@ -176,6 +173,7 @@ export function DataTable({ columns, data = [] }) {
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
+          className="bg-white text-black"
         >
           Next
         </Button>
