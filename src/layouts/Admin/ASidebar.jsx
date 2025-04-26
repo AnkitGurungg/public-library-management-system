@@ -31,7 +31,7 @@ const ASidebar = ({ sidebarToggle }) => {
 
   return (
     <div
-      className={`fixed top-0 p-3 left-0 z-40 h-screen w-64 transition-transform duration-300 ease-in-out shadow-lg bg-white text-black ${
+      className={`fixed top-0 p-3 left-0 z-40 h-screen w-64 transition-transform duration-300 ease-in-out shadow-lg border-l-2 border-l-gray-300 text-black ${
         sidebarToggle ? "-translate-x-full" : "translate-x-0"
       }`}
     >
