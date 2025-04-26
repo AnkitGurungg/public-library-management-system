@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { NavLink, useNavigate } from "react-router-dom";
+import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
 
 const Header = ({ sidebarToggle, setSidebarToggle }) => {
   const [currentDate, setCurrentDate] = useState("");
@@ -67,15 +68,19 @@ const Header = ({ sidebarToggle, setSidebarToggle }) => {
           <DropdownMenuTrigger asChild>
             <div className="flex items-center gap-3 cursor-pointer px-3 py-2 rounded-lg transition mr-1.5">
               <img
-                src={userInfo?.imageURL || "/user/default-user.png"}
+                src={
+                  userInfo?.evidence?.userImage
+                    ? `${BACKEND_SERVER_BASE_URL}${userInfo?.evidence?.userImage}`
+                    : `/user/default-user.png`
+                }
                 className="w-8 h-8 rounded-full object-cover"
                 alt="User"
               />
               <div className="flex flex-col text-left">
-                <p className="text-sm font-medium">{userInfo?.email}</p>
-                <p className="text-xs text-gray-500 capitalize">
-                  {userInfo?.role}
+                <p className="text-sm font-medium capitalize">
+                  {userInfo?.name}
                 </p>
+                <p className="text-xs text-gray-500">{userInfo?.email}</p>
               </div>
               <ChevronDown className="w-4 h-4 text-gray-500" />
             </div>
