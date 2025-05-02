@@ -17,8 +17,8 @@ const AAppLayout = () => {
       return;
     }
     if (!userInfo || userInfo.role !== "ROLE_ADMIN") {
-      // toast.error("Forbidden");
       navigate("/");
+      toast.error("Access Denied");
     }
   }, [userInfo, loading]);
 

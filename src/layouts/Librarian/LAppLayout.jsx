@@ -18,8 +18,8 @@ const LAppLayout = () => {
       return;
     }
     if (!userInfo || userInfo.role !== "ROLE_LIBRARIAN") {
-      // toast.error("Forbidden!");
       navigate("/");
+      toast.error("Access Denied!");
     }
   }, [userInfo, loading]);
 

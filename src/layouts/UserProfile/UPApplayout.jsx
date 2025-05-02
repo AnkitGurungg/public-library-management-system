@@ -3,14 +3,11 @@ import UHeader from "../User/UHeader";
 import UPSidebar from "./UPSidebar";
 import { UserContext } from "@/contexts/UserContext";
 import { useContext, useEffect } from "react";
+import toast from "react-hot-toast";
 
 const UPApplayout = () => {
   const { token, setToken, loading, userInfo, getUserInfo } = useContext(UserContext);
-  
   console.log(getUserInfo);
-
-  
-
 
   return (
     <div className="flex flex-1 overflow-auto">
