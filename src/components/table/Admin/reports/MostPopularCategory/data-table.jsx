@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   flexRender,
@@ -22,6 +22,11 @@ export function DataTable({ columns, data = [] }) {
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
 
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 14,
+  });
+
   const table = useReactTable({
     data,
     columns,
@@ -33,7 +38,12 @@ export function DataTable({ columns, data = [] }) {
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
 
+    pageCount: Math.ceil(data?.length / pagination?.pageSize),
+
+    onPaginationChange: setPagination,
+
     state: {
+      pagination,
       sorting,
       columnFilters,
     },
