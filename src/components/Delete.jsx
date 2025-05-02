@@ -11,7 +11,7 @@ import {
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import { useState } from "react";
 import { useFetchBooks } from "@/hooks/useFetchBooks";
-import { Trash2 } from "lucide-react";
+import { Trash, Trash2 } from "lucide-react";
 import { useFetchCategory } from "@/hooks/useFetchCategory";
 import { useFetchShelfs } from "@/hooks/useFetchShelfs";
 import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
@@ -94,11 +94,16 @@ const Delete = ({ id, name, type }) => {
         <Trash2 size={20} />
       </DialogTrigger>
       <DialogContent aria-describedby={undefined}>
-        <DialogHeader>
-          <DialogTitle>Delete Confirmation</DialogTitle>
+        <DialogHeader className="sm:max-w-[500px]">
+          <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-2">
+            <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
+              <Trash size={27} />
+            </div>
+            <span className="text-lg">Delete Confirmation</span>
+          </DialogTitle>
+          <div className="my-0 h-px bg-gray-800 mx-2 mr-7" />
         </DialogHeader>
-        <hr />
-        <p>
+        <p className="ml-3">
           Are you sure want to procceed with the deletion of
           {type === "book" && (
             <p>
@@ -126,8 +131,8 @@ const Delete = ({ id, name, type }) => {
             </p>
           )}
         </p>
-        <DialogFooter>
-          <Button onClick={handleDelete}>Confirm</Button>
+        <DialogFooter className="w-full mt-2">
+          <Button onClick={handleDelete} className="w-full">Confirm</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

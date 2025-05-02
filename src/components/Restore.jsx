@@ -89,11 +89,16 @@ const RestoreBook = ({ id, name, type, whatUser }) => {
           <RefreshCw size={20} />
         </DialogTrigger>
         <DialogContent aria-describedby={undefined}>
-          <DialogHeader>
-            <DialogTitle>Delete Confirmation</DialogTitle>
-          </DialogHeader>
-          <hr />
-          <p>
+        <DialogHeader className="sm:max-w-[500px]">
+          <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-2">
+            <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
+              <RefreshCw size={27} />
+            </div>
+            <span className="text-lg">Restore Confirmation</span>
+          </DialogTitle>
+          <div className="my-0 h-px bg-gray-800 mx-2 mr-7" />
+        </DialogHeader>
+          <p className="ml-3">
             Are you sure want to procceed with the restoration of
             {type === "book" && (
               <p>
@@ -116,8 +121,8 @@ const RestoreBook = ({ id, name, type, whatUser }) => {
               </p>
             )}
           </p>
-          <DialogFooter>
-            <Button onClick={handleRestore}>Confirm</Button>
+          <DialogFooter className="w-full mt-2">
+            <Button onClick={handleRestore} className="w-full">Confirm</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
