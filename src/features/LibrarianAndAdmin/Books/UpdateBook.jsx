@@ -31,6 +31,7 @@ const UpdateBook = ({ id }) => {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm();
 
   useEffect(() => {
@@ -95,26 +96,26 @@ const UpdateBook = ({ id }) => {
       </DialogTrigger>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader className="sm:max-w-[500px]">
-          <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-2">
+          <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-6">
             <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
               <BookOpenText size={27} />
             </div>
             <span className="text-lg">Update Book</span>
           </DialogTitle>
-          <div className="my-0 h-px bg-gray-800 mx-2 mr-7" />
+          <div className="my-0 h-px bg-gray-800 mx-5" />
         </DialogHeader>
 
         <ScrollArea className="h-[70vh] mb-3 ">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)} className="mx-2 px-3">
             {Array.isArray(books?.data) &&
               books?.data
                 .filter((book) => book.bookId == id)
                 .map((element, index) => (
                   <div
                     key={element.bookId || index}
-                    className="space-y-4 mb-5 pr-5 pl-1"
+                    className="space-y-4 mb-5 pl-1"
                   >
-                    <div>
+                    <div className="flex flex-col gap-1">
                       <Label>ISBN</Label>
                       <Input
                         id="isbn"
@@ -141,7 +142,7 @@ const UpdateBook = ({ id }) => {
                         </p>
                       )}
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-1">
                       <Label>Title</Label>
                       <Input
                         id="title"
@@ -168,7 +169,7 @@ const UpdateBook = ({ id }) => {
                         </p>
                       )}
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-1">
                       <Label>Author</Label>
                       <Input
                         id="author"
@@ -195,12 +196,12 @@ const UpdateBook = ({ id }) => {
                         </p>
                       )}
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-1">
                       <Label>Category</Label>
                       <select
                         name="categoryId"
                         id="category"
-                        className="border-2 w-115 h-9 rounded-[8px]"
+                        className="w-[420px] border rounded-[8px] border-gray-300 mb-0 h-11"
                         required
                         onValueChange={(value) => setValue("categoryId", value)}
                         {...register("categoryId")}
@@ -222,17 +223,18 @@ const UpdateBook = ({ id }) => {
                       )}
                     </div>
 
-                    <div>
+                    <div className="flex flex-col gap-1">
                       <Label>Shelf</Label>
                       <select
                         name="categoryId"
                         id="category"
-                        className="border-2 w-115 h-9 rounded-[8px]"
+                        className="w-[420px] border rounded-[8px] border-gray-300 mb-0 h-11"
                         required
                         onValueChange={(value) => setValue("categoryId", value)}
                         {...register("categoryId")}
                       >
                         <option disabled>Select at shelf</option>
+                        <option>Pinecrest</option>
                         {categories?.data.map((element, index) => (
                           <option
                             key={element.categoryId || index}
@@ -248,7 +250,7 @@ const UpdateBook = ({ id }) => {
                         </p>
                       )}
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-1">
                       <Label>Language</Label>
                       <Input
                         id="language"
@@ -275,7 +277,7 @@ const UpdateBook = ({ id }) => {
                         </p>
                       )}
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-1">
                       <Label>Published Date</Label>
                       <Input
                         id="published-date"
@@ -284,9 +286,21 @@ const UpdateBook = ({ id }) => {
                         className="col-span-3 border-gray-300 mb-0 h-11"
                         placeholder="Choose published date"
                         {...register("publishedDate", {
-                          required: "Please select a date",
+                          required: "Please select a date.",
+                          validate: (value) => {
+                            const selectedDate = new Date(value);
+                            const tomorrow = new Date();
+                            tomorrow.setHours(0, 0, 0, 0);
+                            tomorrow.setDate(tomorrow.getDate() + 1);
+
+                            selectedDate.setHours(0, 0, 0, 0);
+                            return (
+                              selectedDate < tomorrow ||
+                              "Date must be today or earlier."
+                            );
+                          },
                         })}
-                      ></Input>
+                      />
                       {errors?.publishedDate?.message && (
                         <p className="text-sm text-red-500 mt-0.5">
                           {errors?.publishedDate?.message}
@@ -294,7 +308,7 @@ const UpdateBook = ({ id }) => {
                       )}
                     </div>
 
-                    <div>
+                    <div className="flex flex-col gap-1">
                       <Label>Edition</Label>
                       <Input
                         id="edition"
@@ -321,7 +335,8 @@ const UpdateBook = ({ id }) => {
                         </p>
                       )}
                     </div>
-                    <div>
+
+                    <div className="flex flex-col gap-1">
                       <Label>Page count</Label>
                       <Input
                         id="page-count"
@@ -356,7 +371,8 @@ const UpdateBook = ({ id }) => {
                         </p>
                       )}
                     </div>
-                    <div>
+
+                    <div className="flex flex-col gap-1">
                       <Label>Quantity</Label>
                       <Input
                         id="quantity"
@@ -391,7 +407,8 @@ const UpdateBook = ({ id }) => {
                         </p>
                       )}
                     </div>
-                    <div>
+
+                    <div className="flex flex-col gap-1">
                       <Label>Price</Label>
                       <Input
                         id="per-book-cost"
@@ -426,16 +443,19 @@ const UpdateBook = ({ id }) => {
                         </p>
                       )}
                     </div>
-                    <div>
+
+                    <div className="flex flex-col gap-1">
                       <Label>Image</Label>
                       <Input
                         type="file"
+                        className="col-span-3 h-11 border border-gray-300"
                         onChange={handleBookImage}
                         accept="image/jpeg, image/png"
                         required
                       ></Input>
                     </div>
-                    <div>
+
+                    <div className="flex flex-col gap-1">
                       <Label>Descriptoin</Label>
                       <Input
                         id="description"
@@ -464,12 +484,18 @@ const UpdateBook = ({ id }) => {
                     </div>
                   </div>
                 ))}
-            <DialogFooter className="grid grid-cols-4 mx-1 mb-3 pr-3.5">
-              <DialogClose asChild className="w-full">
-                <Button className="grid col-span-2">Clear</Button>
-              </DialogClose>
-              <Button type="submit" className="grid col-span-2">
-                Add
+            <DialogFooter className="grid grid-cols-4 mb-3 ml-1">
+              <Button
+                className="grid col-span-2 w-full"
+                onClick={() => {
+                  reset();
+                  setBookImage(null);
+                }}
+              >
+                Clear
+              </Button>
+              <Button type="submit" className="grid col-span-2 w-full">
+                Update
               </Button>
             </DialogFooter>
           </form>

@@ -105,6 +105,7 @@ const AddBook = () => {
             </DialogTitle>
             <div className="my-0 h-px bg-gray-800 mx-5" />
           </DialogHeader>
+
           <ScrollArea className="h-[70vh] mx-2 mb-3">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-4 px-3 mb-5">
@@ -197,16 +198,17 @@ const AddBook = () => {
                   <Label htmlFor="category" className="text-right">
                     Category
                   </Label>
-
                   <select
+                    id="categoryId"
                     onChange={(e) => setValue("categoryId", e.target.value)}
                     {...register("categoryId", {
                       required: "Please select a category.",
                     })}
                     className="w-[420px] border rounded-[8px] border-gray-300 mb-0 h-11"
+                    defaultValue=""
                   >
-                    <option disabled>Please select a category</option>
-                    {categories?.status == 200 &&
+                    <option disabled>Please select a category.</option>
+                    {categories?.status === 200 &&
                       Array.isArray(categories?.data) &&
                       categories?.data?.length > 0 &&
                       categories?.data.map((element, index) => (
@@ -298,14 +300,18 @@ const AddBook = () => {
                     placeholder="Choose published date"
                     {...register("publishedDate", {
                       required: "Please select a date.",
-                      // validate: (value) => {
-                      //   const selectedDate = new Date(value);
-                      //   const today = new Date();
-                      //   today.setHours(0, 0, 0, 0);
-                      //   return (
-                      //     selectedDate >= today || "Date must be today or later"
-                      //   );
-                      // },
+                      validate: (value) => {
+                        const selectedDate = new Date(value);
+                        const tomorrow = new Date();
+                        tomorrow.setHours(0, 0, 0, 0);
+                        tomorrow.setDate(tomorrow.getDate() + 1);
+
+                        selectedDate.setHours(0, 0, 0, 0);
+                        return (
+                          selectedDate < tomorrow ||
+                          "Date must be today or earlier."
+                        );
+                      },
                     })}
                   />
                   {errors?.publishedDate?.message && (
@@ -466,7 +472,12 @@ const AddBook = () => {
                     accept="image/jpeg, image/png"
                     required
                   />
-                  <p>{error}</p>
+                  {errors?.error?.message && (
+                    <p className="text-sm text-red-500 mt-0.5">
+                      <p>{error}</p>
+                    </p>
+                  )}
+                  
                 </div>
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="description" className="text-right">
@@ -485,8 +496,8 @@ const AddBook = () => {
                         message: "Please enter at least 3 characters.",
                       },
                       maxLength: {
-                        value: 100,
-                        message: "Please enter no more than 100 characters.",
+                        value: 500,
+                        message: "Please enter no more than 500 characters.",
                       },
                     })}
                   />
@@ -497,13 +508,18 @@ const AddBook = () => {
                   )}
                 </div>
               </div>
-              <DialogFooter className="grid grid-cols-4 mx-2 mb-3">
-                <DialogClose asChild>
-                  <Button className="grid col-span-2">Clear</Button>
-                </DialogClose>
-                <Button type="submit" className="grid col-span-2">
-                  Add
+
+              <DialogFooter className="grid grid-cols-2 mx-3 mb-3">
+                <Button
+                  className="w-full"
+                  onClick={() => {
+                    reset();
+                    setBookImage(null);
+                  }}
+                >
+                  Clear
                 </Button>
+                <Button type="submit">Add</Button>
               </DialogFooter>
             </form>
           </ScrollArea>
