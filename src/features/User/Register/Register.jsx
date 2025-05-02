@@ -132,10 +132,16 @@ const Register = ({ isOpenRegister, setIsOpenRegister, setIsOpenLogin }) => {
                     id="password"
                     placeholder="Password"
                     {...register("password", {
-                      required: "Please enter password!",
+                      required: "Please enter password.",
                       minLength: {
                         value: 8,
-                        message: "Use at least 8 characters!",
+                        message: "Please use at least 8 characters.",
+                      },
+                      pattern: {
+                        value:
+                          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).+$/,
+                        message:
+                          "Password must include uppercase, lowercase, number, and special character!",
                       },
                     })}
                     className="w-full h-[65px] rounded-xl border  border-gray-300 bg-white px-4 focus:outline-none focus:ring-1 focus:ring-[#81c7b5]"

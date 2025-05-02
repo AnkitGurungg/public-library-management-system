@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   flexRender,
@@ -39,6 +39,11 @@ export function DataTable({ columns, data }) {
       ]
     : [];
 
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 7,
+  });
+
   const table = useReactTable({
     data,
     columns,
@@ -50,7 +55,12 @@ export function DataTable({ columns, data }) {
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
 
+    pageCount: Math.ceil(data?.length / pagination?.pageSize),
+
+    onPaginationChange: setPagination,
+
     state: {
+      pagination,
       sorting,
       columnFilters,
     },
@@ -193,6 +203,7 @@ export function DataTable({ columns, data }) {
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
+          className="bg-gray-100 text-black"
         >
           Previous
         </Button>
@@ -201,6 +212,7 @@ export function DataTable({ columns, data }) {
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
+          className="bg-gray-100 text-black"
         >
           Next
         </Button>
