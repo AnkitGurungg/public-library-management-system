@@ -79,8 +79,8 @@ const Delete = ({ id, name, type }) => {
           refetchLibrarians();
         }
         if (type === "borrowed") {
-          useFetchBorrowedBooks();
           toast.success("Borrow record deleted!");
+          refetchBorrowedBooks();
         }
       }
     } catch (error) {
@@ -132,7 +132,9 @@ const Delete = ({ id, name, type }) => {
           )}
         </p>
         <DialogFooter className="w-full mt-2">
-          <Button onClick={handleDelete} className="w-full">Confirm</Button>
+          <Button onClick={handleDelete} className="w-full">
+            Confirm
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

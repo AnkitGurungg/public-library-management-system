@@ -6,13 +6,13 @@ import { CheckCircle, XCircle } from "lucide-react";
 export const columns = [
   {
     id: "bookId",
-    header: "Book ID",
+    header: "BID",
     cell: ({ row }) => row?.original?.borrowBooks?.bookId || "",
   },
 
   {
     accessorKey: "userId",
-    header: "User ID",
+    header: "UID",
     cell: ({ row }) => row?.original?.borrowUsers?.userId || "",
   },
 
@@ -105,7 +105,7 @@ export const columns = [
 
       return borrow.returnStatus ? (
         <div className="relative group">
-          <CircleCheckBig className="text-green-500" />
+          <CircleCheckBig className="text-[#206ea6]" />
           <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Already Returned
           </span>

@@ -151,7 +151,7 @@ export const columns = [
               }`}
               disabled={borrow?.returnStatus}
             >
-              <Delete id={borrow.borrowId} name={"book"} type="borrowed" />
+              <Delete id={borrow.borrowId} name={"book"} type={"borrowed"} />
             </button>
             <span className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-600 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               Delete borrow record!
