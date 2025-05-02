@@ -108,7 +108,7 @@ export const columns = [
       return (
         <div className="flex items-center justify-center gap-1">
           <div className="opacity-90">
-            <ViewMember id={member.userId} type={"nonvm"} />
+            <ViewMember id={member.userId} type={"vm"} />
           </div>
 
           <button
