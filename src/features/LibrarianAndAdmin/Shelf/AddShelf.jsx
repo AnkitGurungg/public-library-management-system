@@ -44,9 +44,12 @@ const AddShelf = () => {
       toast.success("Shelf added!");
       reset();
       refetchShelfs();
-      // console.log(response);
     } catch (error) {
-      // console.log(error);
+      if (error?.status === 409) {
+        toast.error(error?.response?.data?.message);
+      } else {
+        toast.error("Please try again.");
+      }
     }
   };
 
@@ -130,10 +133,8 @@ const AddShelf = () => {
                     setValue("categoryId", value, { shouldValidate: true })
                   }
                   {...register("categoryId", {
-                    required: "Please select at least one",
+                    required: "Please select a category",
                   })}
-                  required
-                  // className="border rounded-[7px] h-[40px] w-[460px]"
                   className="w-[420px] border rounded-[8px] border-gray-300 mb-0 h-11"
                 >
                   <option disabled>Please select a category</option>
@@ -149,6 +150,9 @@ const AddShelf = () => {
                       </option>
                     ))}
                 </select>
+                <p className="text-sm text-red-500">
+                  {errors?.categoryId?.message}
+                </p>
               </div>
               <div className="flex flex-col gap-1">
                 <Label>Description</Label>
