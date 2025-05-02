@@ -26,6 +26,7 @@ const UpdateCategory = ({ id }) => {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm();
 
   useEffect(() => {
@@ -51,11 +52,14 @@ const UpdateCategory = ({ id }) => {
           },
         }
       );
+      toast.success("Category updated.");
       setOpen(false);
       refetchCategories();
     } catch (error) {
       if (error?.status === 409) {
-        toast.error(error?.response?.data?.message || "Try again!");
+        toast.error(error?.response?.data?.message || "Try again.");
+      } else {
+        toast.error("Error updating category.");
       }
     }
   };
@@ -184,16 +188,14 @@ const UpdateCategory = ({ id }) => {
                         {errors?.description?.message}
                       </p>
                     </div>
-                    <DialogFooter className="grid grid-cols-4 mx-0 mb-3">
-                      <DialogClose className="grid col-span-2">
-                        <Button className="">Clear</Button>
-                      </DialogClose>
-                      <Button type="submit" className="grid col-span-2">
-                        Update
-                      </Button>
-                    </DialogFooter>
                   </div>
                 ))}
+              <DialogFooter className="grid grid-cols-2 mx-3 mb-3">
+                <Button className="w-full" onClick={() => reset()}>
+                  Clear
+                </Button>
+                <Button type="submit">Update</Button>
+              </DialogFooter>
             </form>
           </ScrollArea>
         </DialogContent>

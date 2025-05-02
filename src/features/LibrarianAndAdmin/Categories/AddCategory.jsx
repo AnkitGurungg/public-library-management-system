@@ -58,9 +58,6 @@ const AddCategory = () => {
           </Button>
         </DialogTrigger>
         <DialogContent aria-describedby={undefined}>
-          {/* <DialogHeader>
-            <DialogTitle>Add Category</DialogTitle>
-          </DialogHeader> */}
           <DialogHeader className="sm:max-w-[500px]">
             <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-6">
               <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
@@ -169,13 +166,11 @@ const AddCategory = () => {
                   <p className="text-red-500">{errors?.description?.message}</p>
                 </div>
               </div>
-              <DialogFooter className="grid grid-cols-4 mx-2 mb-3">
-                <DialogClose className="grid col-span-2">
-                  <Button className="">Clear</Button>
-                </DialogClose>
-                <Button type="submit" className="grid col-span-2">
-                  Add
+              <DialogFooter className="grid grid-cols-2 mx-2 mb-3">
+                <Button className="w-full" onClick={() => reset()}>
+                  Clear
                 </Button>
+                <Button type="submit">Add</Button>
               </DialogFooter>
             </form>
           </ScrollArea>

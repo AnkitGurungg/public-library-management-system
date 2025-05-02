@@ -53,16 +53,22 @@ const ReturnBook = ({ id }) => {
           <RotateCwIcon size={20} />
         </DialogTrigger>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="flex flex-row gap-1">
-              <CornerDownLeft />
-              Return Book
+          <DialogHeader className="sm:max-w-[500px]">
+            <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-5">
+              <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
+                <RotateCwIcon size={27} />
+              </div>
+              <span className="text-lg">Return Book</span>
             </DialogTitle>
           </DialogHeader>
-          <hr />
-          <p>Are you sure want to procceed with the return operation</p>
-          <DialogFooter>
-            <Button onClick={handleReturnBook}>Return</Button>
+          <div className="my-0 h-px bg-gray-800 mx-5" />
+          <p className="mx-6">
+            Are you sure want to procceed with the return operation
+          </p>
+          <DialogFooter className="w-full mt-3 pl-3">
+            <Button onClick={handleReturnBook} className="w-full">
+              Return
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
