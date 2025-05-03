@@ -1,9 +1,16 @@
 import { useFetchUserProfile } from "@/hooks/useFetchUserProfile";
-import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
+import GLOBAL_SERVICE, {
+  BACKEND_SERVER_BASE_URL,
+} from "@/services/GlobalServices";
 import { useEffect, useState } from "react";
 import KYC from "../Register/KYC";
 import { BookOpen, Settings } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { CgSpinner } from "react-icons/cg";
+import { Button } from "@/components/ui/button";
 
 function InfoField({ label, value }) {
   return (
@@ -25,9 +32,44 @@ const UAccountSettings = () => {
     refetchUserProfile();
   }, []);
 
-  useEffect(() => {
-    console.log(userProfile);
-  }, [userProfile]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    watch,
+    reset,
+  } = useForm();
+
+  const newPassword = watch("newPassword");
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await GLOBAL_SERVICE.put(
+        "/api/v1/mla/password/change",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      if (response.status === 200) {
+        reset();
+        toast.success("Password updated successfully!");
+      }
+    } catch (error) {
+      if (error.response.status === 400) {
+        toast.error(error?.response?.data?.message || "Provide valid details.");
+      }
+      if (error.response.status === 409) {
+        toast.error(error?.response?.data?.message || "Please try again.");
+      }
+      if (error.response.status === 500) {
+        toast.error(error?.response?.data?.message || "Server error!");
+      }
+    }
+  };
 
   return (
     <div className="flex-1 ml-64 p-3">
@@ -91,11 +133,7 @@ const UAccountSettings = () => {
             />
             <InfoField
               label="VERIFIED DATE"
-              value={
-                userProfile?.data?.verified === true
-                  ? userProfile?.data?.verifiedDate
-                  : "N/A"
-              }
+              value={userProfile?.data?.verifiedDate || "N/A"}
             />
             <InfoField
               label="VERIFICATION STATUS"
@@ -109,11 +147,10 @@ const UAccountSettings = () => {
 
           <div className="grid grid-cols-2 gap-6 mt-6">
             <div className="bg-gray-100 p-6 rounded-md flex items-center justify-center text-gray-500">
-              {Array.isArray(userProfile?.data?.evidences) &&
-              userProfile.data.evidences.length > 0 &&
-              userProfile.data.evidences[0].evidenceOne ? (
+              {userProfile?.data?.evidence &&
+              userProfile?.data?.evidence?.evidenceOne ? (
                 <img
-                  src={`${BACKEND_SERVER_BASE_URL}${userProfile.data.evidences[0].evidenceOne}`}
+                  src={`${BACKEND_SERVER_BASE_URL}${userProfile?.data?.evidence?.evidenceOne}`}
                   alt="Evidence One"
                   className="w-full h-auto rounded-md border border-gray-200"
                 />
@@ -125,11 +162,10 @@ const UAccountSettings = () => {
             </div>
 
             <div className="bg-gray-100 p-6 rounded-md flex items-center justify-center text-gray-500">
-              {Array.isArray(userProfile?.data?.evidences) &&
-              userProfile.data.evidences.length > 0 &&
-              userProfile.data.evidences[0].evidenceTwo ? (
+              {userProfile?.data?.evidence &&
+              userProfile?.data?.evidence?.evidenceTwo ? (
                 <img
-                  src={`${BACKEND_SERVER_BASE_URL}${userProfile.data.evidences[0].evidenceTwo}`}
+                  src={`${BACKEND_SERVER_BASE_URL}${userProfile?.data?.evidence?.evidenceTwo}`}
                   alt="Evidence Two"
                   className="w-full h-auto rounded-md border border-gray-200 object-cover"
                 />
@@ -143,25 +179,110 @@ const UAccountSettings = () => {
         </Card>
 
         <Card className="p-6">
-          <div className="flex items-center justify-between mb-0">
+          <div className="flex-col items-center justify-between mb-0">
             <h3 className="text-2xl font-bold text-gray-800">
               Security Settings
             </h3>
+            <p className="text-sm text-gray-500 items-start">
+              Update your password regularly for better security.
+            </p>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-md">
-              <div>
-                <h4 className="font-medium">Change Password</h4>
-                <p className="text-sm text-gray-500">
-                  Update your password regularly for better security
-                </p>
-              </div>
-              <button className="px-4 py-2 bg-[#206ea6] text-white rounded-md">
-                Update
-              </button>
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            <div>
+              <Input
+                type="password"
+                id="oldPassword"
+                placeholder="Enter Old Password"
+                {...register("oldPassword", {
+                  required: "Please enter old password.",
+                  minLength: {
+                    value: 3,
+                    message: "Please enter at least 3 characters.",
+                  },
+                  maxLength: {
+                    value: 30,
+                    message: "Please enter no more than 30 characters.",
+                  },
+                })}
+                className="w-full h-[55px] rounded-md border border-gray-200 bg-white px-4 focus:outline-none focus:ring-1 focus:ring-[#81c7b5] placeholder:font-medium placeholder:opacity-50 placeholder:text-sm placeholder:text-gray-950"
+              />
+              <p className="text-red-500 text-[15px] ml-0.5">
+                {errors?.oldPassword?.message}
+              </p>
             </div>
-          </div>
+
+            <div>
+              <Input
+                type="password"
+                id="newPassword"
+                placeholder="Enter New Password"
+                {...register("newPassword", {
+                  required: "Please enter new password.",
+                  minLength: {
+                    value: 8,
+                    message: "Please use at least 8 characters.",
+                  },
+                  maxLength: {
+                    value: 30,
+                    message: "Please enter no more than 30 characters.",
+                  },
+                  pattern: {
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).+$/,
+                    message:
+                      "Password must include uppercase, lowercase, number, and special character!",
+                  },
+                })}
+                className="w-full h-[55px] rounded-md border  border-gray-200 bg-white px-4 focus:outline-none focus:ring-1 focus:ring-[#81c7b5] placeholder:font-medium placeholder:opacity-50 placeholder:text-sm placeholder:text-gray-950"
+              />
+              <p className="text-red-500 text-[15px] ml-0.5">
+                {errors?.newPassword?.message}
+              </p>
+            </div>
+
+            <div>
+              <Input
+                type="password"
+                id="confirmNewPassword"
+                placeholder="Confirm New Password"
+                {...register("confirmNewPassword", {
+                  required: "Please enter confirm password.",
+                  validate: (value) =>
+                    value === newPassword || "Passwords do not match.",
+                  minLength: {
+                    value: 8,
+                    message: "Please use at least 8 characters.",
+                  },
+                  maxLength: {
+                    value: 30,
+                    message: "Please enter no more than 30 characters.",
+                  },
+                })}
+                className="w-full h-[55px] rounded-md border  border-gray-200 bg-white px-4 focus:outline-none focus:ring-1 focus:ring-[#81c7b5] placeholder:font-medium placeholder:opacity-50 placeholder:text-sm placeholder:text-gray-950"
+              />
+              <p className="text-red-500 text-[15px] ml-0.5">
+                {errors?.confirmNewPassword?.message}
+              </p>
+            </div>
+
+            <div className="flex items-center justify-center border rounded-md bg-[#c7312b] text-white uppercase w-1/4 h-[55px]">
+              <Button
+                type="submit"
+                className="flex items-center justify-center w-full h-full bg-[#c7312b] text-white uppercase font-semibold transition-colors hover:bg-[#c7312b]"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <CgSpinner className="animate-spin text-[40px]" />
+                  </span>
+                ) : (
+                  <p className="flex items-center justify-center cursor-pointer w-full h-full">
+                    Update Password
+                  </p>
+                )}
+              </Button>
+            </div>
+          </form>
         </Card>
       </main>
     </div>

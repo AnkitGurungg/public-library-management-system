@@ -26,25 +26,25 @@ const UPSidebar = () => {
 
   useEffect(() => {
     console.log(userProfile);
+    console.log(userProfile?.data?.evidence);
   }, [userProfile]);
 
   return (
     <div className="bg-[#f1f1f1] top-0 ml-0 h-full w-64">
       <div className="p-4 pt-9">
         <div className="flex justify-center mb-4">
-          {Array.isArray(userProfile?.data?.evidences) &&
-          userProfile.data.evidences.length > 0 &&
-          userProfile.data.evidences[0].userImage ? (
+          {userProfile?.data?.evidence &&
+          userProfile?.data?.evidence?.userImage ? (
             <img
               src={
-                userProfile?.data?.evidences[0]?.userImage
-                  ? `${BACKEND_SERVER_BASE_URL}${userProfile.data.evidences[0].userImage}`
-                  : "/placeholder.svg"
+                userProfile?.data?.evidence?.userImage
+                  ? `${BACKEND_SERVER_BASE_URL}${userProfile?.data?.evidence?.userImage}`
+                  : ""
               }
-              alt="User profile"
-              width={100}
-              height={100}
-              className="rounded-full object-cover"
+              alt="User"
+              // width={100}
+              // height={100}
+              className="h-38 w-38 rounded-full object-cover"
             />
           ) : (
             <div className="w-[150px] h-[150px] bg-black rounded-full flex items-center justify-center">
