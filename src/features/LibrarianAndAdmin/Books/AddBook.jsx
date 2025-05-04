@@ -75,8 +75,12 @@ const AddBook = () => {
         refetchBooks();
         toast.success("Book added");
       } catch (error) {
-        if (error?.status === 409) {
+        if (error?.status === 400) {
           toast.error(error?.response?.data?.message);
+        } else if (error?.status === 409) {
+          toast.error(error?.response?.data?.message);
+        } else {
+          toast.error("Please try again later.");
         }
       } finally {
         setLoading(false);
@@ -402,7 +406,7 @@ const AddBook = () => {
                         message: "Please enter a number.",
                       },
                       min: {
-                        value: 0,
+                        value: 1,
                         message: "Please enter valid quantity.",
                       },
                       minLength: {
@@ -477,7 +481,6 @@ const AddBook = () => {
                       <p>{error}</p>
                     </p>
                   )}
-                  
                 </div>
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="description" className="text-right">
