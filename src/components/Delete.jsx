@@ -84,6 +84,12 @@ const Delete = ({ id, name, type }) => {
         }
       }
     } catch (error) {
+      if (error.status === 400) {
+        toast.error(
+          error?.response?.data?.message ||
+            "Failed to send mail please try again."
+        );
+      }
       console.log(error);
     }
   };
