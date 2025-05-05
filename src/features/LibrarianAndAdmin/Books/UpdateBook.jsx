@@ -15,17 +15,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import GlobalService from "@/services/GlobalServices";
 import { useFetchBooks } from "@/hooks/useFetchBooks";
-import { useFetchCategory } from "@/hooks/useFetchCategory";
-import { BsPencilSquare } from "react-icons/bs";
 import toast from "react-hot-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import useFetchDisplayCategory from "@/hooks/useFetchDisplayCategory";
+import { useFetchAvailableShelfs } from "@/hooks/useFetchAvailableShelfs";
 
 const UpdateBook = ({ id }) => {
   const [open, setOpen] = useState(false);
   const [bookImage, setBookImage] = useState(null);
 
   const { data: books, refetch: refetchBooks } = useFetchBooks();
-  const { data: categories, refetch: refetchCategories } = useFetchCategory();
+  const { data: categories, refetch: refetchCategories } =
+    useFetchDisplayCategory();
+  const { data: availableShelfs, refetch: refetchAvailableShelfs } =
+    useFetchAvailableShelfs();
+
   const {
     register,
     handleSubmit,
@@ -226,27 +230,26 @@ const UpdateBook = ({ id }) => {
                     <div className="flex flex-col gap-1">
                       <Label>Shelf</Label>
                       <select
-                        name="categoryId"
-                        id="category"
+                        name="shelfId"
+                        id="shelf"
                         className="w-[420px] border rounded-[8px] border-gray-300 mb-0 h-11"
                         required
-                        onValueChange={(value) => setValue("categoryId", value)}
-                        {...register("categoryId")}
+                        onValueChange={(value) => setValue("shelfId", value)}
+                        {...register("shelfId", { valueAsNumber: true })}
                       >
                         <option disabled>Select at shelf</option>
-                        <option>Pinecrest</option>
-                        {categories?.data.map((element, index) => (
+                        {availableShelfs?.data.map((element, index) => (
                           <option
-                            key={element.categoryId || index}
-                            value={element.categoryId}
+                            key={element.shelfId || index}
+                            value={element.shelfId}
                           >
                             {element.name}
                           </option>
                         ))}
                       </select>
-                      {errors?.categoryId?.message && (
+                      {errors?.shelfId?.message && (
                         <p className="text-sm text-red-500 mt-0.5">
-                          {errors?.categoryId?.message}
+                          {errors?.shelfId?.message}
                         </p>
                       )}
                     </div>
