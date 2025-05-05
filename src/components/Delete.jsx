@@ -19,8 +19,10 @@ import { useFetchVerifiedMembers } from "@/hooks/useFetchVerifiedMembers";
 import useFetchLibrarian from "@/hooks/useFetchLibrarian";
 import toast from "react-hot-toast";
 import { useFetchBorrowedBooks } from "@/hooks/useFetchBorrowedBooks";
+import { CgSpinner } from "react-icons/cg";
 
 const Delete = ({ id, name, type }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: books, refetch: refetchBooks } = useFetchBooks();
   const { data: categories, refetch: refetchCategories } = useFetchCategory();
   const { data: shelfs, refetch: refetchShelfs } = useFetchShelfs();
@@ -37,6 +39,7 @@ const Delete = ({ id, name, type }) => {
   // handles the delete operation
   const handleDelete = async () => {
     let endpoint = "";
+    setIsSubmitting(true);
     try {
       if (type === "book") {
         endpoint = `/api/v1/la/book/delete/${id}`;
@@ -91,6 +94,8 @@ const Delete = ({ id, name, type }) => {
         );
       }
       console.log(error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -138,8 +143,18 @@ const Delete = ({ id, name, type }) => {
           )}
         </p>
         <DialogFooter className="w-full mt-2">
-          <Button onClick={handleDelete} className="w-full">
-            Confirm
+          <Button
+            onClick={handleDelete}
+            className="w-full"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center gap-2">
+                <CgSpinner className="animate-spin text-[40px]" />
+              </span>
+            ) : (
+              "Confirm"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

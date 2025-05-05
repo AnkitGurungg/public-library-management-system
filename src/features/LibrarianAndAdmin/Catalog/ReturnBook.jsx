@@ -15,9 +15,11 @@ import { useEffect, useState } from "react";
 import { useFetchBorrowedBooks } from "@/hooks/useFetchBorrowedBooks";
 import useFetchOverdueBooks from "@/hooks/useFetchOverdueBooks";
 import toast from "react-hot-toast";
+import { CgSpinner } from "react-icons/cg";
 
 const ReturnBook = ({ id }) => {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: borrowBooks, refetch: refetchBorrowedBooks } =
     useFetchBorrowedBooks();
   const {
@@ -33,6 +35,7 @@ const ReturnBook = ({ id }) => {
 
   const handleReturnBook = async () => {
     try {
+      setIsSubmitting(true);
       const response = await GlobalService.get(`/api/v1/la/return/add/${id}`);
       refetchOverdueBooks();
       refetchBorrowedBooks();
@@ -43,6 +46,8 @@ const ReturnBook = ({ id }) => {
       if (error.status === 409) {
         toast.error("Coflict, this book is already returned");
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -66,8 +71,18 @@ const ReturnBook = ({ id }) => {
             Are you sure want to procceed with the return operation
           </p>
           <DialogFooter className="w-full mt-3 pl-3">
-            <Button onClick={handleReturnBook} className="w-full">
-              Return
+            <Button
+              onClick={handleReturnBook}
+              className="w-full"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <span className="flex items-center gap-2">
+                  <CgSpinner className="animate-spin text-[40px]" />
+                </span>
+              ) : (
+                "Return"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

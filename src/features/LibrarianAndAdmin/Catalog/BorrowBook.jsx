@@ -16,6 +16,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import toast from "react-hot-toast";
+import { CgSpinner } from "react-icons/cg";
 
 const BorrowBook = () => {
   const [show, setShow] = useState(false);
@@ -203,7 +204,15 @@ const BorrowBook = () => {
               <Button className="w-full" onClick={() => reset()}>
                 Clear
               </Button>
-              <Button type="submit">Add</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <CgSpinner className="animate-spin text-[40px]" />
+                  </span>
+                ) : (
+                  "Add"
+                )}
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
