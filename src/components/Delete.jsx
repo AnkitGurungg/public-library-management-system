@@ -95,7 +95,7 @@ const Delete = ({ id, name, type }) => {
       }
       console.log(error);
     } finally {
-      setIsDeleting(false);
+      setIsSubmitting(false);
     }
   };
 

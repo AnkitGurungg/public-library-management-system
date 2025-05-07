@@ -198,7 +198,7 @@ const Login = ({ isOpenLogin, setIsOpenLogin }) => {
                       <CgSpinner className="animate-spin text-[40px]" />
                     </span>
                   ) : (
-                    "Login"
+                    <span className="cursor-pointer w-full">Login</span>
                   )}
                 </Button>
               </form>

@@ -56,7 +56,7 @@ const UAccountSettings = () => {
       );
       if (response.status === 200) {
         reset();
-        toast.success("Password updated successfully!");
+        toast.success(response?.data || "Password changed.");
       }
     } catch (error) {
       if (error.response.status === 400) {

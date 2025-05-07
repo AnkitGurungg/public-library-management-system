@@ -176,7 +176,7 @@ const Register = ({ isOpenRegister, setIsOpenRegister, setIsOpenLogin }) => {
                       <CgSpinner className="animate-spin text-[40px]" />
                     </span>
                   ) : (
-                    "Register"
+                    <span className="cursor-pointer w-full">Register</span>
                   )}
                 </Button>
               </form>

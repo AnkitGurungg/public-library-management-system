@@ -43,6 +43,10 @@ const ReturnBook = ({ id }) => {
       toast.success("Book returned!");
       console.log(response);
     } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        toast.error(error?.response?.data?.message || "Please try again.");
+      }
       if (error.status === 409) {
         toast.error("Coflict, this book is already returned");
       }
