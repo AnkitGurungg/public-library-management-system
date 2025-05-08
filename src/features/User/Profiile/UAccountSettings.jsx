@@ -143,6 +143,14 @@ const UAccountSettings = () => {
                   : "NOT VERIFIED"
               }
             />
+            <InfoField
+              label="KYC STATUS"
+              value={
+                userProfile?.data?.profileUpdated === true
+                  ? "FILLED UP"
+                  : "NOT FILLED UP"
+              }
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-6 mt-6">
