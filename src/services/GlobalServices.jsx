@@ -14,7 +14,7 @@ const GLOBAL_SERVICE = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000,
+  // timeout: 100000,
 });
 
 GLOBAL_SERVICE.interceptors.request.use(

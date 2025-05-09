@@ -177,9 +177,14 @@ const AddShelf = () => {
                 </p>
               </div>
               <DialogFooter className="grid grid-cols-4 mb-3">
-                <DialogClose asChild>
-                  <Button className="grid col-span-2">Clear</Button>
-                </DialogClose>
+                <Button
+                  className="grid col-span-2"
+                  onClick={() => {
+                    reset();
+                  }}
+                >
+                  Clear
+                </Button>
                 <Button type="submit" className="grid col-span-2">
                   Add
                 </Button>
