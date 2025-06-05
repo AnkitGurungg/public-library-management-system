@@ -12,7 +12,7 @@ public record BookResponseDto(
         int quantity,
         Date publishedDate,
         float price,
-        String imageUrl,
+        String imageURL,
         String description,
         Date addedDate,
         Date updatedDate,

@@ -34,10 +34,10 @@ const AllTopBorrowedBooks = () => {
           Array.isArray(topBorrowedBooks?.data) &&
           topBorrowedBooks?.data?.length !== 0 ? (
             topBorrowedBooks?.data?.map((element) => (
-              <div key={element?.borrowBooks?.bookId}>
+              <div key={element?.featuredBooks?.bookId}>
                 <BookCard
-                  key={element?.borrowBooks?.bookId}
-                  curBook={element?.borrowBooks}
+                  key={element?.featuredBooks?.bookId}
+                  curBook={element?.featuredBooks}
                 />
               </div>
             ))

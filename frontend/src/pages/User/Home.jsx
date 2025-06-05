@@ -133,8 +133,8 @@ const Home = () => {
                 ?.slice(0, 5)
                 .map((item) => (
                   <BookCard
-                    key={item.borrowBooks.bookId}
-                    curBook={item.borrowBooks}
+                    key={item.featuredBooks.bookId}
+                    curBook={item.featuredBooks}
                   />
                 ))}
           </ul>
@@ -161,7 +161,7 @@ const Home = () => {
               newArrivalBooks?.data
                 ?.slice(0, 5)
                 .map((curBook) => (
-                  <BookCard key={curBook.bookId} curBook={curBook} />
+                  <BookCard key={curBook?.featuredBooks?.bookId} curBook={curBook?.featuredBooks} />
                 ))}
           </ul>
         </div>
@@ -189,7 +189,7 @@ const Home = () => {
               recentlyPublished?.data
                 ?.slice(0, 5)
                 .map((curBook) => (
-                  <BookCard key={curBook.bookId} curBook={curBook} />
+                  <BookCard key={curBook?.featuredBooks?.bookId} curBook={curBook?.featuredBooks} />
                 ))}
           </ul>
         </div>

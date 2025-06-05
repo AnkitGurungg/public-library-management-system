@@ -24,8 +24,8 @@ const NewArrivalBooks = () => {
           Array.isArray(newArrivalBooks?.data) &&
           newArrivalBooks?.data?.length !== 0 ? (
             newArrivalBooks?.data?.map((element) => (
-              <div key={element.bookId}>
-                <BookCard key={element.bookId} curBook={element} />
+              <div key={element?.featuredBooks?.bookId}>
+                <BookCard key={element?.featuredBooks?.bookId} curBook={element?.featuredBooks} />
               </div>
             ))
           ) : (

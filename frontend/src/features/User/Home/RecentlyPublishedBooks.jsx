@@ -12,6 +12,7 @@ const RecentlyPublishedBooks = () => {
 
   useEffect(() => {
     console.log(recentlyPublished);
+    console.log(recentlyPublished?.data);
   }, [recentlyPublished]);
 
   return (
@@ -26,8 +27,8 @@ const RecentlyPublishedBooks = () => {
           Array.isArray(recentlyPublished?.data) &&
           recentlyPublished?.data?.length !== 0 ? (
             recentlyPublished?.data?.map((element) => (
-              <div key={element.bookId}>
-                <BookCard key={element.bookId} curBook={element} />
+              <div key={element?.featuredBooks?.bookId}>
+                <BookCard key={element?.featuredBooks?.bookId} curBook={element?.featuredBooks} />
               </div>
             ))
           ) : (

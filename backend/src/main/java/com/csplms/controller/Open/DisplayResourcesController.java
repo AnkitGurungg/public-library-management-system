@@ -1,7 +1,7 @@
 package com.csplms.controller.Open;
 
+import com.csplms.dto.responseDto.FeaturedBooksDto;
 import com.csplms.entity.Book;
-import com.csplms.entity.Borrow;
 import com.csplms.entity.Category;
 import com.csplms.service.LibrarianAdmin.BookService;
 import com.csplms.service.LibrarianAdmin.CategoryService;
@@ -44,18 +44,18 @@ public class DisplayResourcesController {
         return new ResponseEntity<>(this.displayResourcesService.getAllAvailableBooks(), HttpStatus.OK);
     }
 
-    @GetMapping("/book/get/new-arrivals")
-    public ResponseEntity<List<Book>> getNewArrivalBooks() {
-        return new ResponseEntity<>(this.displayResourcesService.getAllNewArrivalBooks(), HttpStatus.OK);
-    }
-
     @GetMapping("/book/get/top-borrowed-books")
-    public ResponseEntity<List<Borrow>> getTopBorrowedBooks() {
+    public ResponseEntity<List<FeaturedBooksDto>> getTopBorrowedBooks() {
         return new ResponseEntity<>(this.displayResourcesService.getTopBorrowedBooks(), HttpStatus.OK);
     }
 
+    @GetMapping("/book/get/new-arrivals")
+    public ResponseEntity<List<FeaturedBooksDto>> getNewArrivalBooks() {
+        return new ResponseEntity<>(this.displayResourcesService.getAllNewArrivalBooks(), HttpStatus.OK);
+    }
+
     @GetMapping("/book/get/recently-published")
-    public ResponseEntity<List<Book>> findBooksOrderByPublishedDate() {
+    public ResponseEntity<List<FeaturedBooksDto>> findBooksOrderByPublishedDate() {
         return new ResponseEntity<>(this.displayResourcesService.findBooksOrderByPublishedDate(), HttpStatus.OK);
     }
 
