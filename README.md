@@ -1,1 +1,1 @@
-# Chandra Surya Public Library Management System Frontend
+# Chandra Surya Public Library Management System
