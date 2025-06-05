@@ -1,0 +1,66 @@
+package com.csplms.controller.LibrarianAdmin;
+
+import com.csplms.dto.responseDto.AvailableCategoryResponse;
+import com.csplms.entity.Category;
+import com.csplms.service.LibrarianAdmin.CategoryService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import com.csplms.dto.requestDto.CategoryRequestDto;
+import com.csplms.dto.responseDto.CategoryResponseDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@CrossOrigin(origins = "*")
+@RestController
+@RequestMapping("/api/v1/la/category")
+@EnableMethodSecurity(prePostEnabled = true)
+@PreAuthorize("hasAnyAuthority('ROLE_LIBRARIAN', 'ROLE_ADMIN')")
+public class CategoryController {
+
+    private final CategoryService categoryService;
+
+    @Autowired
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<CategoryResponseDto> addCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
+        return new ResponseEntity<>(this.categoryService.addCategory(categoryRequestDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Category> getCategory(@PathVariable("id") int categoryId) {
+        return new ResponseEntity<>(this.categoryService.getCategory(categoryId), HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Category> updateCategory(@PathVariable("id") int categoryId, @RequestBody CategoryRequestDto categoryRequestDto) {
+        return new ResponseEntity<>(this.categoryService.updateCategory(categoryId, categoryRequestDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/get/categories")
+    public ResponseEntity<List<Category>> getCategories() {
+        return new ResponseEntity<>(this.categoryService.getCategories(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get/categories/shelfs")
+    public ResponseEntity<List<AvailableCategoryResponse>> getAllCategoriesAndShelfs() {
+        return new ResponseEntity<>(this.categoryService.getAllCategoriesAndShelfs(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Integer> deleteCategory(@PathVariable("id") int categoryId) {
+        return new ResponseEntity<>(this.categoryService.deleteCategory(categoryId), HttpStatus.OK);
+    }
+
+    @PutMapping("/restore/{id}")
+    public ResponseEntity<Integer> restoreCategory(@PathVariable("id") int categoryId) {
+        return new ResponseEntity<>(this.categoryService.restoreCategory(categoryId), HttpStatus.OK);
+    }
+
+}
