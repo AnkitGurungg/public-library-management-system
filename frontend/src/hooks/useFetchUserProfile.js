@@ -6,7 +6,7 @@ export const useFetchUserProfile = () => {
     queryKey: ["userProfile"],
     queryFn: async () => {
       try {
-        const res = await GLOBAL_SERVICE.get("/api/v1/m/user/profile/get");
+        const res = await GLOBAL_SERVICE.get("/api/v1/mla/user/profile/user-info");
         console.log(res);
         return { status: res.status, data: res.data };
       } catch (error) {

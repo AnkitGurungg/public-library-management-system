@@ -24,7 +24,7 @@ public class ProfileController {
         this.userService = userService;
     }
 
-    @GetMapping("/get")
+    @GetMapping("/user-info")
     public ResponseEntity<User> getUser() {
         String email =(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return new ResponseEntity<>(this.userService.getUser(email), HttpStatus.OK);

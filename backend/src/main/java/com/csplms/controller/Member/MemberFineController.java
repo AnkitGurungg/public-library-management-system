@@ -28,7 +28,7 @@ public class MemberFineController {
         this.memberFineService = memberFineService;
     }
 
-    @GetMapping("/fines/get/fines")
+    @GetMapping("/fines")
     public ResponseEntity<List<FinesDto>> getMemberFines() {
         return new ResponseEntity<>(this.memberFineService.getMemberFines(), HttpStatus.OK);
     }

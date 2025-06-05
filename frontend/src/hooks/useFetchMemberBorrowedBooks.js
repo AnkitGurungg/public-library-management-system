@@ -7,7 +7,7 @@ export const useFetchMemberBorrowedBooks = () => {
     queryFn: async () => {
       try {
         const res = await GLOBAL_SERVICE.get(
-          "/api/v1/m/user/profile/borrowed-books"
+          "/api/v1/mla/user/profile/borrowed-books"
         );
         return { status: res.status, data: res.data };
       } catch (error) {
