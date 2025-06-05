@@ -1,5 +1,6 @@
 package com.csplms.controller.Member;
 
+import com.csplms.dto.responseDto.UserAccountInfoDto;
 import com.csplms.entity.User;
 import com.csplms.service.LibrarianAdmin.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,9 @@ public class ProfileController {
     }
 
     @GetMapping("/user-info")
-    public ResponseEntity<User> getUser() {
+    public ResponseEntity<UserAccountInfoDto> getUser() {
         String email =(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return new ResponseEntity<>(this.userService.getUser(email), HttpStatus.OK);
+        return new ResponseEntity<>(this.userService.getUserAccountInfo(email), HttpStatus.OK);
     }
 
 }

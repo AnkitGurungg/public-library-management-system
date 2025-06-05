@@ -62,7 +62,7 @@ const KYC = () => {
 
     const formData = new FormData();
     formData.append(
-      "userRequestDto",
+      "kycFillUpDto",
       new Blob([JSON.stringify(data)], { type: "application/json" })
     );
     formData.append("userImage", userImage);

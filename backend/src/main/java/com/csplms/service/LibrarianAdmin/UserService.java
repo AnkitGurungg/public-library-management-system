@@ -1,6 +1,8 @@
 package com.csplms.service.LibrarianAdmin;
 
 import com.csplms.dto.requestDto.RejectKYCDto;
+import com.csplms.dto.responseDto.EvidenceDto;
+import com.csplms.dto.responseDto.UserAccountInfoDto;
 import com.csplms.dto.responseDto.UsersForBorrowResponseDto;
 import com.csplms.entity.Evidence;
 import com.csplms.entity.User;
@@ -39,6 +41,37 @@ public class UserService {
             throw new UserNotPresentException("You are no longer user!!!");
         }
         return user;
+    }
+
+    public UserAccountInfoDto getUserAccountInfo(String email) {
+        User user = this.userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceEntityNotFoundException("User", "Id", 0));
+        if (!user.isPresent()){
+            throw new UserNotPresentException("You are no longer user!!!");
+        }
+
+        Evidence evidence = user.getEvidence();
+        EvidenceDto evidenceDto = new EvidenceDto(
+                evidence.getEvidenceId(),
+                evidence.getUserImage(),
+                evidence.getEvidenceOne(),
+                evidence.getEvidenceTwo(),
+                evidence.getDocumentType(),
+                evidence.getDescription()
+        );
+
+        return new UserAccountInfoDto(
+                user.getUserId(),
+                user.getName(),
+                user.getEmail(),
+                user.getContactNumber(),
+                user.getAddress(),
+                user.getAppliedDate(),
+                user.getVerifiedDate(),
+                user.isVerified(),
+                user.isProfileUpdated(),
+                user.isPresent(),
+                evidenceDto
+        );
     }
 
     public List<User> getNonVerifiedMembers() {
