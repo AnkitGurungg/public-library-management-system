@@ -7,7 +7,7 @@ export const useFetchAllAvailableBooks = () => {
     queryFn: async () => {
       try {
         const res = await GLOBAL_SERVICE.get(
-          "/api/v1/p/resource/book/get/all/available/books"
+          "/api/v1/p/resource/books/search-books"
         );
         return { status: res.status, data: res.data };
       } catch (error) {

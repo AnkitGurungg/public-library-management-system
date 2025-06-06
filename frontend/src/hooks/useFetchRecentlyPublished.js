@@ -7,7 +7,7 @@ export const useFetchRecentlyPublished = () => {
     queryFn: async () => {
       try {
         const res = await GLOBAL_SERVICE.get(
-          "/api/v1/p/resource/book/get/recently-published"
+          "/api/v1/p/resource/books/recently-published"
         );
         return { status: res.status, data: res.data };
       } catch (error) {

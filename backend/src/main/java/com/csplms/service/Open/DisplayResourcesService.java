@@ -2,6 +2,7 @@ package com.csplms.service.Open;
 
 import com.csplms.dto.responseDto.BookResponseDto;
 import com.csplms.dto.responseDto.FeaturedBooksDto;
+import com.csplms.dto.responseDto.GlobalBookSearchDto;
 import com.csplms.entity.Book;
 import com.csplms.entity.Borrow;
 import com.csplms.exception.ResourceListNotFoundException;
@@ -37,12 +38,24 @@ public class DisplayResourcesService {
     }
 
 
-    public List<Book> getAllAvailableBooks() {
+    public List<GlobalBookSearchDto> getAllAvailableBooks() {
         List<Book> bookList = this.bookRepository.getAllAvailableBooks();
         if(bookList.isEmpty()){
             throw new ResourceListNotFoundException("Books");
         }
-        return bookList;
+
+        List<GlobalBookSearchDto> list = new ArrayList<>();
+        for (Book book : bookList) {
+            GlobalBookSearchDto item = new GlobalBookSearchDto(
+                    book.getBookId(),
+                    book.getTitle(),
+                    book.getAuthor(),
+                    book.getImageURL()
+            );
+            list.add(item);
+        }
+
+        return list;
     }
 
     public List<FeaturedBooksDto> getTopBorrowedBooks(){

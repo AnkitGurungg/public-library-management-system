@@ -1,6 +1,7 @@
 package com.csplms.controller.Open;
 
 import com.csplms.dto.responseDto.FeaturedBooksDto;
+import com.csplms.dto.responseDto.GlobalBookSearchDto;
 import com.csplms.entity.Book;
 import com.csplms.entity.Category;
 import com.csplms.service.LibrarianAdmin.BookService;
@@ -29,7 +30,7 @@ public class DisplayResourcesController {
         this.bookService = bookService;
     }
 
-    @GetMapping("/category/get/categories")
+    @GetMapping("/categories/active")
     public ResponseEntity<List<Category>> getCategories() {
         return new ResponseEntity<>(this.categoryService.getAllAvailableCategories(), HttpStatus.OK);
     }
@@ -39,22 +40,22 @@ public class DisplayResourcesController {
         return new ResponseEntity<>(this.displayResourcesService.getFilteredBooksByCategory(Integer.parseInt(id)), HttpStatus.OK);
     }
 
-    @GetMapping("/book/get/all/available/books")
-    public ResponseEntity<List<Book>> getAllAvailableBooks() {
+    @GetMapping("/books/search-books")
+    public ResponseEntity<List<GlobalBookSearchDto>> getAllAvailableBooks() {
         return new ResponseEntity<>(this.displayResourcesService.getAllAvailableBooks(), HttpStatus.OK);
     }
 
-    @GetMapping("/book/get/top-borrowed-books")
+    @GetMapping("/books/top-borrowed-books")
     public ResponseEntity<List<FeaturedBooksDto>> getTopBorrowedBooks() {
         return new ResponseEntity<>(this.displayResourcesService.getTopBorrowedBooks(), HttpStatus.OK);
     }
 
-    @GetMapping("/book/get/new-arrivals")
+    @GetMapping("/books/new-arrivals")
     public ResponseEntity<List<FeaturedBooksDto>> getNewArrivalBooks() {
         return new ResponseEntity<>(this.displayResourcesService.getAllNewArrivalBooks(), HttpStatus.OK);
     }
 
-    @GetMapping("/book/get/recently-published")
+    @GetMapping("/books/recently-published")
     public ResponseEntity<List<FeaturedBooksDto>> findBooksOrderByPublishedDate() {
         return new ResponseEntity<>(this.displayResourcesService.findBooksOrderByPublishedDate(), HttpStatus.OK);
     }

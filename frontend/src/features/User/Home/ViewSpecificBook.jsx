@@ -106,7 +106,7 @@ export default function ViewSpecificBook() {
                 )}
               </Badge>
 
-              {memberWishList?.data?.some(
+              {Array.isArray(memberWishList?.data) && memberWishList?.data?.some(
                 (wishlistBook) => wishlistBook?.bookId === book?.bookId
               ) ? (
                 <Button

@@ -73,7 +73,7 @@ const BookCard = ({ curBook }) => {
 
       <div className="space-y-2">
         <div className="flex justify-center items-center w-full">
-          {memberWishList?.data?.some(
+          {Array.isArray(memberWishList?.data) && memberWishList?.data?.some(
             (wishlistBook) => wishlistBook?.bookId === curBook?.bookId
           ) ? (
             <Button

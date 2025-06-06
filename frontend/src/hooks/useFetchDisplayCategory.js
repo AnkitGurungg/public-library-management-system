@@ -7,8 +7,9 @@ const useFetchDisplayCategory = () => {
     queryFn: async () => {
       try {
         const res = await GLOBAL_SERVICE.get(
-          "/api/v1/p/resource/category/get/categories"
+          "/api/v1/p/resource/categories/active"
         );
+        // console.log(res);
         return { status: res.status, data: res.data };
       } catch (error) {
         if (error && error.response.status === 404) {

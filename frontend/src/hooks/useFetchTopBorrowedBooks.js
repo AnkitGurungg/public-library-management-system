@@ -7,7 +7,7 @@ export const useFetchTopBorrowedBooks = () => {
     queryFn: async () => {
       try {
         const res = await GLOBAL_SERVICE.get(
-          "/api/v1/p/resource/book/get/top-borrowed-books"
+          "/api/v1/p/resource/books/top-borrowed-books"
         );
         return { status: res?.status, data: res?.data };
       } catch (error) {
