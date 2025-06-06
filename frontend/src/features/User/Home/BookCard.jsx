@@ -38,7 +38,7 @@ const BookCard = ({ curBook }) => {
 
     try {
       const response = await GLOBAL_SERVICE.post(
-        "/api/v1/m/wishlist/add",
+        "/api/v1/m/wishlists",
         { bookId: curBook.bookId }
         // {
         //   headers: {
@@ -52,8 +52,6 @@ const BookCard = ({ curBook }) => {
     } catch (error) {
       console.error("Error adding to wishlist:", error);
       toast.error("Please try again!");
-      // console.log(error.config.headers.Authorization);
-      // console.log(error.config.headers["Authorization"]);
     }
   };
 
@@ -75,8 +73,8 @@ const BookCard = ({ curBook }) => {
 
       <div className="space-y-2">
         <div className="flex justify-center items-center w-full">
-          {memberWishList?.data?.userWishLists?.some(
-            (wishlistBook) => wishlistBook.book?.bookId === curBook?.bookId
+          {memberWishList?.data?.some(
+            (wishlistBook) => wishlistBook?.bookId === curBook?.bookId
           ) ? (
             <Button
               onClick={() => navigate("/member/profile/wish-list")}

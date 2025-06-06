@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 export const BACKEND_SERVER_BASE_URL = "http://localhost:8080/";
 
 const getToken = () => {
-  // localStorage.setItem("Authorization", localStorage.getItem("Authorization"));
   // localStorage.setItem("x-refresh-token", localStorage.getItem("x-refresh-token"));
   return localStorage.getItem("Authorization");
 };

@@ -7,9 +7,9 @@ export const useFetchMemberWishList = () => {
     queryFn: async () => {
       try {
         const response = await GLOBAL_SERVICE.get(
-          "/api/v1/m/wishlist/get/wishlists"
+          "/api/v1/m/wishlists"
         );
-        console.log(response);
+        // console.log(response);
         return { status: response.status, data: response.data };
         
       } catch (error) {

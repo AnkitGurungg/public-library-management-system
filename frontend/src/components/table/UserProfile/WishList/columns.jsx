@@ -11,7 +11,7 @@ export const columns = (refetchMemberWishList) => [
     accessorKey: "imageURL",
     header: "Book",
     cell: ({ row }) => {
-      const imageUrl = row.original.book.imageURL;
+      const imageUrl = row.original.imageURL;
       const fullImageUrl = imageUrl
         ? `${BACKEND_SERVER_BASE_URL}${imageUrl}`
         : null;
@@ -26,43 +26,50 @@ export const columns = (refetchMemberWishList) => [
       );
     },
   },
+
   {
     id: "title",
     header: "Title",
-    cell: ({ row }) => row.original.book?.title || "N/A",
-    accessorFn: (row) => row.book?.title || "N/A",
+    accessorFn: (row) => {
+      // console.log(row);
+      return row?.title || "N/A"
+    },
+    cell: ({ row }) => {
+      // console.log(row)
+      return row.original?.title || "N/A"
+    },
   },
 
   {
     header: "Author",
-    cell: ({ row }) => row.original.book?.author || "N/A",
+    cell: ({ row }) => row.original.author || "N/A",
   },
 
   {
     id: "category",
     header: "Category",
-    accessorFn: (row) => row?.book?.category?.name || "N/A",
-    cell: ({ row }) => row?.original?.book?.category?.name || "N/A",
+    accessorFn: (row) => row?.categoryName || "N/A",
+    cell: ({ row }) => row?.original?.categoryName || "N/A",
   },
 
   {
     id: "language",
     header: "Language",
-    accessorFn: (row) => row?.book?.language || "N/A",
-    cell: ({ row }) => row.original.book?.language || "N/A",
+    accessorFn: (row) => row?.language || "N/A",
+    cell: ({ row }) => row.original.language || "N/A",
   },
 
   {
     header: "Published Date",
-    cell: ({ row }) => row.original.book?.publishedDate || "N/A",
+    cell: ({ row }) => row.original?.publishedDate || "N/A",
   },
 
   {
     id: "inStock",
-    accessorFn: (row) => ((row?.book?.quantity ?? 0) > 0 ? "YES" : "NO"),
+    accessorFn: (row) => ((row?.availableQuantity ?? 0) > 0 ? "YES" : "NO"),
     header: "Stock Status",
     cell: ({ row }) => {
-      const quantity = row.original.book?.quantity || 0;
+      const quantity = row.original.availableQuantity || 0;
       return quantity > 0 ? (
         <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold bg-[#206ea6] text-white rounded-md">
           <CheckCircle size={16} className="text-white" />
@@ -80,8 +87,8 @@ export const columns = (refetchMemberWishList) => [
   {
     id: "shelf",
     header: "Shelf",
-    accessorFn: (row) => row?.book?.shelf?.name || "N/A",
-    cell: ({ row }) => row?.original?.book?.shelf?.name || "N/A",
+    accessorFn: (row) => row?.shelfName || "N/A",
+    cell: ({ row }) => row?.original?.shelfName || "N/A",
   },
 
   {
@@ -91,11 +98,11 @@ export const columns = (refetchMemberWishList) => [
       const removeHandler = async () => {
         try {
           const response = await GLOBAL_SERVICE.delete(
-            `/api/v1/m/wishlist/delete/${eachBook.wishListId}`
+            `/api/v1/m/wishlists/${eachBook.wishListId}`
           );
           if (response.status === 200) {
             refetchMemberWishList();
-            toast.success(`${eachBook?.book?.title} has been removed!`);
+            toast.success(`Removed ${eachBook?.title}!`);
           }
         } catch (error) {
           console.log(error);

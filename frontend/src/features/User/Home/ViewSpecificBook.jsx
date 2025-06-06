@@ -71,7 +71,7 @@ export default function ViewSpecificBook() {
     }
 
     try {
-      const response = await GLOBAL_SERVICE.post("/api/v1/m/wishlist/add", {
+      const response = await GLOBAL_SERVICE.post("/api/v1/m/wishlists", {
         bookId: book.bookId,
       });
       refetchMemberWishList();
@@ -106,8 +106,8 @@ export default function ViewSpecificBook() {
                 )}
               </Badge>
 
-              {memberWishList?.data?.userWishLists?.some(
-                (wishlistBook) => wishlistBook.book?.bookId === book?.bookId
+              {memberWishList?.data?.some(
+                (wishlistBook) => wishlistBook?.bookId === book?.bookId
               ) ? (
                 <Button
                   onClick={() => navigate("/member/profile/wish-list")}

@@ -25,7 +25,7 @@ export function DataTable({ columns, data }) {
   const categories = Array.isArray(data)
     ? [
         ...new Set(
-          data.map((wishlist) => wishlist?.book?.category?.name).filter(Boolean)
+          data.map((wishlistItem) => wishlistItem?.categoryName).filter(Boolean)
         ),
       ]
     : [];
@@ -33,7 +33,7 @@ export function DataTable({ columns, data }) {
   const languages = Array.isArray(data)
     ? [
         ...new Set(
-          data.map((wishlist) => wishlist?.book?.language).filter(Boolean)
+          data.map((wishlistItem) => wishlistItem?.language).filter(Boolean)
         ),
       ]
     : [];
