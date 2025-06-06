@@ -6,7 +6,8 @@ export const useFetchBooks = () => {
     queryKey: ["books"],
     queryFn: async () => {
       try {
-        const res = await GLOBAL_SERVICE.get("/api/v1/la/book/get/books");
+        const res = await GLOBAL_SERVICE.get("/api/v1/la/books");
+        // console.log(res)
         return { status: res.status, data: res.data };
       } catch (error) {
         if (error && error.response.status === 404) {

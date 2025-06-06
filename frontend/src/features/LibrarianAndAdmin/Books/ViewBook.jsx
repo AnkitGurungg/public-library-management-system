@@ -8,22 +8,20 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useFetchBooks } from "@/hooks/useFetchBooks";
 import { BookOpenText, Eye, NotepadText } from "lucide-react";
 import { useEffect, useState } from "react";
-import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
+import GLOBAL_SERVICE, { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
 import { Button } from "@/components/ui/button";
 
 const ViewBook = ({ id }) => {
-  const { data: books } = useFetchBooks();
   const [book, setBook] = useState(null);
 
   useEffect(() => {
-    if (books?.data && Array.isArray(books.data)) {
-      const foundBook = books.data.find((element) => element.bookId === id);
-      setBook(foundBook || null);
-    }
-  }, [books, id]);
+    const res = GLOBAL_SERVICE.get(`/api/v1/la/books/${id}`);
+    res.then((response) => {
+      setBook(response.data);
+    });
+  }, [id]);
 
   return (
     <div>
@@ -57,7 +55,7 @@ const ViewBook = ({ id }) => {
                       <strong>Author:</strong> {book.author}
                     </p>
                     <p>
-                      <strong>Category:</strong> {book.category?.name}
+                      <strong>Category:</strong> {book.categoryName}
                     </p>
                     <p>
                       <strong>Language:</strong> {book.language}
@@ -79,9 +77,6 @@ const ViewBook = ({ id }) => {
                     </p>
                     <p>
                       <strong>Added Date:</strong> {book.addedDate}
-                    </p>
-                    <p>
-                      <strong>Updated Date:</strong> {book.updatedDate}
                     </p>
 
                     <div className="h-11 overflow-auto w-[450px]">

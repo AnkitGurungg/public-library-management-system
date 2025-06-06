@@ -1,5 +1,7 @@
 package com.csplms.controller.Open;
 
+import com.csplms.dto.responseDto.BookDto;
+import com.csplms.dto.responseDto.CategoryResponseDto;
 import com.csplms.dto.responseDto.FeaturedBooksDto;
 import com.csplms.dto.responseDto.GlobalBookSearchDto;
 import com.csplms.entity.Book;
@@ -31,7 +33,7 @@ public class DisplayResourcesController {
     }
 
     @GetMapping("/categories/active")
-    public ResponseEntity<List<Category>> getCategories() {
+    public ResponseEntity<List<CategoryResponseDto>> getCategories() {
         return new ResponseEntity<>(this.categoryService.getAllAvailableCategories(), HttpStatus.OK);
     }
 
@@ -61,7 +63,7 @@ public class DisplayResourcesController {
     }
 
     @GetMapping("/book/get/{id}")
-    public Book getBook(@PathVariable("id") int bookId) {
+    public BookDto getBook(@PathVariable("id") int bookId) {
         return this.bookService.getBook(bookId);
     }
 

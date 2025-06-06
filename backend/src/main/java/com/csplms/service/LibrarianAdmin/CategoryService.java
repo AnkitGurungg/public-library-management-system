@@ -24,6 +24,7 @@ import com.csplms.exception.ResourceEntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -125,12 +126,27 @@ public class CategoryService {
     }
 
     // Get all available categories to filter books according to category on user side
-    public List<Category> getAllAvailableCategories() {
+    public List<CategoryResponseDto> getAllAvailableCategories() {
         List<Category> categories = this.categoryRepository.getAllAvailableCategories();
         if (categories.isEmpty()) {
             throw new ResourceListNotFoundException("Categories");
         }
-        return categories;
+
+        List<CategoryResponseDto> list = new ArrayList<>();
+        for (Category category : categories) {
+            CategoryResponseDto item = new CategoryResponseDto(
+                    category.getCategoryId(),
+                    category.getName(),
+                    category.getStartingNumber(),
+                    category.getEndingNumber(),
+                    category.getDescription(),
+                    category.getAddedDate(),
+                    category.isPresent()
+            );
+            list.add(item);
+        }
+
+        return list;
     }
 
 //    Get all the categories to display on admin panel

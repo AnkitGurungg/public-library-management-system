@@ -42,7 +42,7 @@ const Delete = ({ id, name, type }) => {
     setIsSubmitting(true);
     try {
       if (type === "book") {
-        endpoint = `/api/v1/la/book/delete/${id}`;
+        endpoint = `/api/v1/la/books/${id}`;
       }
       if (type === "category") {
         endpoint = `/api/v1/la/category/delete/${id}`;

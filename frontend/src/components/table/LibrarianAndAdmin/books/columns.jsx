@@ -23,8 +23,8 @@ export const columns = [
   {
     id: "category",
     header: "Category",
-    accessorFn: (row) => row?.category?.name || "",
-    cell: ({ row }) => row.original.category?.name || "",
+    accessorFn: (row) => row?.categoryName || "",
+    cell: ({ row }) => row.original.categoryName || "",
   },
 
   {
@@ -50,7 +50,7 @@ export const columns = [
   },
 
   {
-    accessorKey: "quantity",
+    accessorKey: "availableQuantity",
     header: ({ column }) => {
       return (
         <div className="flex justify-center w-full text-center">
@@ -69,8 +69,8 @@ export const columns = [
   {
     id: "shelf",
     header: "Shelf",
-    accessorFn: (row) => row?.shelf?.name || "",
-    cell: ({ row }) => row.original.shelf?.name || "",
+    accessorFn: (row) => row?.shelfName || "",
+    cell: ({ row }) => row.original.shelfName || "",
   },
 
   {

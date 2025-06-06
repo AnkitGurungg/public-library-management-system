@@ -11,8 +11,7 @@ const Books = () => {
   }, []);
 
   useEffect(() => {
-    console.log(books);
-    console.log(books?.data);
+    // console.log(books);
   }, [books]);
 
   return (

@@ -25,7 +25,7 @@ export function DataTable({ columns, data = [] }) {
 
   // Get unique categories from the data
   const categories = Array.isArray(data)
-    ? [...new Set(data.map((book) => book.category?.name).filter(Boolean))]
+    ? [...new Set(data.map((item) => item?.categoryName).filter(Boolean))]
     : [];
 
   const [pagination, setPagination] = React.useState({

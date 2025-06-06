@@ -1,5 +1,7 @@
 package com.csplms.controller.LibrarianAdmin;
 
+import com.csplms.dto.responseDto.AdminBooksDto;
+import com.csplms.dto.responseDto.BookDto;
 import com.csplms.entity.Book;
 import com.csplms.exception.MailFailedException;
 import com.csplms.service.LibrarianAdmin.BookService;
@@ -19,7 +21,7 @@ import java.io.IOException;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/v1/la/book")
+@RequestMapping("/api/v1/la/books")
 @EnableMethodSecurity(prePostEnabled = true)
 @PreAuthorize("hasAnyAuthority('ROLE_LIBRARIAN', 'ROLE_ADMIN')")
 public class BookController {
@@ -31,7 +33,7 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<BookResponseDto> addBook(
             @RequestPart BookRequestDto bookRequestDto,
             @RequestPart MultipartFile bookImage
@@ -39,27 +41,22 @@ public class BookController {
         return this.bookService.addBook(bookRequestDto, bookImage);
     }
 
-    @GetMapping("/get/{id}")
-    public Book getBook(@PathVariable("id") int bookId) {
+    @GetMapping
+    public ResponseEntity<List<AdminBooksDto>> getBooks() {
+        return new ResponseEntity<>(this.bookService.getAllBooks(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public BookDto getBook(@PathVariable("id") int bookId) {
         return this.bookService.getBook(bookId);
     }
 
-    @GetMapping("/get/user/{id}")
+    @GetMapping("/{id}/user")
     public ResponseEntity<String> getBookAddedUser(@PathVariable("id") int bookId) {
         return new ResponseEntity<>(this.bookService.getBookAddedUser(bookId), HttpStatus.OK);
     }
 
-    @GetMapping("/get/books")
-    public List<Book> getBooks() {
-        return this.bookService.getAllBooks();
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public void deleteBook(@PathVariable("id") int bookId) {
-        this.bookService.deleteBook(bookId);
-    }
-
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<BookResponseDto> updateBook(@PathVariable Integer id, @RequestPart BookRequestDto bookRequestDto, @RequestPart(value = "bookImage", required = false) MultipartFile bookImage) {
         return new ResponseEntity<>(this.bookService.updateBook(id, bookRequestDto, bookImage), HttpStatus.CREATED);
     }
@@ -67,6 +64,11 @@ public class BookController {
     @PutMapping("/restore/{id}")
     public ResponseEntity<BookResponseDto> restoreBook(@PathVariable Integer id) {
         return new ResponseEntity<>(this.bookService.restoreBook(id), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteBook(@PathVariable("id") int bookId) {
+        this.bookService.deleteBook(bookId);
     }
 
 }

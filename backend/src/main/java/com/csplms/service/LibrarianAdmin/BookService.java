@@ -1,5 +1,7 @@
 package com.csplms.service.LibrarianAdmin;
 
+import com.csplms.dto.responseDto.AdminBooksDto;
+import com.csplms.dto.responseDto.BookDto;
 import org.slf4j.Logger;
 import com.csplms.entity.Book;
 import com.csplms.exception.*;
@@ -26,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.nio.file.Path;
 import java.nio.file.Files;
@@ -63,12 +66,33 @@ public class BookService {
         this.globalDateUtil = globalDateUtil;
     }
 
-    public List<Book> getAllBooks(){
+    public List<AdminBooksDto> getAllBooks(){
         List<Book> bookList = this.bookRepository.getAllBooks();
         if(bookList.isEmpty()){
             throw new ResourceListNotFoundException("Books");
         }
-        return bookList;
+
+        List<AdminBooksDto> dtoList = new ArrayList<>();
+        for (Book book : bookList){
+            AdminBooksDto item = new AdminBooksDto(
+                    book.getBookId(),
+                    book.getTitle(),
+                    book.getAuthor(),
+                    book.getPublishedDate(),
+                    book.getLanguage(),
+                    book.getAvailableQuantity(),
+                    book.isAvailable(),
+
+                    book.getCategory().getCategoryId(),
+                    book.getCategory().getName(),
+
+                    book.getShelf().getShelfId(),
+                    book.getShelf().getName()
+                    );
+            dtoList.add(item);
+        }
+
+        return dtoList;
     }
 
     @Transactional(rollbackFor = {MessagingException.class, MailException.class, MailFailedException.class, Exception.class})
@@ -126,12 +150,36 @@ public class BookService {
         }
     }
 
-    public Book getBook(int bookId) {
+    public BookDto getBook(int bookId) {
         Book book = this.bookRepository.findById(bookId).orElseThrow(() -> new ResourceEntityNotFoundException("Book", "Id", bookId));
         if (!book.isAvailable()){
             throw new ResourceEntityNotFoundException("Book", "Id", bookId);
         }
-        return book;
+
+        BookDto dto = new BookDto(
+                book.getBookId(),
+                book.getIsbn(),
+                book.getTitle(),
+                book.getAuthor(),
+                book.getLanguage(),
+                book.getEdition(),
+                book.getPageCount(),
+                book.getAvailableQuantity(),
+                book.getPublishedDate(),
+                book.getPrice(),
+                book.getImageURL(),
+                book.getDescription(),
+                book.getAddedDate(),
+                book.isAvailable(),
+
+                book.getCategory() != null ? book.getCategory().getCategoryId() : null,
+                book.getCategory() != null ? book.getCategory().getName() : null,
+
+                book.getShelf() != null ? book.getShelf().getShelfId() : null,
+                book.getShelf() != null ? book.getShelf().getName() : null
+        );
+
+        return dto;
     }
 
     public String getBookAddedUser(int bookId) {

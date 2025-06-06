@@ -63,7 +63,7 @@ const AddBook = () => {
       try {
         setLoading(true);
         const response = await GLOBAL_SERVICE.post(
-          "/api/v1/la/book/add",
+          "/api/v1/la/books",
           formData,
           {
             headers: {

@@ -36,7 +36,7 @@ const RestoreBook = ({ id, name, type, whatUser }) => {
     let endpoint = "";
     try {
       if (type === "book") {
-        endpoint = `/api/v1/la/book/restore/${id}`;
+        endpoint = `/api/v1/la/books/restore/${id}`;
       }
       if (type === "category") {
         endpoint = `/api/v1/la/category/restore/${id}`;
