@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
-import { BookOpenText, Component, PlusCircle } from "lucide-react";
+import { Component, PlusCircle } from "lucide-react";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import toast from "react-hot-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -30,7 +30,7 @@ const AddCategory = () => {
   const onSubmit = async (data) => {
     try {
       const respose = await GLOBAL_SERVICE.post(
-        "/api/v1/la/category/add",
+        "/api/v1/la/categories",
         JSON.stringify(data),
         {
           headers: {

@@ -19,8 +19,10 @@ import toast from "react-hot-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const UpdateCategory = ({ id }) => {
-  const { data: categories, refetch: refetchCategories } = useFetchCategory();
   const [open, setOpen] = useState();
+  const [category, setCategory] = useState(null);
+
+  const {refetch: refetchCategories } = useFetchCategory();
   const {
     register,
     handleSubmit,
@@ -30,21 +32,23 @@ const UpdateCategory = ({ id }) => {
   } = useForm();
 
   useEffect(() => {
-    const selectedCategory = categories?.data?.find(
-      (category) => category.categoryId === id
-    );
-    if (selectedCategory) {
-      setValue("name", selectedCategory.name || "");
-      setValue("startingNumber", selectedCategory.startingNumber || "");
-      setValue("endingNumber", selectedCategory.endingNumber || "");
-      setValue("description", selectedCategory.description || "");
+    const res = GLOBAL_SERVICE.get(`/api/v1/la/categories/${id}`);
+    res.then((response) => {
+      setCategory(response.data);
+    });
+
+    if (category) {
+      setValue("name", category.name || "");
+      setValue("startingNumber", category.startingNumber || "");
+      setValue("endingNumber", category.endingNumber || "");
+      setValue("description", category.description || "");
     }
-  }, [categories, id, setValue]);
+  }, [id, setValue]);
 
   const onSubmit = async (data) => {
     try {
       const response = await GLOBAL_SERVICE.put(
-        `/api/v1/la/category/update/${id}`,
+        `/api/v1/la/categories/${id}`,
         JSON.stringify(data),
         {
           headers: {
@@ -84,112 +88,107 @@ const UpdateCategory = ({ id }) => {
 
           <ScrollArea className="mx-2 mb-3">
             <form onSubmit={handleSubmit(onSubmit)}>
-              {categories?.data
-                ?.filter((category) => category.categoryId == id)
-                .map((element, index) => (
-                  <div
-                    key={element.categoryId || index}
-                    className="space-y-4 px-3 mb-5"
-                  >
-                    <div className="flex flex-col gap-1">
-                      <Label>Name</Label>
-                      <Input
-                        className="col-span-3 border-gray-300 mb-0 h-11"
-                        placeholder="Enter name"
-                        {...register("name", {
-                          required: "Please enter name!",
-                          minLength: {
-                            value: 3,
-                            message: "Please enter atleast 3 characters!",
-                          },
-                        })}
-                      />
-                      <p className="text-red-500">{errors?.name?.message}</p>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <Label>Starting Number</Label>
-                      <Input
-                        className="col-span-3 border-gray-300 mb-0 h-11"
-                        placeholder="Enter starting number"
-                        {...register("startingNumber", {
-                          required: "Please enter starting number.",
-                          pattern: {
-                            value: /^\d+$/,
-                            message: "Please enter a number.",
-                          },
-                          min: {
-                            value: 0,
-                            message: "Please enter valid starting number.",
-                          },
-                          minLength: {
-                            value: 1,
-                            message: "Please enter at least one number.",
-                          },
-                          maxLength: {
-                            value: 9,
-                            message:
-                              "Please enter a number with no more than 9 digits.",
-                          },
-                        })}
-                      />
-                      <p className="text-red-500">
-                        {errors?.startingNumber?.message}
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <Label>Ending Number</Label>
-                      <Input
-                        className="col-span-3 border-gray-300 mb-0 h-11"
-                        placeholder="Enter ending number"
-                        {...register("endingNumber", {
-                          required: "Please enter ending number.",
-                          pattern: {
-                            value: /^\d+$/,
-                            message: "Please enter a number.",
-                          },
-                          min: {
-                            value: 0,
-                            message: "Please enter valid ending number.",
-                          },
-                          minLength: {
-                            value: 1,
-                            message: "Please enter at least one number.",
-                          },
-                          maxLength: {
-                            value: 9,
-                            message:
-                              "Please enter a number with no more than 9 digits.",
-                          },
-                        })}
-                      />
-                      <p className="text-red-500">
-                        {errors?.endingNumber?.message}
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <Label>Description</Label>
-                      <Input
-                        className="col-span-3 border-gray-300 mb-0 h-11"
-                        placeholder="Enter description"
-                        type="text"
-                        {...register("description", {
-                          required: "Please enter description.",
-                          minLength: {
-                            value: 3,
-                            message: "Please enter at least 3 characters.",
-                          },
-                          maxLength: {
-                            value: 50,
-                            message: "Please enter no more than 50 characters.",
-                          },
-                        })}
-                      />
-                      <p className="text-red-500">
-                        {errors?.description?.message}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+              <div className="space-y-4 px-3 mb-5">
+                <div className="flex flex-col gap-1">
+                  <Label>Name</Label>
+                  <Input
+                    defaultValue={category?.name}
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter name"
+                    {...register("name", {
+                      required: "Please enter name!",
+                      minLength: {
+                        value: 3,
+                        message: "Please enter at least 3 characters!",
+                      },
+                    })}
+                  />
+                  <p className="text-red-500">{errors?.name?.message}</p>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label>Starting Number</Label>
+                  <Input
+                    defaultValue={category?.startingNumber}
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter starting number"
+                    {...register("startingNumber", {
+                      required: "Please enter starting number.",
+                      pattern: {
+                        value: /^\d+$/,
+                        message: "Please enter a number.",
+                      },
+                      min: {
+                        value: 0,
+                        message: "Please enter valid starting number.",
+                      },
+                      minLength: {
+                        value: 1,
+                        message: "Please enter at least one number.",
+                      },
+                      maxLength: {
+                        value: 9,
+                        message:
+                          "Please enter a number with no more than 9 digits.",
+                      },
+                    })}
+                  />
+                  <p className="text-red-500">
+                    {errors?.startingNumber?.message}
+                  </p>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label>Ending Number</Label>
+                  <Input
+                    defaultValue={category?.endingNumber}
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter ending number"
+                    {...register("endingNumber", {
+                      required: "Please enter ending number.",
+                      pattern: {
+                        value: /^\d+$/,
+                        message: "Please enter a number.",
+                      },
+                      min: {
+                        value: 0,
+                        message: "Please enter valid ending number.",
+                      },
+                      minLength: {
+                        value: 1,
+                        message: "Please enter at least one number.",
+                      },
+                      maxLength: {
+                        value: 9,
+                        message:
+                          "Please enter a number with no more than 9 digits.",
+                      },
+                    })}
+                  />
+                  <p className="text-red-500">
+                    {errors?.endingNumber?.message}
+                  </p>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label>Description</Label>
+                  <Input
+                    defaultValue={category?.description}
+                    className="col-span-3 border-gray-300 mb-0 h-11"
+                    placeholder="Enter description"
+                    type="text"
+                    {...register("description", {
+                      required: "Please enter description.",
+                      minLength: {
+                        value: 3,
+                        message: "Please enter at least 3 characters.",
+                      },
+                      maxLength: {
+                        value: 50,
+                        message: "Please enter no more than 50 characters.",
+                      },
+                    })}
+                  />
+                  <p className="text-red-500">{errors?.description?.message}</p>
+                </div>
+              </div>
               <DialogFooter className="grid grid-cols-2 mx-3 mb-3">
                 <Button className="w-full" onClick={() => reset()}>
                   Clear

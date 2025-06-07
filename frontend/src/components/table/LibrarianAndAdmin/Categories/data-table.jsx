@@ -17,7 +17,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import AddCategory from "@/features/LibrarianAndAdmin/Categories/AddCategory";
 
@@ -67,9 +66,9 @@ export function DataTable({ columns, data = [] }) {
         <div className="flex gap-2.5">
           <select
             className="border rounded-lg text-gray-800 px-3 py-2 bg-white "
-            value={table.getColumn("present")?.getFilterValue() ?? ""}
+            value={table.getColumn("active")?.getFilterValue() ?? ""}
             onChange={(e) =>
-              table.getColumn("present")?.setFilterValue(e.target.value)
+              table.getColumn("active")?.setFilterValue(e.target.value)
             }
           >
             <option value="" disabled selected>

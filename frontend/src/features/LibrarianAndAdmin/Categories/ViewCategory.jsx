@@ -8,23 +8,19 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { useState, useEffect } from "react";
-import { BookOpenText, Component, Eye, NotepadText } from "lucide-react";
-import { useFetchCategory } from "@/hooks/useFetchCategory";
+import { Component, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import GLOBAL_SERVICE from "@/services/GlobalServices";
 
 const ViewCategory = ({ id }) => {
-  const BACKEND_SERVER_BASE_URL = "http://localhost:8080/";
-  const { data: categories } = useFetchCategory();
   const [category, setCategory] = useState(null);
 
   useEffect(() => {
-    if (categories?.data && Array.isArray(categories.data)) {
-      const foundCategory = categories.data.find(
-        (element) => element.categoryId === id
-      );
-      setCategory(foundCategory || null);
-    }
-  }, [categories, id]);
+    const res = GLOBAL_SERVICE.get(`/api/v1/la/categories/${id}`);
+    res.then((response) => {
+      setCategory(response.data);
+    });
+  }, [id]);
 
   return (
     <div>
@@ -79,7 +75,7 @@ const ViewCategory = ({ id }) => {
                   <div className="col-span-1">
                     <p>
                       {" "}
-                      <strong>Updated Date:</strong> {category.updatedDate}
+                      <strong>Active:</strong> {category.present ? "YES" : "NO"}
                     </p>
                   </div>
                 </div>

@@ -1,6 +1,7 @@
 package com.csplms.controller.LibrarianAdmin;
 
 import com.csplms.dto.responseDto.AvailableCategoryResponse;
+import com.csplms.dto.responseDto.CategoryDto;
 import com.csplms.entity.Category;
 import com.csplms.service.LibrarianAdmin.CategoryService;
 import org.springframework.http.HttpStatus;
@@ -39,7 +40,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategory(@PathVariable("id") int categoryId) {
+    public ResponseEntity<CategoryDto> getCategory(@PathVariable("id") int categoryId) {
         return new ResponseEntity<>(this.categoryService.getCategory(categoryId), HttpStatus.OK);
     }
 

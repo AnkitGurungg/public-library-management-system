@@ -3,7 +3,6 @@ import RestoreBook from "@/components/Restore";
 import UpdateCategory from "@/features/LibrarianAndAdmin/Categories/UpdateCategory";
 import ViewCategory from "@/features/LibrarianAndAdmin/Categories/ViewCategory";
 import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
-import { CgKey } from "react-icons/cg";
 
 export const columns = [
   {
@@ -68,26 +67,9 @@ export const columns = [
   },
 
   {
-    accessorKey: "updatedDate",
-    header: ({ column }) => {
-      return (
-        <div className="flex justify-center w-full text-center">
-          <span
-            className="flex items-center cursor-pointer"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Updated Date
-            <ChevronsUpDown className="ml-2 h-4 w-4" />
-          </span>
-        </div>
-      );
-    },
-  },
-
-  {
-    id: "present",
+    id: "active",
     accessorFn: (row) => String(row?.present) || "",
-    header: "Available",
+    header: "Active",
     cell: ({ row }) =>
       row?.original?.present ? (
         <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">
@@ -107,8 +89,7 @@ export const columns = [
     cell: ({ row }) => {
       const category = row.original;
       const isPresent = category?.present;
-      console.log(category);
-      console.log(isPresent);
+
       return (
         <div className="flex items-center justify-center gap-1">
           <div className="opacity-90">

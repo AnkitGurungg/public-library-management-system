@@ -1,6 +1,7 @@
 package com.csplms.service.LibrarianAdmin;
 
 import com.csplms.dto.responseDto.AvailableCategoryResponse;
+import com.csplms.dto.responseDto.CategoryDto;
 import com.csplms.dto.responseDto.CategoryShelfResponse;
 import com.csplms.entity.Book;
 import com.csplms.entity.Shelf;
@@ -70,12 +71,24 @@ public class CategoryService {
         }
     }
 
-    public Category getCategory(int categoryId) {
+    public CategoryDto getCategory(int categoryId) {
         Category category = this.categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceEntityNotFoundException("SeedBook", "Id", categoryId));
-        if (!category.isPresent()){
-            throw new ResourceEntityNotFoundException("SeedBook", "Id", categoryId);
+
+        if (category != null){
+            return new CategoryDto(
+                    category.getCategoryId(),
+                    category.getName(),
+                    category.getStartingNumber(),
+                    category.getEndingNumber(),
+                    category.getDescription(),
+                    category.getAddedDate(),
+                    category.isPresent(),
+
+                    category.getAddedBy() != null ? category.getAddedBy().getUserId() : null,
+                    category.getAddedBy() != null ? category.getAddedBy().getName() : null
+            );
         }
-        return category;
+        return null;
     }
 
     public Category updateCategory(int categoryId, CategoryRequestDto categoryRequestDto) {
