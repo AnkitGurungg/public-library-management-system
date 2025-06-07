@@ -39,10 +39,10 @@ const RestoreBook = ({ id, name, type, whatUser }) => {
         endpoint = `/api/v1/la/books/restore/${id}`;
       }
       if (type === "category") {
-        endpoint = `/api/v1/la/category/restore/${id}`;
+        endpoint = `/api/v1/la/categories/restore/${id}`;
       }
       if (type === "shelf") {
-        endpoint = `/api/v1/la/shelf/restore/${id}`;
+        endpoint = `/api/v1/la/shelves/restore/${id}`;
       }
       if (type === "user" && whatUser === "member") {
         endpoint = `/api/v1/la/user/restore/${id}`;

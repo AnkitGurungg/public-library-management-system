@@ -45,10 +45,10 @@ const Delete = ({ id, name, type }) => {
         endpoint = `/api/v1/la/books/${id}`;
       }
       if (type === "category") {
-        endpoint = `/api/v1/la/category/delete/${id}`;
+        endpoint = `/api/v1/la/categories/${id}`;
       }
       if (type === "shelf") {
-        endpoint = `/api/v1/la/shelf/delete/${id}`;
+        endpoint = `/api/v1/la/shelves/${id}`;
       }
       if (type === "user") {
         endpoint = `/api/v1/la/user/delete/${id}`;

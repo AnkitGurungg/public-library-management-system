@@ -8,20 +8,19 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-import { useFetchShelfs } from "@/hooks/useFetchShelfs";
 import { Eye, NotepadText, SquareLibrary } from "lucide-react";
 import { useState, useEffect } from "react";
+import GLOBAL_SERVICE from "@/services/GlobalServices";
 
 const ViewShelf = ({ id }) => {
-  const { data: shelfs, refetch: refetchShelfs } = useFetchShelfs();
   const [shelf, setShelf] = useState(null);
 
   useEffect(() => {
-    if (shelfs?.data && Array.isArray(shelfs.data)) {
-      const foundShelf = shelfs.data.find((element) => element.shelfId === id);
-      setShelf(foundShelf || null);
-    }
-  }, [shelfs, id]);
+    const res = GLOBAL_SERVICE.get(`/api/v1/la/shelves/${id}`);
+    res.then((response) => {
+      setShelf(response.data);
+    });
+  }, [id]);
 
   return (
     <div>
@@ -46,19 +45,19 @@ const ViewShelf = ({ id }) => {
                 <div>
                   <p>
                     {" "}
-                    <strong>Name:</strong> {shelf.name}
+                    <strong>Name:</strong> {shelf?.name}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
                   <div className="col-span-1">
                     <p>
-                      <strong>Category:</strong> {shelf.category.name}
+                      <strong>Category:</strong> {shelf?.categoryName}
                     </p>
                   </div>
                   <div className="col-span-1">
                     <p>
-                      <strong>Capacity:</strong> {shelf.capacity}
+                      <strong>Added Date:</strong> {shelf?.addedDate}
                     </p>
                   </div>
                 </div>
@@ -66,19 +65,19 @@ const ViewShelf = ({ id }) => {
                 <div className="grid grid-cols-2 gap-6">
                   <div className="col-span-1">
                     <p>
-                      <strong>Added Date:</strong> {shelf.addedDate}
+                      <strong>Active Capacity:</strong> {shelf?.availableCapacity}
                     </p>
                   </div>
                   <div className="col-span-1">
                     <p>
-                      <strong>Updated Date:</strong> {shelf.updatedDate}
+                      <strong>Total Capacity:</strong> {shelf?.totalCapacity}
                     </p>
                   </div>
                 </div>
 
                 <div className="h-11 overflow-auto w-[400px]">
                   <p className="w-full">
-                    <strong>Description:</strong> {shelf.description}
+                    <strong>Description:</strong> {shelf?.description}
                   </p>
                 </div>
               </div>

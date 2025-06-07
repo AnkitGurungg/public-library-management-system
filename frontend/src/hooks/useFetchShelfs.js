@@ -6,7 +6,7 @@ export const useFetchShelfs = () => {
     queryKey: ["shelfs"],
     queryFn: async () => {
       try {
-        const res = await GLOBAL_SERVICE.get("/api/v1/la/shelf/get/shelves");
+        const res = await GLOBAL_SERVICE.get("/api/v1/la/shelves");
         return { status: res.status, data: res.data };
       } catch (error) {
         if (error.response && error.response.status === 404) {

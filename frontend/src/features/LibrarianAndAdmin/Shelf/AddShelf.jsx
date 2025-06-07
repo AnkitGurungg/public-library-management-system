@@ -33,7 +33,7 @@ const AddShelf = () => {
   const onSubmit = async (data) => {
     try {
       const response = await GLOBAL_SERVICE.post(
-        "/api/v1/la/shelf/add",
+        "/api/v1/la/shelves",
         JSON.stringify(data),
         {
           headers: {

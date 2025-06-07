@@ -35,37 +35,25 @@ export const columns = [
   },
 
   {
-    accessorKey: "updatedDate",
-    header: ({ column }) => {
-      return (
-        <div className="flex justify-center w-full text-center">
-          <span
-            className="flex items-center cursor-pointer"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Updated Date
-            <ChevronsUpDown className="ml-2 h-4 w-4" />
-          </span>
-        </div>
-      );
-    },
+    accessorKey: "availableCapacity",
+    header: "Active Capacity",
   },
 
   {
-    accessorKey: "capacity",
-    header: "Capacity",
+    accessorKey: "totalCapacity",
+    header: "Total Capacity",
   },
 
   {
     id: "category",
     header: "Category",
-    accessorFn: (row) => row?.category?.name || "",
-    cell: ({ row }) => row.original.category?.name || "",
+    accessorFn: (row) => row?.categoryName || "",
+    cell: ({ row }) => row.original.categoryName || "",
   },
   {
-    id: "available",
+    id: "active",
     accessorFn: (row) => String(row?.present) || "",
-    header: "Available",
+    header: "Active",
     cell: ({ row }) =>
       row?.original?.present ? (
         <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">

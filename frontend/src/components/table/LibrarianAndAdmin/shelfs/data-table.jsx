@@ -24,7 +24,7 @@ export function DataTable({ columns, data = [] }) {
   const [sorting, setSorting] = useState([]);
 
   const categories = Array.isArray(data)
-    ? [...new Set(data.map((shelf) => shelf.category?.name).filter(Boolean))]
+    ? [...new Set(data.map((item) => item.categoryName).filter(Boolean))]
     : [];
 
   const [pagination, setPagination] = React.useState({

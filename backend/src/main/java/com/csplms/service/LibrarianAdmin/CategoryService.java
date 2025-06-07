@@ -150,12 +150,26 @@ public class CategoryService {
     }
 
 //    Get all the categories to display on admin panel
-    public List<Category> getCategories() {
+    public List<CategoryResponseDto> getCategories() {
         List<Category> categories = this.categoryRepository.getAllCategories();
         if (categories.isEmpty()) {
             throw new ResourceListNotFoundException("Categories");
         }
-        return categories;
+
+        List<CategoryResponseDto> list = new ArrayList<>();
+        for (Category category : categories){
+            CategoryResponseDto item = new CategoryResponseDto(
+                    category.getCategoryId(),
+                    category.getName(),
+                    category.getStartingNumber(),
+                    category.getEndingNumber(),
+                    category.getDescription(),
+                    category.getAddedDate(),
+                    category.isPresent()
+            );
+            list.add(item);
+        }
+        return list;
     }
 
     @Transactional

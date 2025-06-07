@@ -16,7 +16,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/v1/la/category")
+@RequestMapping("/api/v1/la/categories")
 @EnableMethodSecurity(prePostEnabled = true)
 @PreAuthorize("hasAnyAuthority('ROLE_LIBRARIAN', 'ROLE_ADMIN')")
 public class CategoryController {
@@ -28,24 +28,19 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<CategoryResponseDto> addCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
         return new ResponseEntity<>(this.categoryService.addCategory(categoryRequestDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping
+    public ResponseEntity<List<CategoryResponseDto>> getCategories() {
+        return new ResponseEntity<>(this.categoryService.getCategories(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
     public ResponseEntity<Category> getCategory(@PathVariable("id") int categoryId) {
         return new ResponseEntity<>(this.categoryService.getCategory(categoryId), HttpStatus.OK);
-    }
-
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable("id") int categoryId, @RequestBody CategoryRequestDto categoryRequestDto) {
-        return new ResponseEntity<>(this.categoryService.updateCategory(categoryId, categoryRequestDto), HttpStatus.OK);
-    }
-
-    @GetMapping("/get/categories")
-    public ResponseEntity<List<Category>> getCategories() {
-        return new ResponseEntity<>(this.categoryService.getCategories(), HttpStatus.OK);
     }
 
     @GetMapping("/get/categories/shelfs")
@@ -53,14 +48,19 @@ public class CategoryController {
         return new ResponseEntity<>(this.categoryService.getAllCategoriesAndShelfs(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Integer> deleteCategory(@PathVariable("id") int categoryId) {
-        return new ResponseEntity<>(this.categoryService.deleteCategory(categoryId), HttpStatus.OK);
+    @PutMapping("/{id}")
+    public ResponseEntity<Category> updateCategory(@PathVariable("id") int categoryId, @RequestBody CategoryRequestDto categoryRequestDto) {
+        return new ResponseEntity<>(this.categoryService.updateCategory(categoryId, categoryRequestDto), HttpStatus.OK);
     }
 
     @PutMapping("/restore/{id}")
     public ResponseEntity<Integer> restoreCategory(@PathVariable("id") int categoryId) {
         return new ResponseEntity<>(this.categoryService.restoreCategory(categoryId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Integer> deleteCategory(@PathVariable("id") int categoryId) {
+        return new ResponseEntity<>(this.categoryService.deleteCategory(categoryId), HttpStatus.OK);
     }
 
 }

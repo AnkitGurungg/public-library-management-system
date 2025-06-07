@@ -7,7 +7,7 @@ export const useFetchCategory = () => {
     queryFn: async () => {
       try {
         const res = await GLOBAL_SERVICE.get(
-          "/api/v1/la/category/get/categories"
+          "/api/v1/la/categories"
         );
         return { status: res.status, data: res.data };
       } catch (error) {

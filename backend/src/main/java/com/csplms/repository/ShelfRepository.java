@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ShelfRepository extends JpaRepository<Shelf, Integer> {
-    List<Shelf> findByName(String name);
 
     @Query(value = "select * from shelfs order by present desc, shelf_id desc, added_date desc", nativeQuery = true)
     List<Shelf> getAllShelves();

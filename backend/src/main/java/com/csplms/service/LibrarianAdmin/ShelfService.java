@@ -1,6 +1,8 @@
 package com.csplms.service.LibrarianAdmin;
 
 import com.csplms.dto.requestDto.ShelfRequestDto;
+import com.csplms.dto.responseDto.AdminShelfDto;
+import com.csplms.dto.responseDto.ShelfDto;
 import com.csplms.dto.responseDto.ShelfResponseDto;
 import com.csplms.entity.Book;
 import com.csplms.entity.Shelf;
@@ -8,7 +10,6 @@ import com.csplms.entity.User;
 import com.csplms.exception.ResourceListNotFoundException;
 import com.csplms.exception.ResourceEntityNotFoundException;
 import com.csplms.exception.UniqueKeyViolationException;
-import com.csplms.exception.UpdateShelfException;
 import com.csplms.mapper.ShelfMapper;
 import com.csplms.repository.BookRepository;
 import com.csplms.repository.ShelfRepository;
@@ -21,6 +22,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -101,36 +103,75 @@ public class ShelfService {
         return 1;
     }
 
-    public Shelf getShelf(int shelfId) {
+    public ShelfDto getShelf(int shelfId) {
         Shelf shelf = this.shelfRepository.findById(shelfId).orElseThrow(() -> new ResourceEntityNotFoundException("Shelf", "Id", shelfId));
-        if(!shelf.isPresent()){
-            throw new ResourceEntityNotFoundException("Shelf", "Id", shelfId);
+
+        if (shelf != null) {
+            return new ShelfDto(
+                    shelf.getShelfId(),
+                    shelf.getName(),
+                    shelf.getAddedDate(),
+                    shelf.getAvailableCapacity(),
+                    shelf.getTotalCapacity(),
+                    shelf.getDescription(),
+                    shelf.isPresent(),
+
+                    shelf.getCategory() != null ? shelf.getCategory().getCategoryId() : null,
+                    shelf.getCategory() != null ? shelf.getCategory().getName() : null
+            );
         }
-        return shelf;
+        return null;
     }
 
-    public List<Shelf> getShelfByName(String shelfName) {
-        List<Shelf> shelfList = this.shelfRepository.findByName(shelfName);
-        if (shelfList.isEmpty()){
-            throw new ResourceListNotFoundException("Shelfs");
-        }
-        return shelfList;
-    }
-
-    public List<Shelf> getShelves() {
+    public List<AdminShelfDto> getShelves() {
         List<Shelf> shelves =  this.shelfRepository.getAllShelves();
         if (shelves.isEmpty()){
             throw new ResourceListNotFoundException("Shelfs");
         }
-        return shelves;
+
+        List<AdminShelfDto> shelfDtoList = new ArrayList<>();
+        for (Shelf shelf : shelves){
+            AdminShelfDto item = new AdminShelfDto(
+                    shelf.getShelfId(),
+                    shelf.getName(),
+                    shelf.getAddedDate(),
+                    shelf.getAvailableCapacity(),
+                    shelf.getTotalCapacity(),
+                    shelf.isPresent(),
+
+                    shelf.getCategory() != null ? shelf.getCategory().getCategoryId() : null,
+                    shelf.getCategory() != null ? shelf.getCategory().getName() : null
+            );
+            shelfDtoList.add(item);
+        }
+
+        return shelfDtoList;
     }
 
-    public List<Shelf> getAllAvailableShelves() {
+//    get all active shelves
+    public List<ShelfDto> getAllAvailableShelves() {
         List<Shelf> shelves =  this.shelfRepository.getAllAvailableShelves();
         if (shelves.isEmpty()){
             throw new ResourceListNotFoundException("Shelfs");
         }
-        return shelves;
+
+        List<ShelfDto> dtoList = new ArrayList<>();
+        for (Shelf shelf : shelves){
+            ShelfDto item = new ShelfDto(
+                    shelf.getShelfId(),
+                    shelf.getName(),
+                    shelf.getAddedDate(),
+                    shelf.getAvailableCapacity(),
+                    shelf.getTotalCapacity(),
+                    shelf.getDescription(),
+                    shelf.isPresent(),
+                    shelf.getCategory() != null ? shelf.getCategory().getCategoryId() : null,
+                    shelf.getCategory() != null ? shelf.getCategory().getName() : null
+            );
+            dtoList.add(item);
+        }
+
+        return dtoList;
     }
 
     @Transactional

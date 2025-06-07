@@ -7,7 +7,7 @@ export const useFetchAvailableShelfs = () => {
     queryFn: async () => {
       try {
         const res = await GLOBAL_SERVICE.get(
-          "/api/v1/la/shelf/get/available/shelves"
+          "/api/v1/la/shelves/active"
         );
         return { status: res.status, data: res.data };
       } catch (error) {

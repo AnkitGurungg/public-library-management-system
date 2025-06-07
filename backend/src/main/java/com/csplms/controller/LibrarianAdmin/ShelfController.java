@@ -1,5 +1,7 @@
 package com.csplms.controller.LibrarianAdmin;
 
+import com.csplms.dto.responseDto.AdminShelfDto;
+import com.csplms.dto.responseDto.ShelfDto;
 import com.csplms.entity.Shelf;
 import com.csplms.service.LibrarianAdmin.ShelfService;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,7 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/v1/la/shelf")
+@RequestMapping("/api/v1/la/shelves")
 @EnableMethodSecurity(prePostEnabled = true)
 @PreAuthorize("hasAnyAuthority('ROLE_LIBRARIAN', 'ROLE_ADMIN')")
 public class ShelfController {
@@ -27,22 +29,27 @@ public class ShelfController {
         this.shelfService = shelfService;
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<ShelfResponseDto> addShelf(@RequestBody ShelfRequestDto shelfRequestDto) {
         return new ResponseEntity<>(this.shelfService.addShelf(shelfRequestDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<Shelf> getShelf(@PathVariable("id") int shelfId) {
+    @GetMapping
+    public ResponseEntity<List<AdminShelfDto>> getShelfs() {
+        return new ResponseEntity<>(this.shelfService.getShelves(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ShelfDto> getShelf(@PathVariable("id") int shelfId) {
         return new ResponseEntity<>(this.shelfService.getShelf(shelfId), HttpStatus.OK);
     }
 
-    @GetMapping("/get/name/{name}")
-    public ResponseEntity<List<Shelf>> getShelfByName(@PathVariable("name") String shelfName) {
-        return new ResponseEntity<>(this.shelfService.getShelfByName(shelfName), HttpStatus.OK);
+    @GetMapping("/active")
+    public ResponseEntity<List<ShelfDto>> getAllAvailableShelves() {
+        return new ResponseEntity<>(this.shelfService.getAllAvailableShelves(), HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Shelf> updateShelf(@PathVariable("id") int shelfId, @RequestBody ShelfRequestDto shelfRequestDto) {
         return new ResponseEntity<>(this.shelfService.updateShelf(shelfId, shelfRequestDto), HttpStatus.OK);
     }
@@ -52,17 +59,7 @@ public class ShelfController {
         return new ResponseEntity<>(this.shelfService.restoreShelf(shelfId), HttpStatus.OK);
     }
 
-    @GetMapping("/get/shelves")
-    public ResponseEntity<List<Shelf>> getShelfs() {
-        return new ResponseEntity<>(this.shelfService.getShelves(), HttpStatus.OK);
-    }
-
-    @GetMapping("/get/available/shelves")
-    public ResponseEntity<List<Shelf>> getAllAvailableShelves() {
-        return new ResponseEntity<>(this.shelfService.getAllAvailableShelves(), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public Integer deleteShelf(@PathVariable("id") Integer shelfId) {
         return this.shelfService.deleteShelf(shelfId);
     }
