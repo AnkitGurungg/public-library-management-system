@@ -19,43 +19,17 @@ import {
 import { Input } from "@/components/ui/input";
 
 export function DataTable({ columns, data = [] }) {
-  const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
-
-  // const categories = [
-  //   ...new Set(
-  //     data
-  //       .map((fine) => fine?.returns?.borrows?.borrowBooks?.category?.name)
-  //       .filter(Boolean)
-  //   ),
-  // ];
-
-  // const books = [
-  //   ...new Set(
-  //     data
-  //       .map((book) => book?.returns?.borrows?.borrowBooks?.title)
-  //       .filter(Boolean)
-  //   ),
-  // ];
+  const [columnFilters, setColumnFilters] = useState([]);
 
   let books = [];
   let categories = [];
 
   if (Array.isArray(data)) {
-    books = [
-      ...new Set(
-        data
-          .map((book) => book?.returns?.borrows?.borrowBooks?.title)
-          .filter(Boolean)
-      ),
-    ];
+    books = [...new Set(data.map((item) => item?.bookTitle).filter(Boolean))];
 
     categories = [
-      ...new Set(
-        data
-          .map((fine) => fine?.returns?.borrows?.borrowBooks?.category?.name)
-          .filter(Boolean)
-      ),
+      ...new Set(data.map((item) => item?.categoryName).filter(Boolean)),
     ];
   }
 

@@ -1,8 +1,6 @@
 package com.csplms.controller.Admin;
 
 import com.csplms.entity.Book;
-import com.csplms.entity.User;
-import com.csplms.entity.Borrow;
 import com.csplms.service.Admin.ReportService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +14,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/v1/a/report")
+@RequestMapping("/api/v1/a/reports")
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 public class ReportController {
 

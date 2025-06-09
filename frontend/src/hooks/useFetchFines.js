@@ -6,8 +6,9 @@ const useFetchFines = () => {
     queryKey: ["fines"],
     queryFn: async () => {
       try {
-        const res = await GLOBAL_SERVICE.get("/api/v1/la/fine/get/fines");
+        const res = await GLOBAL_SERVICE.get("/api/v1/la/fines");
         // console.log(res);
+        
         return { status: res.status, data: res.data };
       } catch (error) {
         if (error && error.response.status === 404) {

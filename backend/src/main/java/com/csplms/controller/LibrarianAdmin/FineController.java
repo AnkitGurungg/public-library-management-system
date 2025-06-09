@@ -1,6 +1,6 @@
 package com.csplms.controller.LibrarianAdmin;
 
-import com.csplms.entity.Fine;
+import com.csplms.dto.responseDto.AdminFineDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/v1/la/fine")
+@RequestMapping("/api/v1/la/fines")
 @EnableMethodSecurity(prePostEnabled = true)
 @PreAuthorize("hasAnyAuthority('ROLE_LIBRARIAN', 'ROLE_ADMIN')")
 public class FineController {
@@ -28,8 +28,8 @@ public class FineController {
         this.fineService = fineService;
     }
 
-    @GetMapping("/get/fines")
-    public ResponseEntity<List<Fine>> getAllFineRecords() {
+    @GetMapping
+    public ResponseEntity<List<AdminFineDto>> getAllFineRecords() {
         return new ResponseEntity<>(this.fineService.getAllFineRecords(), HttpStatus.OK);
     }
 

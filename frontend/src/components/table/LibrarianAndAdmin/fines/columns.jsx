@@ -3,14 +3,13 @@ import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
 export const columns = [
   {
     header: "FID",
-    cell: ({ row }) =>
-      row?.original?.returns?.borrows?.borrowUsers?.userId || "N/A",
+    cell: ({ row }) => row?.original?.fineId || "N/A",
   },
 
   {
     id: "userName",
     header: "Name",
-    accessorFn: (row) => row?.returns?.borrows?.borrowUsers?.name ?? "",
+    accessorFn: (row) => row?.userName ?? "",
     cell: ({ getValue }) => getValue() || "N/A",
     filterFn: "includesString",
   },
@@ -18,24 +17,21 @@ export const columns = [
   {
     id: "title",
     header: "Title",
-    accessorFn: (row) => row?.returns?.borrows?.borrowBooks?.title || "N/A",
-    cell: ({ row }) =>
-      row?.original?.returns?.borrows?.borrowBooks?.title || "N/A",
+    accessorFn: (row) => row?.bookTitle || "N/A",
+    cell: ({ row }) => row?.original?.bookTitle || "N/A",
   },
 
   {
     id: "category",
     header: "Category",
-    accessorFn: (row) =>
-      row?.returns?.borrows?.borrowBooks?.category?.name || "",
-    cell: ({ row }) =>
-      row?.original?.returns?.borrows?.borrowBooks?.category?.name || "",
+    accessorFn: (row) => row?.categoryName || "",
+    cell: ({ row }) => row?.original?.categoryName || "",
   },
 
   {
     id: "borrowDate",
     accessorFn: (row) => {
-      const date = row?.returns?.borrows?.borrowDate;
+      const date = row?.borrowDate;
       return date ? new Date(date).getTime() : null;
     },
     header: ({ column }) => (
@@ -50,7 +46,7 @@ export const columns = [
       </div>
     ),
     cell: ({ row }) => {
-      const date = row.original?.returns?.borrows?.borrowDate;
+      const date = row.original?.borrowDate;
       return date || "N/A";
     },
   },
@@ -58,7 +54,7 @@ export const columns = [
   {
     id: "dueDate",
     accessorFn: (row) => {
-      const date = row?.returns?.borrows?.dueDate;
+      const date = row?.dueDate;
       return date ? new Date(date).getTime() : null;
     },
     header: ({ column }) => (
@@ -73,7 +69,7 @@ export const columns = [
       </div>
     ),
     cell: ({ row }) => {
-      const date = row.original?.returns?.borrows?.dueDate;
+      const date = row.original?.dueDate;
       return date || "N/A";
     },
   },
@@ -105,7 +101,7 @@ export const columns = [
   {
     id: "returnDate",
     accessorFn: (row) => {
-      const date = row?.returns?.returnDate;
+      const date = row?.returnDate;
       return date ? new Date(date).getTime() : null;
     },
     header: ({ column }) => (
@@ -120,7 +116,7 @@ export const columns = [
       </div>
     ),
     cell: ({ row }) => {
-      const date = row.original?.returns?.returnDate;
+      const date = row.original?.returnDate;
       return date || "N/A";
     },
   },

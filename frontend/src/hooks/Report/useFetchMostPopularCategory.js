@@ -7,7 +7,7 @@ export const useFetchMostPopularCategory = () => {
     queryFn: async () => {
       try {
         const res = await GLOBAL_SERVICE.get(
-          "/api/v1/a/report/most-popular-category"
+          "/api/v1/a/reports/most-popular-category"
         );
         return { status: res.status, data: res.data };
       } catch (error) {
