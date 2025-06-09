@@ -1,4 +1,4 @@
-import { CircleEllipsis, RefreshCw, RotateCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,7 +12,6 @@ import {
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import { useState } from "react";
 import { useFetchBooks } from "@/hooks/useFetchBooks";
-import { Trash2 } from "lucide-react";
 import { useFetchCategory } from "@/hooks/useFetchCategory";
 import { useFetchShelfs } from "@/hooks/useFetchShelfs";
 import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
@@ -21,17 +20,16 @@ import useFetchLibrarian from "@/hooks/useFetchLibrarian";
 import toast from "react-hot-toast";
 
 const RestoreBook = ({ id, name, type, whatUser }) => {
-  const { data: books, refetch: refetchBooks } = useFetchBooks();
-  const { data: categories, refetch: refetchCategories } = useFetchCategory();
-  const { data: shelfs, refetch: refetchShelfs } = useFetchShelfs();
-  const { data: VerifiedMembers, refetch: refetchVerifiedMembers } =
-    useFetchVerifiedMembers();
-  const { data: nonVerifiedMembers, refetch: refetchNonVerifiedMembers } =
-    useFetchNonVerifiedMembers();
-  const { data: librarian, refetch: refetchLibrarians } = useFetchLibrarian();
-
   const [open, setOpen] = useState(false);
 
+  const { refetch: refetchBooks } = useFetchBooks();
+  const { refetch: refetchCategories } = useFetchCategory();
+  const { refetch: refetchShelfs } = useFetchShelfs();
+  const { refetch: refetchVerifiedMembers } = useFetchVerifiedMembers();
+  const { refetch: refetchNonVerifiedMembers } = useFetchNonVerifiedMembers();
+  const { refetch: refetchLibrarians } = useFetchLibrarian();
+
+  // handle the restore operation
   const handleRestore = async () => {
     let endpoint = "";
     try {
@@ -45,10 +43,10 @@ const RestoreBook = ({ id, name, type, whatUser }) => {
         endpoint = `/api/v1/la/shelves/restore/${id}`;
       }
       if (type === "user" && whatUser === "member") {
-        endpoint = `/api/v1/la/user/restore/${id}`;
+        endpoint = `/api/v1/la/users/restore/${id}`;
       }
       if (type === "user" && whatUser === "librarian") {
-        endpoint = `/api/v1/la/user/restore/${id}`;
+        endpoint = `/api/v1/a/librarians/restore/${id}`;
       }
 
       if (endpoint) {
@@ -89,40 +87,42 @@ const RestoreBook = ({ id, name, type, whatUser }) => {
           <RefreshCw size={20} />
         </DialogTrigger>
         <DialogContent aria-describedby={undefined}>
-        <DialogHeader className="sm:max-w-[500px]">
-          <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-2">
-            <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
-              <RefreshCw size={27} />
-            </div>
-            <span className="text-lg">Restore Confirmation</span>
-          </DialogTitle>
-          <div className="my-0 h-px bg-gray-800 mx-2 mr-7" />
-        </DialogHeader>
+          <DialogHeader className="sm:max-w-[500px]">
+            <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-2">
+              <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">
+                <RefreshCw size={27} />
+              </div>
+              <span className="text-lg">Restore Confirmation</span>
+            </DialogTitle>
+            <div className="my-0 h-px bg-gray-800 mx-2 mr-7" />
+          </DialogHeader>
           <p className="ml-3">
             Are you sure want to procceed with the restoration of
             {type === "book" && (
               <p>
-                {type} {name} in id {id}?
+                {type} {name} ?
               </p>
             )}
             {type === "category" && (
               <p>
-                {type} {name} in id {id}?
+                {type} {name} ?
               </p>
             )}
             {type === "shelf" && (
               <p>
-                {type} {name} in id {id}?
+                {type} {name} ?
               </p>
             )}
             {type === "user" && (
               <p>
-                {type} {name} in id {id}?
+                {type} {name} ?
               </p>
             )}
           </p>
           <DialogFooter className="w-full mt-2">
-            <Button onClick={handleRestore} className="w-full">Confirm</Button>
+            <Button onClick={handleRestore} className="w-full">
+              Confirm
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

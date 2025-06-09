@@ -1,6 +1,4 @@
 import Delete from "@/components/Delete";
-import UpdateBook from "@/features/LibrarianAndAdmin/Books/UpdateBook";
-import ViewBook from "@/features/LibrarianAndAdmin/Books/ViewBook";
 import VerifyMember from "@/features/LibrarianAndAdmin/Members/VerifyMember";
 import ViewMember from "@/features/LibrarianAndAdmin/Members/ViewMember";
 import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
@@ -44,9 +42,9 @@ export const columns = [
   },
 
   {
-    id: "present",
+    id: "deleted",
     accessorFn: (row) => String(row?.present) || "",
-    header: "Present",
+    header: "Deleted",
     cell: ({ row }) =>
       row?.original?.present ? (
         <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">

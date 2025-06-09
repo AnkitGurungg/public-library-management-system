@@ -47,6 +47,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "update users set present=0, verified=0 where user_id=:userId", nativeQuery = true)
     int deleteUser(Integer userId);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update users set present=0, verified=0 where user_id=:userId", nativeQuery = true)
+    int deleteLibrarian(Integer userId);
+
     @Query(value = """
         SELECT
             b.*,

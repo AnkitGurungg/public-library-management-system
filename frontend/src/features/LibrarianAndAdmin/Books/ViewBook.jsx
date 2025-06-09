@@ -20,6 +20,7 @@ const ViewBook = ({ id }) => {
     const res = GLOBAL_SERVICE.get(`/api/v1/la/books/${id}`);
     res.then((response) => {
       setBook(response.data);
+      // console.log(response);
     });
   }, [id]);
 

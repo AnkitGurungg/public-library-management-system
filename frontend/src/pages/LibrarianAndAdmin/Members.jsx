@@ -1,10 +1,8 @@
-import { CircleX, UserRoundX, Users } from "lucide-react";
-import { CircleCheck } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { UserRoundX, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import VerifiedMembers from "@/features/LibrarianAndAdmin/Members/VerifiedMembers";
+import VmNonVMMembers from "@/features/LibrarianAndAdmin/Members/VmNonVMMembers";
 import NonVerifiedMembers from "@/features/LibrarianAndAdmin/Members/NonVerifiedMembers";
-import { useState, useEffect } from "react";
 
 const Members = () => {
   const [showVM, setVMShow] = useState(false);
@@ -38,7 +36,7 @@ const Members = () => {
       </div>
 
       {showNONVM && <NonVerifiedMembers />}
-      {showVM && <VerifiedMembers />}
+      {showVM && <VmNonVMMembers />}
     </div>
   );
 };

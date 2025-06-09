@@ -6,10 +6,9 @@ const useFetchLibrarian = () => {
     queryKey: ["librarian"],
     queryFn: async () => {
       try {
-        const res = await GLOBAL_SERVICE.get(
-          "/api/v1/a/librarian/get/librarians"
-        );
-        console.log(res.config.headers.getContentType());
+        const res = await GLOBAL_SERVICE.get("/api/v1/a/librarians");
+        // console.log(res);
+
         return { status: res.status, data: res.data };
       } catch (error) {
         console.log("err", error);

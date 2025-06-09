@@ -22,21 +22,18 @@ import { useFetchBorrowedBooks } from "@/hooks/useFetchBorrowedBooks";
 import { CgSpinner } from "react-icons/cg";
 
 const Delete = ({ id, name, type }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { data: books, refetch: refetchBooks } = useFetchBooks();
-  const { data: categories, refetch: refetchCategories } = useFetchCategory();
-  const { data: shelfs, refetch: refetchShelfs } = useFetchShelfs();
-  const { data: VerifiedMembers, refetch: refetchVerifiedMembers } =
-    useFetchVerifiedMembers();
-  const { data: nonVerifiedMembers, refetch: refetchNonVerifiedMembers } =
-    useFetchNonVerifiedMembers();
-  const { data: librarian, refetch: refetchLibrarians } = useFetchLibrarian();
-  const { data: borrowedBooks, refetch: refetchBorrowedBooks } =
-    useFetchBorrowedBooks();
-
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // handles the delete operation
+  const { refetch: refetchBooks } = useFetchBooks();
+  const { refetch: refetchCategories } = useFetchCategory();
+  const { refetch: refetchShelfs } = useFetchShelfs();
+  const { refetch: refetchVerifiedMembers } = useFetchVerifiedMembers();
+  const { refetch: refetchNonVerifiedMembers } = useFetchNonVerifiedMembers();
+  const { refetch: refetchLibrarians } = useFetchLibrarian();
+  const { refetch: refetchBorrowedBooks } = useFetchBorrowedBooks();
+
+  // handle the delete operation
   const handleDelete = async () => {
     let endpoint = "";
     setIsSubmitting(true);
@@ -51,7 +48,7 @@ const Delete = ({ id, name, type }) => {
         endpoint = `/api/v1/la/shelves/${id}`;
       }
       if (type === "user") {
-        endpoint = `/api/v1/la/user/delete/${id}`;
+        endpoint = `/api/v1/la/users/${id}`;
       }
       if (type === "borrowed") {
         endpoint = `/api/v1/la/borrow/delete/${id}`;
@@ -118,27 +115,27 @@ const Delete = ({ id, name, type }) => {
           Are you sure want to procceed with the deletion of
           {type === "book" && (
             <p>
-              {type} {name} in id {id} ?
+              {type} {name} ?
             </p>
           )}
           {type === "category" && (
             <p>
-              {type} {name} in id {id} ?
+              {type} {name} ?
             </p>
           )}
           {type === "shelf" && (
             <p>
-              {type} {name} in id {id} ?
+              {type} {name} ?
             </p>
           )}
           {type === "user" && (
             <p>
-              {type} {name} in id {id} ?
+              {type} {name} ?
             </p>
           )}
           {type === "borrowed" && (
             <p>
-              {type} {name} in id {id} ?
+              {type} {name} ?
             </p>
           )}
         </p>

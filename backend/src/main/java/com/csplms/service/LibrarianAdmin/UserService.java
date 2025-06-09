@@ -1,9 +1,7 @@
 package com.csplms.service.LibrarianAdmin;
 
 import com.csplms.dto.requestDto.RejectKYCDto;
-import com.csplms.dto.responseDto.EvidenceDto;
-import com.csplms.dto.responseDto.UserAccountInfoDto;
-import com.csplms.dto.responseDto.UsersForBorrowResponseDto;
+import com.csplms.dto.responseDto.*;
 import com.csplms.entity.Evidence;
 import com.csplms.entity.User;
 import com.csplms.exception.ResourceListNotFoundException;
@@ -16,6 +14,7 @@ import com.csplms.util.GlobalDateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,12 +34,39 @@ public class UserService {
         this.getAuthUserUtil = getAuthUserUtil;
     }
 
-    public User getUser(String email) {
-        User user = this.userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceEntityNotFoundException("User", "Id", 0));
-        if (!user.isPresent()){
-            throw new UserNotPresentException("You are no longer user!!!");
+    public UserDto getUser(int userId) {
+        User user = this.userRepository.findById(userId).orElseThrow(() -> new ResourceEntityNotFoundException("User", "Id", 0));
+
+        if (user != null){
+            Evidence evidence = user.getEvidence();
+
+            EvidenceDto evidenceDto = null;
+            if (evidence != null){
+                evidenceDto = new EvidenceDto(
+                        evidence.getEvidenceId(),
+                        evidence.getUserImage(),
+                        evidence.getEvidenceOne(),
+                        evidence.getEvidenceTwo(),
+                        evidence.getDocumentType(),
+                        evidence.getDescription()
+                );
+            }
+            return new UserDto(
+                    user.getUserId(),
+                    user.getName(),
+                    user.getEmail(),
+                    user.getAddress(),
+                    user.getAppliedDate(),
+                    user.getVerifiedDate(),
+                    user.getContactNumber(),
+                    user.isVerified(),
+                    user.isPresent(),
+                    user.isActive(),
+                    evidenceDto
+            );
         }
-        return user;
+
+        return null;
     }
 
     public UserAccountInfoDto getUserAccountInfo(String email) {
@@ -74,20 +100,56 @@ public class UserService {
         );
     }
 
-    public List<User> getNonVerifiedMembers() {
+    public List<AdminUserDto> getNonVerifiedMembers() {
         List<User> users = this.userRepository.getNonVerifiedMembers();
         if (users.isEmpty()){
             throw new ResourceListNotFoundException("Users");
         }
-        return users;
+
+        List<AdminUserDto> nonVMList = new ArrayList<>();
+        for (User user : users){
+            AdminUserDto item = new AdminUserDto(
+                    user.getUserId(),
+                    user.getName(),
+                    user.getEmail(),
+                    user.getAddress(),
+                    user.getAppliedDate(),
+                    user.getVerifiedDate(),
+                    user.getContactNumber(),
+                    user.isVerified(),
+                    user.isPresent(),
+                    user.isActive()
+            );
+            nonVMList.add(item);
+        }
+
+        return nonVMList;
     }
 
-    public List<User> getVerifiedMembers() {
-        List<User> users = this.userRepository.getVerifiedMembers();
-        if (users.isEmpty()){
+    public List<AdminUserDto> getVerifiedMembers() {
+        List<User> verifiedMembers = this.userRepository.getVerifiedMembers();
+        if (verifiedMembers.isEmpty()){
             throw new ResourceListNotFoundException("Users");
         }
-        return users;
+
+        List<AdminUserDto> vmList = new ArrayList<>();
+        for (User user : verifiedMembers){
+            AdminUserDto item = new AdminUserDto(
+                    user.getUserId(),
+                    user.getName(),
+                    user.getEmail(),
+                    user.getAddress(),
+                    user.getAppliedDate(),
+                    user.getVerifiedDate(),
+                    user.getContactNumber(),
+                    user.isVerified(),
+                    user.isPresent(),
+                    user.isActive()
+            );
+            vmList.add(item);
+        }
+
+        return vmList;
     }
 
     public List<UsersForBorrowResponseDto> getAllUsers() {

@@ -1,5 +1,7 @@
 package com.csplms.controller.LibrarianAdmin;
 
+import com.csplms.dto.responseDto.AdminUserDto;
+import com.csplms.dto.responseDto.UserDto;
 import com.csplms.dto.responseDto.UsersForBorrowResponseDto;
 import com.csplms.entity.User;
 import org.springframework.http.HttpStatus;
@@ -16,7 +18,7 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/v1/la/user")
+@RequestMapping("/api/v1/la/users")
 @EnableMethodSecurity(prePostEnabled = true)
 @PreAuthorize("hasAnyAuthority('ROLE_LIBRARIAN', 'ROLE_ADMIN')")
 public class UserController {
@@ -28,30 +30,24 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<User> getUser(@PathVariable("id") int userId) {
-        String email =(String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return new ResponseEntity<>(this.userService.getUser(email), HttpStatus.OK);
-    }
-
-    @GetMapping("/get/users/nonvm")
-    public ResponseEntity<List<User>> getNonVerifiedMembers() {
-        return new ResponseEntity<>(this.userService.getNonVerifiedMembers(), HttpStatus.OK);
-    }
-
-    @GetMapping("/get/users/vm")
-    public ResponseEntity<List<User>> getVerifiedMembers() {
-        return new ResponseEntity<>(this.userService.getVerifiedMembers(), HttpStatus.OK);
-    }
-
-    @GetMapping("/get/users/all")
+    @GetMapping
     public ResponseEntity<List<UsersForBorrowResponseDto>> getAllUsers() {
         return new ResponseEntity<>(this.userService.getAllUsers(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Integer> deleteUser(@PathVariable("id") Integer userId) {
-        return new ResponseEntity<>(this.userService.deleteUser(userId), HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUser(@PathVariable("id") int userId) {
+        return new ResponseEntity<>(this.userService.getUser(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/non-vm")
+    public ResponseEntity<List<AdminUserDto>> getNonVerifiedMembers() {
+        return new ResponseEntity<>(this.userService.getNonVerifiedMembers(), HttpStatus.OK);
+    }
+
+    @GetMapping("/vm")
+    public ResponseEntity<List<AdminUserDto>> getVerifiedMembers() {
+        return new ResponseEntity<>(this.userService.getVerifiedMembers(), HttpStatus.OK);
     }
 
     @PutMapping("/verify/{id}")
@@ -67,6 +63,11 @@ public class UserController {
     @PutMapping("/restore/{id}")
     public ResponseEntity<Integer> restoreUser(@PathVariable("id") Integer userId) {
         return new ResponseEntity<>(this.userService.restoreMember(userId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Integer> deleteUser(@PathVariable("id") Integer userId) {
+        return new ResponseEntity<>(this.userService.deleteUser(userId), HttpStatus.OK);
     }
 
 }

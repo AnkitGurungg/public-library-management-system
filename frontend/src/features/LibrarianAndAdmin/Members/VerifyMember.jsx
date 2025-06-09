@@ -4,19 +4,10 @@ import {
   DialogTitle,
   DialogContent,
   DialogFooter,
-  DialogClose,
   DialogHeader,
 } from "@/components/ui/dialog";
 import { useState } from "react";
-import {
-  BadgeCent,
-  BadgeCheck,
-  Check,
-  CircleCheck,
-  CircleCheckBig,
-  Fingerprint,
-  Users,
-} from "lucide-react";
+import { CircleCheckBig, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFetchNonVerifiedMembers } from "@/hooks/useFetchNonVerifiedMembers";
 import { useFetchVerifiedMembers } from "@/hooks/useFetchVerifiedMembers";
@@ -25,14 +16,14 @@ import toast from "react-hot-toast";
 
 const VerifyMember = ({ id }) => {
   const [open, setOpen] = useState(false);
-  const { data: nonVerifiedMembers, refetch: refetchNonVerifiedMembers } =
-    useFetchNonVerifiedMembers();
-  const { data: VerifiedMembers, refetch: refetchVerifiedMembers } =
-    useFetchVerifiedMembers();
+  const { refetch: refetchNonVerifiedMembers } = useFetchNonVerifiedMembers();
+  const { refetch: refetchVerifiedMembers } = useFetchVerifiedMembers();
 
   const handleVerification = async () => {
     try {
-      const response = await GLOBAL_SERVICE.put(`/api/v1/la/user/verify/${id}`);
+      const response = await GLOBAL_SERVICE.put(
+        `/api/v1/la/users/verify/${id}`
+      );
       toast.success("Member verified.");
       refetchNonVerifiedMembers();
       refetchVerifiedMembers();

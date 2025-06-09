@@ -17,7 +17,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import AddBook from "@/features/LibrarianAndAdmin/Books/AddBook";
 import AddLibrarian from "@/features/Admin/AddLibrarian";
 
 export function DataTable({ columns, data = [] }) {
@@ -65,13 +64,13 @@ export function DataTable({ columns, data = [] }) {
         <div className="flex gap-2.5">
           <select
             className="border rounded-lg text-gray-800 px-3 py-2 bg-white"
-            value={table.getColumn("present")?.getFilterValue() ?? ""}
+            value={table.getColumn("deleted")?.getFilterValue() ?? ""}
             onChange={(e) =>
-              table.getColumn("present")?.setFilterValue(e.target.value)
+              table.getColumn("deleted")?.setFilterValue(e.target.value)
             }
           >
             <option value="" disabled selected>
-              Select present status
+              Select deleted status
             </option>
             <option value="">ALL</option>
             <option value={true}>YES</option>

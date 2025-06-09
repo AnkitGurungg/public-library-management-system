@@ -9,19 +9,21 @@ import {
   DialogClose,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
-import useFetchLibrarian from "@/hooks/useFetchLibrarian";
-import { BookOpenText, Eye, NotepadText, Users, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Eye, Users } from "lucide-react";
+import GLOBAL_SERVICE from "@/services/GlobalServices";
 
 const ViewLibrarian = ({ id, type }) => {
+  const [librarian, setLibrarian] = useState(null);
   const BACKEND_SERVER_BASE_URL = "http://localhost:8080/";
 
-  const { data: librarians, refetch: refetchLibrarians } = useFetchLibrarian();
-
-  const selectedLibrarian =
-    Array.isArray(librarians?.data) &&
-    librarians?.data?.length > 0 &&
-    librarians?.data?.find((element) => element.userId === id);
+  useEffect(() => {
+    const res = GLOBAL_SERVICE.get(`/api/v1/a/librarians/${id}`);
+    res.then((response) => {
+      setLibrarian(response.data);
+      // console.log(response);
+    });
+  }, [id]);
 
   return (
     <div>
@@ -43,16 +45,15 @@ const ViewLibrarian = ({ id, type }) => {
           <div className="max-h-[70vh] overflow-y-auto border border-gray-300 rounded-lg">
             <div className="flex flex-col items-center mb-4">
               <Avatar className="h-24 w-24 mt-1">
-                {selectedLibrarian?.evidence?.userImage ? (
+                {librarian?.evidence?.userImage ? (
                   <a
                     href={
-                      BACKEND_SERVER_BASE_URL +
-                      selectedLibrarian.evidence?.userImage
+                      BACKEND_SERVER_BASE_URL + librarian?.evidence?.userImage
                     }
                     target="_blank"
                   >
                     <AvatarImage
-                      src={`${BACKEND_SERVER_BASE_URL}${selectedLibrarian.evidence?.userImage}`}
+                      src={`${BACKEND_SERVER_BASE_URL}${librarian?.evidence?.userImage}`}
                       alt="Librarian"
                       className="object-cover"
                     />
@@ -66,28 +67,28 @@ const ViewLibrarian = ({ id, type }) => {
             <div className="space-y-3 text-base mx-5">
               <div>
                 <span className="font-semibold">Name:</span>{" "}
-                {selectedLibrarian?.name || "N/A"}
+                {librarian?.name || "N/A"}
               </div>
               <div>
                 <span className="font-semibold">Contact:</span>{" "}
-                {selectedLibrarian?.contactNumber || "N/A"}
+                {librarian?.contactNumber || "N/A"}
               </div>
               <div>
                 <span className="font-semibold">Email:</span>{" "}
-                {selectedLibrarian?.email || "N/A"}
+                {librarian?.email || "N/A"}
               </div>
               <div>
                 <span className="font-semibold">Address:</span>{" "}
-                {selectedLibrarian?.address || "N/A"}
+                {librarian?.address || "N/A"}
               </div>
               <div>
                 <span className="font-semibold">Applied Date:</span>{" "}
-                {selectedLibrarian?.appliedDate || "N/A"}
+                {librarian?.appliedDate || "N/A"}
               </div>
 
               <div className="">
                 <span className="font-semibold">Verified Date:</span>{" "}
-                {selectedLibrarian?.verifiedDate || "N/A"}
+                {librarian?.verifiedDate || "N/A"}
               </div>
             </div>
 
@@ -97,15 +98,14 @@ const ViewLibrarian = ({ id, type }) => {
                 <div className="flex-1 overflow-hidden rounded-lg border">
                   <a
                     href={
-                      BACKEND_SERVER_BASE_URL +
-                      selectedLibrarian.evidence?.evidenceOne
+                      BACKEND_SERVER_BASE_URL + librarian?.evidence?.evidenceOne
                     }
                     target="_blank"
                   >
                     <img
                       src={
-                        selectedLibrarian?.evidence?.evidenceOne
-                          ? `${BACKEND_SERVER_BASE_URL}${selectedLibrarian.evidence?.evidenceOne}`
+                        librarian?.evidence?.evidenceOne
+                          ? `${BACKEND_SERVER_BASE_URL}${librarian?.evidence?.evidenceOne}`
                           : ""
                       }
                       alt="N/A"
@@ -116,15 +116,14 @@ const ViewLibrarian = ({ id, type }) => {
                 <div className="flex-1 overflow-hidden rounded-lg border">
                   <a
                     href={
-                      BACKEND_SERVER_BASE_URL +
-                      selectedLibrarian.evidence?.evidenceTwo
+                      BACKEND_SERVER_BASE_URL + librarian?.evidence?.evidenceTwo
                     }
                     target="_blank"
                   >
                     <img
                       src={
-                        selectedLibrarian?.evidence?.evidenceTwo
-                          ? `${BACKEND_SERVER_BASE_URL}${selectedLibrarian.evidence?.evidenceTwo}`
+                        librarian?.evidence?.evidenceTwo
+                          ? `${BACKEND_SERVER_BASE_URL}${librarian?.evidence?.evidenceTwo}`
                           : ""
                       }
                       alt="N/A"
@@ -144,110 +143,6 @@ const ViewLibrarian = ({ id, type }) => {
       </Dialog>
     </div>
   );
-
-  // return (
-  //   <div>
-  //     <Dialog>
-  //       <DialogTrigger>
-  //         <Eye size={20} />
-  //       </DialogTrigger>
-
-  //       <DialogContent aria-describedby={undefined}>
-  //         <DialogHeader>
-  //           <DialogTitle>View Librarian</DialogTitle>
-  //         </DialogHeader>
-  //         <hr />
-  //         {checkUserType() != null && checkUserType() != undefined ? (
-  //           <div className="flex flex-row w-[vh]">
-  //             <div className="flex flex-col gap-2">
-  //               <div>
-  //                 <p>Name: {checkUserType().name}</p>
-  //               </div>
-  //               <div>
-  //                 <p>Contact: {checkUserType().contactNumber}</p>
-  //               </div>
-  //               <div>
-  //                 <p>Email: {checkUserType().email}</p>
-  //               </div>
-  //               <div>
-  //                 <p>Address: {checkUserType().address}</p>
-  //               </div>
-  //               <div className="flex flex-row justify-between">
-  //                 <div>
-  //                   <p>Applied Date: {checkUserType().appliedDate}</p>
-  //                 </div>
-  //                 <div>
-  //                   <p>Verified Date: {checkUserType().verifiedDate}</p>
-  //                 </div>
-  //               </div>
-  //             </div>
-
-  //             {checkUserType()?.evidences?.length > 2 && (
-  //               <div>
-  //                 <div>
-  //                   <a
-  //                     href={
-  //                       BACKEND_SERVER_BASE_URL +
-  //                       checkUserType().evidences[0]?.userImage
-  //                     }
-  //                     target="_blank"
-  //                   >
-  //                     <img
-  //                       src={
-  //                         BACKEND_SERVER_BASE_URL +
-  //                         checkUserType().evidences[0]?.userImage
-  //                       }
-  //                       alt="User Image Loading!!!"
-  //                     />
-  //                   </a>
-  //                 </div>
-
-  //                 <div>
-  //                   <div>
-  //                     <a
-  //                       href={
-  //                         BACKEND_SERVER_BASE_URL +
-  //                         checkUserType().evidences[0]?.evidenceOne
-  //                       }
-  //                       target="_blank"
-  //                     >
-  //                       <img
-  //                         src={
-  //                           BACKEND_SERVER_BASE_URL +
-  //                           checkUserType().evidences[0]?.evidenceOne
-  //                         }
-  //                         alt="Evidence1 Loading!!!"
-  //                       />
-  //                     </a>
-  //                   </div>
-  //                   <div>
-  //                     <a
-  //                       href={
-  //                         BACKEND_SERVER_BASE_URL +
-  //                         checkUserType().evidences[0]?.evidenceTwo
-  //                       }
-  //                       target="_blank"
-  //                     >
-  //                       <img
-  //                         src={
-  //                           BACKEND_SERVER_BASE_URL +
-  //                           checkUserType().evidences[0]?.evidenceTwo
-  //                         }
-  //                         alt="Evidence2 Loading!!!"
-  //                       />
-  //                     </a>
-  //                   </div>
-  //                 </div>
-  //               </div>
-  //             )}
-  //           </div>
-  //         ) : (
-  //           <p>Does not exist</p>
-  //         )}
-  //       </DialogContent>
-  //     </Dialog>
-  //   </div>
-  // );
 };
 
 export default ViewLibrarian;

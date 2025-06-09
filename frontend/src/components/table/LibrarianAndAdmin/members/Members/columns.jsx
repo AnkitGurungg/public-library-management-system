@@ -44,9 +44,9 @@ export const columns = [
   },
 
   {
-    id: "present",
+    id: "deleted",
     accessorFn: (row) => String(row?.present) || "",
-    header: "Present",
+    header: "Deleted",
     cell: ({ row }) =>
       row?.original?.present ? (
         <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">
