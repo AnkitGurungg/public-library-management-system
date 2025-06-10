@@ -51,7 +51,7 @@ const Delete = ({ id, name, type }) => {
         endpoint = `/api/v1/la/users/${id}`;
       }
       if (type === "borrowed") {
-        endpoint = `/api/v1/la/borrow/delete/${id}`;
+        endpoint = `/api/v1/la/borrows/${id}`;
       }
 
       if (endpoint) {

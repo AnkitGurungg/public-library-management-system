@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useFetchBorrowedBooks } from "@/hooks/useFetchBorrowedBooks";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,18 +12,14 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { BookOpenText, CircleArrowUp, PlusCircle } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import GLOBAL_SERVICE from "@/services/GlobalServices";
+import { BookOpenText, CircleArrowUp } from "lucide-react";
 import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
 import { CgSpinner } from "react-icons/cg";
+import GLOBAL_SERVICE from "@/services/GlobalServices";
 
 const ExtendDueDate = ({ id }) => {
-  console.log(id);
-  const [show, setShow] = useState(false);
-  const { data: borrowedBooks, refetch: refetchBorrowedBooks } =
-    useFetchBorrowedBooks();
+  const { refetch: refetchBorrowedBooks } = useFetchBorrowedBooks();
   const {
     register,
     handleSubmit,
@@ -30,10 +27,14 @@ const ExtendDueDate = ({ id }) => {
     reset,
   } = useForm();
 
+  useEffect(() => {
+    // console.log("Extend bookId:", id);
+  }, [id]);
+
   const onSubmit = async (data) => {
     try {
       const response = await GLOBAL_SERVICE.post(
-        `/api/v1/la/borrow/extend/${id}`,
+        `/api/v1/la/borrows/extend/${id}`,
         {
           headers: {
             "Content-Type": "application/json",

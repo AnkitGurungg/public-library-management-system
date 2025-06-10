@@ -6,8 +6,11 @@ export const useFetchBorrowedBooks = () => {
     queryKey: ["borrowedBooks"],
     queryFn: async () => {
       try {
-        const response = await GLOBAL_SERVICE.get("/api/v1/la/borrow/get/borrows");
+        const response = await GLOBAL_SERVICE.get(
+          `/api/v1/la/borrows/borrowed-books`
+        );
         // console.log(response);
+
         return { status: response.status, data: response.data };
       } catch (error) {
         // console.log(error);

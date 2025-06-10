@@ -15,7 +15,7 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/v1/la/return")
+@RequestMapping("/api/v1/la/returns")
 @EnableMethodSecurity(prePostEnabled = true)
 @PreAuthorize("hasAnyAuthority('ROLE_LIBRARIAN', 'ROLE_ADMIN')")
 public class ReturnController {
@@ -27,7 +27,7 @@ public class ReturnController {
         this.returnService = returnService;
     }
 
-    @GetMapping("/add/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<Return> returnBook(@PathVariable("id") int borrowId) throws MessagingException, MailFailedException {
         return new ResponseEntity<>(this.returnService.returnBook(borrowId), HttpStatus.OK);
     }

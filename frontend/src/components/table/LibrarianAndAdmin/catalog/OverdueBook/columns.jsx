@@ -5,22 +5,23 @@ import { CheckCircle, XCircle } from "lucide-react";
 
 export const columns = [
   {
-    id: "bookId",
+    id: "borrowId",
     header: "BID",
-    cell: ({ row }) => row?.original?.borrowBooks?.bookId || "",
-  },
-
-  {
-    accessorKey: "userId",
-    header: "UID",
-    cell: ({ row }) => row?.original?.borrowUsers?.userId || "",
+    cell: ({ row }) => row?.original?.borrowId || "",
   },
 
   {
     id: "name",
-    accessorFn: (row) => row?.borrowUsers?.name || "",
+    accessorFn: (row) => row?.username || "",
     header: "Name",
-    cell: ({ row }) => row?.original?.borrowUsers?.name || "",
+    cell: ({ row }) => row?.original?.username || "",
+  },
+
+  {
+    id: "title",
+    accessorFn: (row) => row?.bookTitle || "",
+    header: "Title",
+    cell: ({ row }) => row?.original?.bookTitle || "",
   },
 
   {
@@ -67,7 +68,6 @@ export const columns = [
     header: "Extended",
     cell: ({ row }) =>
       row?.original?.extended ? (
-        // <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-md">
         <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-[#206ea6] bg-blue-100 rounded-md">
           <CheckCircle size={16} className="text-[#206ea6]" />
           YES

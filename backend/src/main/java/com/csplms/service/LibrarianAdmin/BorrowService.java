@@ -1,5 +1,6 @@
 package com.csplms.service.LibrarianAdmin;
 
+import com.csplms.dto.responseDto.AdminBorrowDto;
 import com.csplms.dto.responseDto.reports.OverdueStatsDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import com.csplms.dto.responseDto.FinesInfo;
 import com.csplms.repository.BookRepository;
 import com.csplms.repository.UserRepository;
 import com.csplms.repository.BorrowRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.csplms.exception.MailFailedException;
 import com.csplms.dto.requestDto.BorrowRequestDto;
@@ -28,6 +30,7 @@ import com.csplms.exception.ResourceEntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -129,16 +132,57 @@ public class BorrowService {
         return this.borrowMapper.toBorrowResponseDto(borrow);
     }
 
-    public List<Borrow> getAllBorrowRecords() {
+    public List<AdminBorrowDto> getAllBorrowRecords() {
         List<Borrow> borrows = this.borrowRepository.getAllBorrowRecords();
         if (borrows.isEmpty()) {
             throw new ResourceListNotFoundException("Borrow records");
         }
-        return borrows;
+
+        List<AdminBorrowDto> list = new ArrayList<>();
+        for (Borrow borrow : borrows){
+            AdminBorrowDto item = new AdminBorrowDto(
+                    borrow.getBorrowId(),
+                    borrow.getBorrowDate(),
+                    borrow.getDueDate(),
+                    borrow.isExtended(),
+                    borrow.isReturnStatus(),
+
+                    borrow.getBorrowBooks() != null ? borrow.getBorrowBooks().getBookId() : null,
+                    borrow.getBorrowBooks() != null ? borrow.getBorrowBooks().getTitle() : null,
+
+                    borrow.getBorrowUsers() != null ? borrow.getBorrowUsers().getUserId() : null,
+                    borrow.getBorrowUsers() != null ? borrow.getBorrowUsers().getName() : null
+            );
+            list.add(item);
+        }
+
+        return list;
     }
 
-    public List<Borrow> getAllOverdueBooks() {
-        return borrowRepository.getAllOverdueBooks(globalDateUtil.getCurrentDate());
+    public List<AdminBorrowDto> getAllOverdueBooks() {
+        List<Borrow> borrows = borrowRepository.getAllOverdueBooks(globalDateUtil.getCurrentDate());
+
+        List<AdminBorrowDto> dtoList = new ArrayList<>();
+        if (borrows != null){
+            for (Borrow borrow : borrows){
+                AdminBorrowDto item = new AdminBorrowDto(
+                        borrow.getBorrowId(),
+                        borrow.getBorrowDate(),
+                        borrow.getDueDate(),
+                        borrow.isExtended(),
+                        borrow.isReturnStatus(),
+
+                        borrow.getBorrowBooks() != null ? borrow.getBorrowBooks().getBookId() : null,
+                        borrow.getBorrowBooks() != null ? borrow.getBorrowBooks().getTitle() : null,
+
+                        borrow.getBorrowUsers() != null ? borrow.getBorrowUsers().getUserId() : null,
+                        borrow.getBorrowUsers() != null ? borrow.getBorrowUsers().getName() : null
+                );
+                dtoList.add(item);
+            }
+        }
+
+        return dtoList;
     }
 
     @Transactional(rollbackFor = {MessagingException.class, MailFailedException.class, Exception.class})

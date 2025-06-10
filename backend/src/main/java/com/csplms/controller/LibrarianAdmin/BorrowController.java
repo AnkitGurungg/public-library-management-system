@@ -1,5 +1,6 @@
 package com.csplms.controller.LibrarianAdmin;
 
+import com.csplms.dto.responseDto.AdminBorrowDto;
 import com.csplms.entity.Borrow;
 import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/v1/la/borrow")
+@RequestMapping("/api/v1/la/borrows")
 @EnableMethodSecurity(prePostEnabled = true)
 @PreAuthorize("hasAnyAuthority('ROLE_LIBRARIAN', 'ROLE_ADMIN')")
 public class BorrowController {
@@ -31,7 +32,7 @@ public class BorrowController {
         this.borrowService = borrowService;
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<BorrowResponseDto> borrow(@RequestBody BorrowRequestDto borrowRequestDto) throws MessagingException, MailFailedException {
         return new ResponseEntity<>(this.borrowService.borrow(borrowRequestDto), HttpStatus.CREATED);
     }
@@ -41,22 +42,22 @@ public class BorrowController {
         return new ResponseEntity<>(this.borrowService.extend(borrowId, extendDueDateDto), HttpStatus.OK);
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<BorrowResponseDto> getBorrowRecord(@PathVariable("id") Integer borrowId) {
         return new ResponseEntity<>(this.borrowService.getBorrowRecord(borrowId), HttpStatus.OK);
     }
 
-    @GetMapping("/get/borrows")
-    public ResponseEntity<List<Borrow>> getAllBorrowRecords() {
+    @GetMapping("/borrowed-books")
+    public ResponseEntity<List<AdminBorrowDto>> getAllBorrowRecords() {
         return new ResponseEntity<>(this.borrowService.getAllBorrowRecords(), HttpStatus.OK);
     }
 
-    @GetMapping("/get/overdue")
-    public ResponseEntity<List<Borrow>> getAllOverdueBooks() {
+    @GetMapping("/overdue-books")
+    public ResponseEntity<List<AdminBorrowDto>> getAllOverdueBooks() {
         return new ResponseEntity<>(this.borrowService.getAllOverdueBooks(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Integer> deleteBorrow(@PathVariable("id") int borrowId) throws MessagingException, MailFailedException {
         return new ResponseEntity<>(this.borrowService.deleteBorrow(borrowId), HttpStatus.OK);
     }

@@ -8,7 +8,6 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CornerDownLeft } from "lucide-react";
 import { RotateCwIcon } from "lucide-react";
 import GlobalService from "@/services/GlobalServices";
 import { useEffect, useState } from "react";
@@ -20,28 +19,24 @@ import { CgSpinner } from "react-icons/cg";
 const ReturnBook = ({ id }) => {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { data: borrowBooks, refetch: refetchBorrowedBooks } =
-    useFetchBorrowedBooks();
-  const {
-    data: overdueBooks,
-    refetch: refetchOverdueBooks,
-    isLoading,
-    error,
-  } = useFetchOverdueBooks();
+  
+  const { refetch: refetchBorrowedBooks } = useFetchBorrowedBooks();
+  const { refetch: refetchOverdueBooks } = useFetchOverdueBooks();
 
   useEffect(() => {
-    console.log("useeffect id is:", id);
+    // console.log("Return bookId:", id);
   }, [id]);
 
   const handleReturnBook = async () => {
     try {
       setIsSubmitting(true);
-      const response = await GlobalService.get(`/api/v1/la/return/add/${id}`);
+      const response = await GlobalService.post(`/api/v1/la/returns/${id}`);
       refetchOverdueBooks();
       refetchBorrowedBooks();
       setOpen(false);
       toast.success("Book returned!");
       console.log(response);
+
     } catch (error) {
       console.log(error);
       if (error.status === 400) {
@@ -72,7 +67,7 @@ const ReturnBook = ({ id }) => {
           </DialogHeader>
           <div className="my-0 h-px bg-gray-800 mx-5" />
           <p className="mx-6">
-            Are you sure want to procceed with the return operation
+            Are you sure want to procceed with the return operation ?
           </p>
           <DialogFooter className="w-full mt-3 pl-3">
             <Button

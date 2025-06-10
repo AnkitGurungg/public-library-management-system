@@ -12,16 +12,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BookOpenText, PlusCircle } from "lucide-react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import toast from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
 
 const BorrowBook = () => {
-  const [show, setShow] = useState(false);
-  const { data: borrowedBooks, refetch: refetchBorrowedBooks } =
-    useFetchBorrowedBooks();
+  const { refetch: refetchBorrowedBooks } = useFetchBorrowedBooks();
   const {
     register,
     handleSubmit,
@@ -32,7 +29,7 @@ const BorrowBook = () => {
   const onSubmit = async (data) => {
     try {
       const response = await GLOBAL_SERVICE.post(
-        "/api/v1/la/borrow/add",
+        "/api/v1/la/borrows",
         JSON.stringify(data),
         {
           headers: {

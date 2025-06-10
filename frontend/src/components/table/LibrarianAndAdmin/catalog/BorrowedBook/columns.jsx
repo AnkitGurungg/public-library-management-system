@@ -11,22 +11,23 @@ import Delete from "@/components/Delete";
 
 export const columns = [
   {
-    id: "bookId",
+    id: "borrowId",
     header: "BID",
-    cell: ({ row }) => row?.original?.borrowBooks?.bookId || "",
-  },
-
-  {
-    accessorKey: "userId",
-    header: "UID",
-    cell: ({ row }) => row?.original?.borrowUsers?.userId || "",
+    cell: ({ row }) => row?.original?.borrowId || "",
   },
 
   {
     id: "name",
-    accessorFn: (row) => row?.borrowUsers?.name || "",
+    accessorFn: (row) => row?.username || "",
     header: "Name",
-    cell: ({ row }) => row?.original?.borrowUsers?.name || "",
+    cell: ({ row }) => row?.original?.username || "",
+  },
+
+  {
+    id: "title",
+    accessorFn: (row) => row?.bookTitle || "",
+    header: "Title",
+    cell: ({ row }) => row?.original?.bookTitle || "",
   },
 
   {

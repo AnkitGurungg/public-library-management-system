@@ -1,18 +1,7 @@
-import { CircleMinus } from "lucide-react";
-import { CircleCheckBig } from "lucide-react";
 import { useFetchBorrowedBooks } from "../../../hooks/useFetchBorrowedBooks";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { useEffect } from "react";
-import ReturnBook from "./ReturnBook";
 import { columns } from "@/components/table/LibrarianAndAdmin/catalog/BorrowedBook/columns";
 import { DataTable } from "@/components/table/LibrarianAndAdmin/catalog/BorrowedBook/data-table";
+import { useEffect } from "react";
 
 const BorrowedBooks = () => {
   const {
@@ -20,6 +9,10 @@ const BorrowedBooks = () => {
     refetch: refetchBorrowedBooks,
     isLoading,
   } = useFetchBorrowedBooks();
+
+  useEffect(() => {
+    refetchBorrowedBooks();
+  }, []);
 
   if (isLoading) {
     return <h1>Loading....</h1>;
