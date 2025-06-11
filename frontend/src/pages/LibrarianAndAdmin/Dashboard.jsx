@@ -1,5 +1,4 @@
-import { TrendingUp } from "lucide-react";
-import { Pie, PieChart } from "recharts";
+import { UserCheck, UserRoundX, BookOpen, Book } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -13,21 +12,15 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { Pie, PieChart } from "recharts";
+import { TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
+import BorrowBarChart from "./BorrowBarChart";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import useFetchCountVm from "@/hooks/Dashboard/useFetchCountVm";
 import useFetchCountNonVm from "@/hooks/Dashboard/useFetchCountNonVm";
 import useFetchCountBooks from "@/hooks/Dashboard/useFetchCountBooks";
 import useFetchCountBorrowedBooks from "@/hooks/Dashboard/useFetchCountBorrowedBooks";
-import {
-  BookOpenText,
-  BookText,
-  UserCheck,
-  UserRoundX,
-  BookOpen,
-  Book,
-} from "lucide-react";
-import BorrowBarChart from "./BorrowBarChart";
 
 function Dashboard() {
   const [chartData, setChartData] = useState([]);
@@ -71,11 +64,10 @@ function Dashboard() {
       try {
         setLoading(true);
         const response = await GLOBAL_SERVICE.get(
-          "/api/v1/la/dashboard/category-stats"
+          "/api/v1/la/dashboard/categories/book-counts"
         );
-
         const data = response.data;
-        console.log("API data:", data);
+        // console.log("API data:", data);
 
         const transformedData = data.map((item, index) => ({
           category: item.categoryName,

@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import GLOBAL_SERVICE from "@/services/GlobalServices";
 
 function BorrowBarChart() {
   const [chartData, setChartData] = useState([]);
@@ -54,13 +55,9 @@ function BorrowBarChart() {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(
-          `http://localhost:8080/api/v1/la/dashboard/borrows/year/${selectedYear}`
+        const { data } = await GLOBAL_SERVICE.get(
+          `/api/v1/la/dashboard/borrows/count-by-month/${selectedYear}`
         );
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data = await response.json();
         setChartData(data);
 
         const currentMonth = new Date().getMonth();

@@ -7,7 +7,7 @@ const useFetchCountBorrowedBooks = () => {
     queryFn: async () => {
       try {
         const res = await GLOBAL_SERVICE.get(
-          "/api/v1/la/dashboard/get/count/bb"
+          "/api/v1/la/dashboard/books/count-bb"
         );
         return { status: res.status, data: res.data };
       } catch (error) {

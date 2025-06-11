@@ -7,7 +7,7 @@ const useFetchCountVm = () => {
     queryFn: async () => {
       try {
         const res = await GLOBAL_SERVICE.get(
-          "/api/v1/la/dashboard/get/count/vm"
+          "/api/v1/la/dashboard/members/count-vm"
         );
         console.log(res);
         return { status: res.status, data: res.data };

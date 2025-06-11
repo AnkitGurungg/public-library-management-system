@@ -27,33 +27,33 @@ public class DashboardController {
         this.bookService = bookService;
     }
 
-    @GetMapping("/get/count/nonvm")
-    public ResponseEntity<Integer> countMembersToVerify() {
-        return new ResponseEntity<>(this.dashboardService.countMembersToVerify(), HttpStatus.OK);
-    }
-
-    @GetMapping("/get/count/vm")
+    @GetMapping("/members/count-vm")
     public ResponseEntity<Integer> countVerifiedMembers() {
         return new ResponseEntity<>(this.dashboardService.countVerifiedMembers(), HttpStatus.OK);
     }
 
-    @GetMapping("/get/count/bb")
-    public ResponseEntity<Integer> countBorrowedBooks() {
-        return new ResponseEntity<>(this.dashboardService.countBorrowedBooks(), HttpStatus.OK);
+    @GetMapping("/members/count-nonvm")
+    public ResponseEntity<Integer> countMembersToVerify() {
+        return new ResponseEntity<>(this.dashboardService.countMembersToVerify(), HttpStatus.OK);
     }
 
-    @GetMapping("/get/count/books")
+    @GetMapping("/books/count")
     public ResponseEntity<Integer> countBooks() {
         return new ResponseEntity<>(this.dashboardService.countBooks(), HttpStatus.OK);
     }
 
-    @GetMapping("/category-stats")
+    @GetMapping("/books/count-bb")
+    public ResponseEntity<Integer> countBorrowedBooks() {
+        return new ResponseEntity<>(this.dashboardService.countBorrowedBooks(), HttpStatus.OK);
+    }
+
+    @GetMapping("/categories/book-counts")
     public ResponseEntity<List<CategoryCountDTO>> getCategoryStats() {
         List<CategoryCountDTO> stats = bookService.getTopCategoriesForPieChart();
         return ResponseEntity.ok(stats);
     }
 
-    @GetMapping("/borrows/year/{year}")
+    @GetMapping("/borrows/count-by-month/{year}")
     public ResponseEntity<List<Map<String, Object>>> getBorrowStatsByYear(@PathVariable int year) {
         return ResponseEntity.ok(dashboardService.getBorrowStatsByYear(year));
     }
