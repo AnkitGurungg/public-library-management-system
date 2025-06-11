@@ -19,8 +19,8 @@ import {
 import { Input } from "@/components/ui/input";
 
 export function DataTable({ columns, data = [] }) {
-  const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
+  const [columnFilters, setColumnFilters] = useState([]);
 
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
@@ -60,10 +60,6 @@ export function DataTable({ columns, data = [] }) {
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
         />
-
-        <div className="flex gap-2.5">
-          {/* <Button className="opacity-90">Filter</Button> */}
-        </div>
       </div>
       <div className="rounded-md border">
         <Table>

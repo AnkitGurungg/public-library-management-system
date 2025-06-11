@@ -1,8 +1,7 @@
+import { useEffect } from "react";
 import { columns } from "@/components/table/Admin/reports/MostPopularCategory/columns";
 import { DataTable } from "@/components/table/Admin/reports/MostPopularCategory/data-table";
 import { useFetchMostPopularCategory } from "@/hooks/Report/useFetchMostPopularCategory";
-import GLOBAL_SERVICE from "@/services/GlobalServices";
-import { useEffect } from "react";
 
 export const MostPopularCategory = () => {
   const { data: mostPopularCategory, refetch: refetchMostPopularCategory } =
@@ -13,7 +12,7 @@ export const MostPopularCategory = () => {
   }, []);
 
   useEffect(() => {
-    console.log(mostPopularCategory);
+    // console.table(mostPopularCategory);
   }, [mostPopularCategory]);
 
   return (
