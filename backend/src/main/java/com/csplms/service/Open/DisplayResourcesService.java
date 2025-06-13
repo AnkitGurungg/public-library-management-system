@@ -29,12 +29,36 @@ public class DisplayResourcesService {
         this.borrowRepository = borrowRepository;
     }
 
-    public List<Book> getFilteredBooksByCategory(Integer categoryId) {
+    public List<BookResponseDto> getFilteredBooksByCategory(Integer categoryId) {
         List<Book> filteredBooks = bookRepository.getFilteredBooksByCategory(categoryId);
         if (filteredBooks.isEmpty()){
             throw new ResourceListNotFoundException("Books");
         }
-        return filteredBooks;
+
+        List<BookResponseDto> dtoList = new ArrayList<>();
+        for (Book book : filteredBooks) {
+            BookResponseDto item = new BookResponseDto(
+                    book.getBookId(),
+                    book.getIsbn(),
+                    book.getTitle(),
+                    book.getAuthor(),
+                    book.getLanguage(),
+                    book.getEdition(),
+                    book.getPageCount(),
+                    book.getTotalQuantity(),
+                    book.getPublishedDate(),
+                    book.getPrice(),
+                    book.getImageURL(),
+                    book.getDescription(),
+                    book.getAddedDate(),
+                    book.getPublishedDate(),
+                    book.isAvailable(),
+                    book.getCategory().getCategoryId()
+            );
+            dtoList.add(item);
+        }
+
+        return dtoList;
     }
 
 

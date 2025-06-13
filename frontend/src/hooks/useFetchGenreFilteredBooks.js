@@ -2,14 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 
 const useFetchGenreFilteredBooks = ({ categoryId }) => {
-    console.log(categoryId);
+  console.log("categoryId: ", categoryId);
   return useQuery({
     queryKey: ["genreFilteredBooks"],
     queryFn: async () => {
       try {
         const res = await GLOBAL_SERVICE.get(
-          `/api/v1/p/resource/get/categories/${categoryId}`
+          `/api/v1/p/resource/categories/${categoryId}/books`
         );
+        // console.log("Genre Filtered Books: ", res);
+
         return { status: res.status, data: res.data };
       } catch (error) {
         if (error && error.response.status === 404) {

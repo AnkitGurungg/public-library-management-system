@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useFetchDisplayCategory from "@/hooks/useFetchDisplayCategory";
-import { useNavigate } from "react-router-dom";
-import GLOBAL_SERVICE from "@/services/GlobalServices";
 import BookCard from "./BookCard";
 import { ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import useFetchDisplayCategory from "@/hooks/useFetchDisplayCategory";
+import useFetchGenreFilteredBooks from "@/hooks/useFetchGenreFilteredBooks";
 
 const GenreFilteredBooks = () => {
   const navigate = useNavigate();
   const { categoryId } = useParams();
   const [books, setBooks] = useState([]);
-  const [error, setError] = useState(null);
   const [showGenre, setShowGenre] = useState(false);
-  const [categoryName, setCategoryName] = useState("");
 
   const {
     data: displayCategory,
@@ -20,26 +18,22 @@ const GenreFilteredBooks = () => {
     isLoading: isDisplayCategoryLoading,
   } = useFetchDisplayCategory();
 
+  const { data: genreFilteredBooks, refetch: refetchGenreFilteredBooks } =
+    useFetchGenreFilteredBooks({ categoryId });
+
   const handleShowGenre = () => {
     setShowGenre(!showGenre);
   };
 
   useEffect(() => {
-    const fetchGenreFilteredBooks = async () => {
-      try {
-        const response = await GLOBAL_SERVICE.get(
-          `/api/v1/p/resource/get/categories/${categoryId}`
-        );
-        setBooks(response);
-      } catch (error) {
-        setError("Error fetching books");
-      }
-    };
-    fetchGenreFilteredBooks();
+    refetchGenreFilteredBooks();
     refetchDisplayCategory();
   }, [categoryId]);
 
-  if (error) return <p>{error}</p>;
+  useEffect(() => {
+    setBooks(genreFilteredBooks);
+  }, [genreFilteredBooks]);
+
   if (isDisplayCategoryLoading) return <p>Loading genres...</p>;
 
   return (
@@ -90,9 +84,9 @@ const GenreFilteredBooks = () => {
             {books?.status === 200 &&
             Array.isArray(books?.data) &&
             books?.data?.length !== 0 ? (
-              books?.data?.map((element) => (
-                <div key={element.bookId}>
-                  <BookCard key={element.bookId} curBook={element} />
+              books?.data?.map((item) => (
+                <div key={item.bookId}>
+                  <BookCard key={item.bookId} curBook={item} />
                 </div>
               ))
             ) : (

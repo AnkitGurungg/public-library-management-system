@@ -1,11 +1,6 @@
 package com.csplms.controller.Open;
 
-import com.csplms.dto.responseDto.BookDto;
-import com.csplms.dto.responseDto.CategoryResponseDto;
-import com.csplms.dto.responseDto.FeaturedBooksDto;
-import com.csplms.dto.responseDto.GlobalBookSearchDto;
-import com.csplms.entity.Book;
-import com.csplms.entity.Category;
+import com.csplms.dto.responseDto.*;
 import com.csplms.service.LibrarianAdmin.BookService;
 import com.csplms.service.LibrarianAdmin.CategoryService;
 import org.springframework.http.HttpStatus;
@@ -37,8 +32,8 @@ public class DisplayResourcesController {
         return new ResponseEntity<>(this.categoryService.getAllAvailableCategories(), HttpStatus.OK);
     }
 
-    @GetMapping("/get/categories/{id}")
-    public ResponseEntity<List<Book>> getFilteredBooksByCategory(@PathVariable("id") String id) {
+    @GetMapping("/categories/{id}/books")
+    public ResponseEntity<List<BookResponseDto>> getFilteredBooksByCategory(@PathVariable("id") String id) {
         return new ResponseEntity<>(this.displayResourcesService.getFilteredBooksByCategory(Integer.parseInt(id)), HttpStatus.OK);
     }
 
