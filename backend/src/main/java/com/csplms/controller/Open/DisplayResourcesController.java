@@ -42,6 +42,11 @@ public class DisplayResourcesController {
         return new ResponseEntity<>(this.displayResourcesService.getFilteredBooksByCategory(Integer.parseInt(id)), HttpStatus.OK);
     }
 
+    @GetMapping("/books/{id}")
+    public BookDto getBook(@PathVariable("id") int bookId) {
+        return this.bookService.getBook(bookId);
+    }
+
     @GetMapping("/books/search-books")
     public ResponseEntity<List<GlobalBookSearchDto>> getAllAvailableBooks() {
         return new ResponseEntity<>(this.displayResourcesService.getAllAvailableBooks(), HttpStatus.OK);
@@ -60,11 +65,6 @@ public class DisplayResourcesController {
     @GetMapping("/books/recently-published")
     public ResponseEntity<List<FeaturedBooksDto>> findBooksOrderByPublishedDate() {
         return new ResponseEntity<>(this.displayResourcesService.findBooksOrderByPublishedDate(), HttpStatus.OK);
-    }
-
-    @GetMapping("/book/get/{id}")
-    public BookDto getBook(@PathVariable("id") int bookId) {
-        return this.bookService.getBook(bookId);
     }
 
 }

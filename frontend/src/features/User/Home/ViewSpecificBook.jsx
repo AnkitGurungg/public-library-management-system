@@ -1,4 +1,3 @@
-import React, { useContext, useEffect, useState } from "react";
 import {
   Book,
   Calendar,
@@ -6,26 +5,27 @@ import {
   ChevronUp,
   Globe,
   Hash,
-  Heart,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { useNavigate, useParams } from "react-router-dom";
 import GLOBAL_SERVICE, {
   BACKEND_SERVER_BASE_URL,
 } from "@/services/GlobalServices";
-import AddToWishList from "./AddToWishList";
 import toast from "react-hot-toast";
-import { useFetchMemberWishList } from "@/hooks/useFetchMemberWishList";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { UserContext } from "@/contexts/UserContext";
+import { Separator } from "@/components/ui/separator";
+import { useNavigate, useParams } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useFetchMemberWishList } from "@/hooks/useFetchMemberWishList";
 
 export default function ViewSpecificBook() {
-  const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
   const { bookId } = useParams();
+
   const [book, setBook] = useState({});
+  const [isExpanded, setIsExpanded] = useState(false);
   const { token, setToken, userInfo } = useContext(UserContext);
+
   const { data: memberWishList, refetch: refetchMemberWishList } =
     useFetchMemberWishList();
 
@@ -40,9 +40,10 @@ export default function ViewSpecificBook() {
   const getBook = async () => {
     try {
       const response = await GLOBAL_SERVICE.get(
-        `/api/v1/la/book/get/${bookId}`
+        `/api/v1/p/resource/books/${bookId}`
       );
-      console.log(response);
+      // console.log(response);
+
       if (response?.status === 200 && Object.keys(response?.data).length > 0) {
         setBook(response?.data);
       }
@@ -62,7 +63,6 @@ export default function ViewSpecificBook() {
   }, []);
 
   const handleAddToWishlist = async (e) => {
-    console.log("cliked");
     e.stopPropagation();
 
     if (!token) {
@@ -106,7 +106,8 @@ export default function ViewSpecificBook() {
                 )}
               </Badge>
 
-              {Array.isArray(memberWishList?.data) && memberWishList?.data?.some(
+              {Array.isArray(memberWishList?.data) &&
+              memberWishList?.data?.some(
                 (wishlistBook) => wishlistBook?.bookId === book?.bookId
               ) ? (
                 <Button
@@ -129,25 +130,22 @@ export default function ViewSpecificBook() {
 
         <div className="md:col-span-2">
           <h1 className="text-xl md:text-3xl lg:text-2xl font-bold leading-tight mb-2 mt-13">
-            Nexus: A Brief History of Information Networks from the Stone Age to
-            AI
+            {book?.title}
           </h1>
-          <p className="text-lg text-gray-600 mb-6">by Yuval Noah Harari</p>
+          <p className="text-lg text-gray-600 mb-6">by {book?.author}</p>
 
           <div className="mb-8">
             <h2 className="text-xl font-bold mb-0">Synopsis</h2>
             <div className="space-y-3 text-gray-700">
-              <p>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Porro,
-                facere! Provident, voluptate aperiam optio voluptas iure vel,
-                dignissimos aspernatur adipisci saepe accusantium quisquam
-                assumenda, expedita atque dolorem odit totam perspiciatis!
-                Consequuntur veritatis aut dolore a eveniet adipisci sit
-                accusantium est quod natus? Id et fuga eaque dignissimos, ut vel
-                eos corporis rem aliquid praesentium ea voluptatum, officia
-                atque, quo molestiae. Id voluptatibus magni eum placeat. Magnam
-                quod vero, dolores ducimus libero vitae illum animi rem nesciunt
-                nam adipisci eligendi, error, iure expedita sequi sint
+              <p className="text-justify">
+                {book?.description && isExpanded
+                  ? book?.description
+                  : book?.description?.length > 300
+                  ? `${book?.description?.slice(0, 300)}...`
+                  : book?.description}
+
+                {(!book?.description || book.description.length === 0) &&
+                  "No description available."}
               </p>
             </div>
 
@@ -156,17 +154,18 @@ export default function ViewSpecificBook() {
                 className="text-black bg-white p-0 h-auto font-medium flex items-center hover:bg-white hover:text-[#2c5282]"
                 onClick={toggleReadMore}
               >
-                {isExpanded ? (
-                  <>
-                    Read Less
-                    <ChevronUp className="ml-1 h-4 w-4" />
-                  </>
-                ) : (
-                  <>
-                    Read More
-                    <ChevronDown className="ml-1 h-4 w-4" />
-                  </>
-                )}
+                {book?.description?.length > 0 &&
+                  (isExpanded ? (
+                    <>
+                      Read Less
+                      <ChevronUp className="ml-1 h-4 w-4" />
+                    </>
+                  ) : (
+                    <>
+                      Read More
+                      <ChevronDown className="ml-1 h-4 w-4" />
+                    </>
+                  ))}
               </Button>
             </div>
           </div>
