@@ -3,6 +3,7 @@ package com.csplms.controller.Open;
 import com.csplms.dto.responseDto.*;
 import com.csplms.service.LibrarianAdmin.BookService;
 import com.csplms.service.LibrarianAdmin.CategoryService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,8 +49,14 @@ public class DisplayResourcesController {
     }
 
     @GetMapping("/books/top-borrowed-books")
-    public ResponseEntity<List<FeaturedBooksDto>> getTopBorrowedBooks() {
-        return new ResponseEntity<>(this.displayResourcesService.getTopBorrowedBooks(), HttpStatus.OK);
+    public ResponseEntity<Page<BookResponseDto>> getTopBorrowedBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        return new ResponseEntity<>(
+                displayResourcesService.getTopBorrowedBooks(page, size),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping("/books/new-arrivals")

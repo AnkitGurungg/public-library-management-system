@@ -10,6 +10,9 @@ import com.csplms.repository.BookRepository;
 import com.csplms.repository.BorrowRepository;
 import com.csplms.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -82,15 +85,18 @@ public class DisplayResourcesService {
         return list;
     }
 
-    public List<FeaturedBooksDto> getTopBorrowedBooks(){
-        List<Borrow> bookList = this.borrowRepository.topBorrowedBooks();
-        if(bookList.isEmpty()){
+    public Page<BookResponseDto> getTopBorrowedBooks(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Borrow> borrowPage = borrowRepository.topBorrowedBooks(pageable);
+
+        if (borrowPage.isEmpty()) {
             throw new ResourceListNotFoundException("Books");
         }
 
-        List<FeaturedBooksDto> filteredBooks = new ArrayList<>();
-        for(Borrow borrow : bookList){
+        Page<BookResponseDto> booksDto= borrowPage.map(borrow -> {
             Book book = borrow.getBorrowBooks();
+
             BookResponseDto bookResponseDto = new BookResponseDto(
                     book.getBookId(),
                     book.getIsbn(),
@@ -110,10 +116,10 @@ public class DisplayResourcesService {
                     book.getCategory().getCategoryId()
             );
 
-            filteredBooks.add(new FeaturedBooksDto(borrow.getBorrowId(), bookResponseDto));
-        }
+            return bookResponseDto;
+        });
 
-        return filteredBooks;
+        return booksDto;
     }
 
     public List<FeaturedBooksDto> getAllNewArrivalBooks(){

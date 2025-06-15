@@ -1,38 +1,32 @@
-import { Input } from "@/components/ui/input";
-import BookCard from "@/features/User/Home/BookCard";
-import useFetchNewArrivalBooks from "@/hooks/useFetchNewArrivalBooks";
-import { useFetchMemberWishList } from "@/hooks/useFetchMemberWishList";
-import { useFetchTopBorrowedBooks } from "@/hooks/useFetchTopBorrowedBooks";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useEffect } from "react";
 import Autoplay from "embla-carousel-autoplay";
+import { useNavigate } from "react-router-dom";
+
+import BookCard from "@/features/User/Home/BookCard";
+import useFetchNewArrivalBooks from "@/hooks/useFetchNewArrivalBooks";
+import { useFetchTopBorrowedBooks } from "@/hooks/useFetchTopBorrowedBooks";
 import { useFetchRecentlyPublished } from "@/hooks/useFetchRecentlyPublished";
 
 const Home = () => {
+  const pageNumber = 0;
+  const pageSize = 5;
   const navigate = useNavigate();
 
-  const {
-    data: newArrivalBooks,
-    refetch: refetchNewArrivalBooks,
-    isLoading,
-    isFetched,
-  } = useFetchNewArrivalBooks();
   const { data: topBorrowedBooks, refetch: refetchTopBorrowedBooks } =
-    useFetchTopBorrowedBooks();
+    useFetchTopBorrowedBooks(pageNumber, pageSize);
+  const { data: newArrivalBooks, refetch: refetchNewArrivalBooks } =
+    useFetchNewArrivalBooks();
   const { data: recentlyPublished, refetch: refetchRecentlyPublished } =
     useFetchRecentlyPublished();
 
   useEffect(() => {
-    refetchNewArrivalBooks();
     refetchTopBorrowedBooks();
+    refetchNewArrivalBooks();
     refetchRecentlyPublished();
   }, []);
 
@@ -106,8 +100,6 @@ const Home = () => {
             </div>
           </CarouselItem>
         </CarouselContent>
-        {/* <CarouselPrevious />
-        <CarouselNext /> */}
       </Carousel>
 
       <div className="max-w-7xl mt-9">
@@ -128,15 +120,10 @@ const Home = () => {
           </div>
           <ul className="grid grid-cols-5 justify-center items-center gap-5">
             {topBorrowedBooks?.status === 200 &&
-              topBorrowedBooks?.data?.length > 0 &&
-              topBorrowedBooks?.data
-                ?.slice(0, 5)
-                .map((item) => (
-                  <BookCard
-                    key={item.featuredBooks.bookId}
-                    curBook={item.featuredBooks}
-                  />
-                ))}
+              topBorrowedBooks?.data?.content?.length > 0 &&
+              topBorrowedBooks?.data?.content.map((item) => (
+                <BookCard key={item.bookId} curBook={item} />
+              ))}
           </ul>
         </div>
 
@@ -161,7 +148,10 @@ const Home = () => {
               newArrivalBooks?.data
                 ?.slice(0, 5)
                 .map((curBook) => (
-                  <BookCard key={curBook?.featuredBooks?.bookId} curBook={curBook?.featuredBooks} />
+                  <BookCard
+                    key={curBook?.featuredBooks?.bookId}
+                    curBook={curBook?.featuredBooks}
+                  />
                 ))}
           </ul>
         </div>
@@ -189,7 +179,10 @@ const Home = () => {
               recentlyPublished?.data
                 ?.slice(0, 5)
                 .map((curBook) => (
-                  <BookCard key={curBook?.featuredBooks?.bookId} curBook={curBook?.featuredBooks} />
+                  <BookCard
+                    key={curBook?.featuredBooks?.bookId}
+                    curBook={curBook?.featuredBooks}
+                  />
                 ))}
           </ul>
         </div>

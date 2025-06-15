@@ -1,25 +1,20 @@
-import { Button } from "@/components/ui/button";
-import { UserContext } from "@/contexts/UserContext";
-import { useFetchMemberWishList } from "@/hooks/useFetchMemberWishList";
-import { useFetchTopBorrowedBooks } from "@/hooks/useFetchTopBorrowedBooks";
-import GLOBAL_SERVICE, {
-  BACKEND_SERVER_BASE_URL,
-} from "@/services/GlobalServices";
-import { useContext, useEffect } from "react";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import BookCard from "./BookCard";
+import { useFetchTopBorrowedBooks } from "@/hooks/useFetchTopBorrowedBooks";
 
 const AllTopBorrowedBooks = () => {
+  const size = 10;
+  const [page, setPage] = useState(0);
+
   const { data: topBorrowedBooks, refetch: refetchTopBorrowedBooks } =
-    useFetchTopBorrowedBooks();
+    useFetchTopBorrowedBooks(page, size);
 
   useEffect(() => {
     refetchTopBorrowedBooks();
   }, []);
 
   useEffect(() => {
-    console.log(topBorrowedBooks);
+    // console.log(topBorrowedBooks);
   }, [topBorrowedBooks]);
 
   return (
@@ -31,14 +26,11 @@ const AllTopBorrowedBooks = () => {
       <div className="flex flex-grow">
         <div className="grid grid-cols-5 md:grid-cols-2 lg:grid-cols-5 gap-3">
           {topBorrowedBooks?.status === 200 &&
-          Array.isArray(topBorrowedBooks?.data) &&
-          topBorrowedBooks?.data?.length !== 0 ? (
-            topBorrowedBooks?.data?.map((element) => (
-              <div key={element?.featuredBooks?.bookId}>
-                <BookCard
-                  key={element?.featuredBooks?.bookId}
-                  curBook={element?.featuredBooks}
-                />
+          Array.isArray(topBorrowedBooks?.data?.content) &&
+          topBorrowedBooks?.data?.content?.length !== 0 ? (
+            topBorrowedBooks?.data?.content?.map((element) => (
+              <div key={element?.bookId}>
+                <BookCard key={element?.bookId} curBook={element} />
               </div>
             ))
           ) : (
@@ -48,6 +40,40 @@ const AllTopBorrowedBooks = () => {
             </p>
           )}
         </div>
+      </div>
+
+      <div className="flex gap-4 mt-6">
+        <button
+          disabled={page === 0}
+          onClick={() => setPage((p) => p - 1)}
+          className="
+            px-4 py-2 rounded
+            text-white
+            bg-blue-600 
+            hover:bg-blue-700
+            disabled:bg-blue-300
+            disabled:text-blue-100
+            disabled:cursor-not-allowed
+          "
+        >
+          Prev
+        </button>
+
+        <button
+          disabled={topBorrowedBooks?.data?.last}
+          onClick={() => setPage((p) => p + 1)}
+          className="
+            px-4 py-2 rounded
+            text-white
+            bg-blue-600 
+            hover:bg-blue-700
+            disabled:bg-blue-300
+            disabled:text-blue-100
+            disabled:cursor-not-allowed
+          "
+        >
+          Next
+        </button>
       </div>
     </section>
   );
