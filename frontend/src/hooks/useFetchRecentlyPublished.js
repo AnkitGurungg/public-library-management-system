@@ -1,14 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 
-export const useFetchRecentlyPublished = () => {
+export const useFetchRecentlyPublished = (page, size) => {
   return useQuery({
-    queryKey: ["recentlyPublished"],
+    queryKey: ["recentlyPublished", page, size],
     queryFn: async () => {
       try {
         const res = await GLOBAL_SERVICE.get(
-          "/api/v1/p/resource/books/recently-published"
+          `/api/v1/p/resource/books/recently-published?page=${page}&size=${size}`
         );
+        // console.log(res);
+
         return { status: res.status, data: res.data };
       } catch (error) {
         if (error && error.response.status === 404) {

@@ -22,7 +22,7 @@ const Home = () => {
   const { data: newArrivalBooks, refetch: refetchNewArrivalBooks } =
     useFetchNewArrivalBooks(pageNumber, pageSize);
   const { data: recentlyPublished, refetch: refetchRecentlyPublished } =
-    useFetchRecentlyPublished();
+    useFetchRecentlyPublished(pageNumber, pageSize);
 
   useEffect(() => {
     refetchTopBorrowedBooks();
@@ -170,15 +170,10 @@ const Home = () => {
           </div>
           <ul className="grid grid-cols-5 justify-center items-center gap-5">
             {recentlyPublished?.status === 200 &&
-              recentlyPublished?.data?.length > 0 &&
-              recentlyPublished?.data
-                ?.slice(0, 5)
-                .map((curBook) => (
-                  <BookCard
-                    key={curBook?.featuredBooks?.bookId}
-                    curBook={curBook?.featuredBooks}
-                  />
-                ))}
+              recentlyPublished?.data?.content?.length > 0 &&
+              recentlyPublished?.data?.content?.map((curBook) => (
+                <BookCard key={curBook?.bookId} curBook={curBook} />
+              ))}
           </ul>
         </div>
       </div>

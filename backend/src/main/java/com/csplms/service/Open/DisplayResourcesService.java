@@ -156,36 +156,35 @@ public class DisplayResourcesService {
         return newlyArrivedBooks;
     }
 
-    public List<FeaturedBooksDto> findBooksOrderByPublishedDate() {
-        List<Book> bookList = this.bookRepository.findBooksOrderByPublishedDate();
-        if(bookList.isEmpty()){
+    public Page<BookResponseDto> findBooksOrderByPublishedDate(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Book> bookPage = this.bookRepository.findBooksOrderByPublishedDate(pageable);
+
+        if(bookPage.isEmpty()){
             throw new ResourceListNotFoundException("Books");
         }
 
-        List<FeaturedBooksDto> filteredBooks = new ArrayList<>();
-        for(Book book : bookList){
-            BookResponseDto bookResponseDto = new BookResponseDto(
-                    book.getBookId(),
-                    book.getIsbn(),
-                    book.getTitle(),
-                    book.getAuthor(),
-                    book.getLanguage(),
-                    book.getEdition(),
-                    book.getPageCount(),
-                    book.getTotalQuantity(),
-                    book.getPublishedDate(),
-                    book.getPrice(),
-                    book.getImageURL(),
-                    book.getDescription(),
-                    book.getAddedDate(),
-                    book.getPublishedDate(),
-                    book.isAvailable(),
-                    book.getCategory().getCategoryId()
-            );
-
-            filteredBooks.add(new FeaturedBooksDto(0, bookResponseDto));
-        }
-        return filteredBooks;
+        return bookPage.map(
+                book -> new BookResponseDto(
+                        book.getBookId(),
+                        book.getIsbn(),
+                        book.getTitle(),
+                        book.getAuthor(),
+                        book.getLanguage(),
+                        book.getEdition(),
+                        book.getPageCount(),
+                        book.getTotalQuantity(),
+                        book.getPublishedDate(),
+                        book.getPrice(),
+                        book.getImageURL(),
+                        book.getDescription(),
+                        book.getAddedDate(),
+                        book.getPublishedDate(),
+                        book.isAvailable(),
+                        book.getCategory().getCategoryId()
+                )
+        );
     }
 
 }

@@ -71,8 +71,14 @@ public class DisplayResourcesController {
     }
 
     @GetMapping("/books/recently-published")
-    public ResponseEntity<List<FeaturedBooksDto>> findBooksOrderByPublishedDate() {
-        return new ResponseEntity<>(this.displayResourcesService.findBooksOrderByPublishedDate(), HttpStatus.OK);
+    public ResponseEntity<Page<BookResponseDto>> findBooksOrderByPublishedDate(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        return new ResponseEntity<>(
+                this.displayResourcesService.findBooksOrderByPublishedDate(page, size),
+                HttpStatus.OK
+        );
     }
 
 }

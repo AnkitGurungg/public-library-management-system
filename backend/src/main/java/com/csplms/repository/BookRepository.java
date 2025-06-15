@@ -62,7 +62,12 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     @Query("SELECT b FROM Book b WHERE b NOT IN (SELECT DISTINCT br.borrowBooks FROM Borrow br)")
     List<Book> findBooksNeverBorrowed();
 
-    @Query(value = "SELECT * FROM books where available=1 ORDER BY published_date DESC, added_date desc, book_id desc;", nativeQuery = true)
-    List<Book> findBooksOrderByPublishedDate();
+    @Query(
+            value = "SELECT * FROM books WHERE available = 1 " +
+                    "ORDER BY published_date DESC, added_date DESC, book_id DESC",
+            countQuery = "SELECT COUNT(*) FROM books WHERE available = 1",
+            nativeQuery = true
+    )
+    Page<Book> findBooksOrderByPublishedDate(Pageable pageable);
 
 }
