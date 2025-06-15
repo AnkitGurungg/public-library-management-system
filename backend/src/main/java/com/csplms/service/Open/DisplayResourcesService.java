@@ -5,15 +5,15 @@ import com.csplms.dto.responseDto.FeaturedBooksDto;
 import com.csplms.dto.responseDto.GlobalBookSearchDto;
 import com.csplms.entity.Book;
 import com.csplms.entity.Borrow;
-import com.csplms.exception.ResourceListNotFoundException;
 import com.csplms.repository.BookRepository;
 import com.csplms.repository.BorrowRepository;
 import com.csplms.repository.CategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import com.csplms.exception.ResourceListNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,36 +122,38 @@ public class DisplayResourcesService {
         return booksDto;
     }
 
-    public List<FeaturedBooksDto> getAllNewArrivalBooks(){
-        List<Book> bookList = this.bookRepository.getAllNewArrivalBooks();
-        if(bookList.isEmpty()){
+    public Page<BookResponseDto> getAllNewArrivalBooks(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Book> bookPage = this.bookRepository.getAllNewArrivalBooks(pageable);
+
+        if(bookPage.isEmpty()){
             throw new ResourceListNotFoundException("Books");
         }
 
-        List<FeaturedBooksDto> filteredBooks = new ArrayList<>();
-        for(Book book : bookList){
-            BookResponseDto bookResponseDto = new BookResponseDto(
-                    book.getBookId(),
-                    book.getIsbn(),
-                    book.getTitle(),
-                    book.getAuthor(),
-                    book.getLanguage(),
-                    book.getEdition(),
-                    book.getPageCount(),
-                    book.getTotalQuantity(),
-                    book.getPublishedDate(),
-                    book.getPrice(),
-                    book.getImageURL(),
-                    book.getDescription(),
-                    book.getAddedDate(),
-                    book.getPublishedDate(),
-                    book.isAvailable(),
-                    book.getCategory().getCategoryId()
-            );
+        Page<BookResponseDto> newlyArrivedBooks = bookPage.map(
+                book -> {
+                     return new BookResponseDto(
+                            book.getBookId(),
+                            book.getIsbn(),
+                            book.getTitle(),
+                            book.getAuthor(),
+                            book.getLanguage(),
+                            book.getEdition(),
+                            book.getPageCount(),
+                            book.getTotalQuantity(),
+                            book.getPublishedDate(),
+                            book.getPrice(),
+                            book.getImageURL(),
+                            book.getDescription(),
+                            book.getAddedDate(),
+                            book.getPublishedDate(),
+                            book.isAvailable(),
+                            book.getCategory().getCategoryId()
+                    );
+                }
+        );
 
-            filteredBooks.add(new FeaturedBooksDto(0, bookResponseDto));
-        }
-        return filteredBooks;
+        return newlyArrivedBooks;
     }
 
     public List<FeaturedBooksDto> findBooksOrderByPublishedDate() {

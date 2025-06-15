@@ -1,13 +1,13 @@
 package com.csplms.controller.Open;
 
 import com.csplms.dto.responseDto.*;
-import com.csplms.service.LibrarianAdmin.BookService;
-import com.csplms.service.LibrarianAdmin.CategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.csplms.service.LibrarianAdmin.BookService;
 import com.csplms.service.Open.DisplayResourcesService;
+import com.csplms.service.LibrarianAdmin.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -60,8 +60,14 @@ public class DisplayResourcesController {
     }
 
     @GetMapping("/books/new-arrivals")
-    public ResponseEntity<List<FeaturedBooksDto>> getNewArrivalBooks() {
-        return new ResponseEntity<>(this.displayResourcesService.getAllNewArrivalBooks(), HttpStatus.OK);
+    public ResponseEntity<Page<BookResponseDto>> getNewArrivalBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        return new ResponseEntity<>(
+                this.displayResourcesService.getAllNewArrivalBooks(page, size),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping("/books/recently-published")

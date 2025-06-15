@@ -2,6 +2,8 @@ package com.csplms.repository;
 
 import com.csplms.dto.responseDto.CategoryCountDTO;
 import com.csplms.entity.Book;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -42,8 +44,13 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     List<Book> getAllAvailableBooks();
 
     //home page
-    @Query(value = "select * from books where available=1 order by added_date desc, book_id desc;", nativeQuery = true)
-    List<Book> getAllNewArrivalBooks();
+    @Query(
+            value = "SELECT * FROM books WHERE available = 1 ORDER BY added_date DESC, book_id DESC",
+            countQuery = "SELECT COUNT(*) FROM books WHERE available = 1",
+            nativeQuery = true
+    )
+    Page<Book> getAllNewArrivalBooks(Pageable pageable);
+
 
     @Query("SELECT new com.csplms.dto.responseDto.CategoryCountDTO(c.name, COUNT(b)) " +
             "FROM Book b JOIN b.category c " +

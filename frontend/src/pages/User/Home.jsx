@@ -20,7 +20,7 @@ const Home = () => {
   const { data: topBorrowedBooks, refetch: refetchTopBorrowedBooks } =
     useFetchTopBorrowedBooks(pageNumber, pageSize);
   const { data: newArrivalBooks, refetch: refetchNewArrivalBooks } =
-    useFetchNewArrivalBooks();
+    useFetchNewArrivalBooks(pageNumber, pageSize);
   const { data: recentlyPublished, refetch: refetchRecentlyPublished } =
     useFetchRecentlyPublished();
 
@@ -121,7 +121,7 @@ const Home = () => {
           <ul className="grid grid-cols-5 justify-center items-center gap-5">
             {topBorrowedBooks?.status === 200 &&
               topBorrowedBooks?.data?.content?.length > 0 &&
-              topBorrowedBooks?.data?.content.map((item) => (
+              topBorrowedBooks?.data?.content?.map((item) => (
                 <BookCard key={item.bookId} curBook={item} />
               ))}
           </ul>
@@ -144,15 +144,10 @@ const Home = () => {
           </div>
           <ul className="grid grid-cols-5 justify-center items-center gap-5">
             {newArrivalBooks?.status === 200 &&
-              newArrivalBooks?.data?.length > 0 &&
-              newArrivalBooks?.data
-                ?.slice(0, 5)
-                .map((curBook) => (
-                  <BookCard
-                    key={curBook?.featuredBooks?.bookId}
-                    curBook={curBook?.featuredBooks}
-                  />
-                ))}
+              newArrivalBooks?.data?.content?.length > 0 &&
+              newArrivalBooks?.data?.content?.map((item) => (
+                <BookCard key={item?.bookId} curBook={item} />
+              ))}
           </ul>
         </div>
 

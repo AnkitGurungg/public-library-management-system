@@ -1,15 +1,16 @@
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import { useQuery } from "@tanstack/react-query";
 
-const useFetchNewArrivalBooks = () => {
+const useFetchNewArrivalBooks = (page, size) => {
   return useQuery({
-    queryKey: ["displayBooks"],
+    queryKey: ["newlyArrivedBooks", page, size],
     queryFn: async () => {
       try {
         const res = await GLOBAL_SERVICE.get(
-          "/api/v1/p/resource/books/new-arrivals"
+          `/api/v1/p/resource/books/new-arrivals?page=${page}&size=${size}`
         );
-        console.log(res);
+        // console.log(res);
+
         return { status: res.status, data: res.data };
       } catch (error) {
         console.log(error);
