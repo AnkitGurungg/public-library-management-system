@@ -1,21 +1,22 @@
 package com.csplms.controller.Member;
 
-import com.csplms.dto.requestDto.ReceiveKhaltiRequestDto;
-import com.csplms.dto.responseDto.InitiateKhaltiSuccessResponse;
+import com.csplms.dto.requestDto.KhaltiPaymentInitiateRequestDto;
+import com.csplms.dto.responseDto.KhaltiPaymentInitiateResponseDto;
+import com.csplms.dto.requestDto.KhaltiPaymentVerificationRequestDto;
 import com.csplms.exception.MailFailedException;
 import com.csplms.service.Member.MemberPaymentService;
 import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @CrossOrigin("*")
 @RestController
 @EnableMethodSecurity(prePostEnabled = true)
+@PreAuthorize("hasAnyAuthority('ROLE_MEMBER', 'ROLE_LIBRARIAN', 'ROLE_ADMIN')")
 public class MemberPaymentController {
 
     private final MemberPaymentService memberPaymentService;
@@ -25,15 +26,14 @@ public class MemberPaymentController {
         this.memberPaymentService = memberPaymentService;
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_MEMBER', 'ROLE_LIBRARIAN', 'ROLE_ADMIN')")
-    @PostMapping("/api/v1/m/user/profile/fine/pay")
-    public ResponseEntity<InitiateKhaltiSuccessResponse> payFine (@RequestBody ReceiveKhaltiRequestDto receiveKhaltiRequestDto) {
-        return new ResponseEntity<>(this.memberPaymentService.payFine(receiveKhaltiRequestDto), HttpStatus.OK);
+    @PostMapping("/api/v1/mla/payments/khalti/initiate")
+    public ResponseEntity<KhaltiPaymentInitiateResponseDto> initiateFinePayment(@RequestBody KhaltiPaymentInitiateRequestDto khaltiPaymentInitiateRequestDto) {
+        return new ResponseEntity<>(this.memberPaymentService.initiateFinePayment(khaltiPaymentInitiateRequestDto), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/get/fines/response", consumes = {"text/xml", "*/*"})
-    public void getFinesByMember(HttpServletRequest request) throws MessagingException, MailFailedException {
-        this.memberPaymentService.getFinesByMember(request);
+    @PostMapping(value = "api/v1/mla/payments/khalti/verify")
+    public ResponseEntity<Boolean> verifyKhaltiPayment(@RequestBody KhaltiPaymentVerificationRequestDto khaltiPaymentVerificationRequestDto) throws MessagingException, MailFailedException {
+        return new ResponseEntity<>(this.memberPaymentService.verifyKhaltiPayment(khaltiPaymentVerificationRequestDto), HttpStatus.OK);
     }
 
 }

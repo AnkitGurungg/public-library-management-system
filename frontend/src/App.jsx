@@ -31,6 +31,7 @@ import ViewSpecificBook from "./features/User/Home/ViewSpecificBook";
 import AboutUs from "./layouts/User/About/AboutUs";
 import ContactUs from "./layouts/User/About/ContactUs";
 import RecentlyPublishedBooks from "./features/User/Home/RecentlyPublishedBooks";
+import { PaymentResponse } from "./features/User/Fines/PaymentResponse";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -65,6 +66,14 @@ const App = () => {
     },
 
     {
+      path: "/payment",
+      element: <UPApplayout />,
+      children: [
+        { path: "response", element: <PaymentResponse /> },
+      ],
+    },
+
+    {
       path: "/librarian",
       element: <LAppLayout />,
       children: [
@@ -78,6 +87,7 @@ const App = () => {
         { path: "*", element: <DefaultPage /> },
       ],
     },
+
     {
       path: "/admin",
       element: <AAppLayout />,

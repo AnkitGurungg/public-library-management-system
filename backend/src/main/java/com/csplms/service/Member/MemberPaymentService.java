@@ -1,6 +1,8 @@
 package com.csplms.service.Member;
 
-import com.csplms.dto.requestDto.ReceiveKhaltiRequestDto;
+import com.csplms.dto.requestDto.KhaltiPaymentInitiateRequestDto;
+import com.csplms.dto.requestDto.KhaltiPaymentVerificationRequestDto;
+import com.csplms.dto.responseDto.KhaltiPaymentInitiateResponseDto;
 import com.csplms.entity.*;
 import com.csplms.exception.MailFailedException;
 import com.csplms.exception.ResourceEntityNotFoundException;
@@ -11,15 +13,13 @@ import com.csplms.util.EmailUtil;
 import com.csplms.util.GetAuthUserUtil;
 import com.csplms.util.GlobalDateUtil;
 import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
-import com.csplms.dto.requestDto.InitiateKhaltiRequestDto;
-import com.csplms.dto.responseDto.InitiateKhaltiSuccessResponse;
+import com.csplms.dto.requestDto.KhaltiPaymentRequest;
 
 @Service
 public class MemberPaymentService {
@@ -54,29 +54,29 @@ public class MemberPaymentService {
         this.returnRepository = returnRepository;
     }
 
-    public InitiateKhaltiSuccessResponse payFine(ReceiveKhaltiRequestDto receiveKhaltiRequestDto) {
-        logger.error("receive Khalti RequestDto is: {}", receiveKhaltiRequestDto);
-        InitiateKhaltiRequestDto initiateKhaltiRequestDto = memberPaymentMapper.toInitiateKhaltiRequestDto(receiveKhaltiRequestDto);
-        InitiateKhaltiSuccessResponse initiateKhaltiSuccessResponse = restClient
+    public KhaltiPaymentInitiateResponseDto initiateFinePayment(KhaltiPaymentInitiateRequestDto khaltiPaymentInitiateRequestDto) {
+        logger.warn("KhaltiPaymentInitiateRequestDto is: {}", khaltiPaymentInitiateRequestDto);
+        KhaltiPaymentRequest khaltiPaymentRequest = memberPaymentMapper.prepareKhaltiPayment(khaltiPaymentInitiateRequestDto);
+        KhaltiPaymentInitiateResponseDto khaltiPaymentInitiateResponseDto = restClient
                 .post()
                 .uri("https://dev.khalti.com/api/v2/epayment/initiate/")
                 .header("Authorization", "key 78d4ab4e77364e189f8fffe6f014ffee")
-                .body(initiateKhaltiRequestDto)
+                .body(khaltiPaymentRequest)
                 .retrieve()
-                .body(InitiateKhaltiSuccessResponse.class);
-        logger.warn("InitiateKhaltiSuccessResponse is: {}", initiateKhaltiSuccessResponse);
-        return initiateKhaltiSuccessResponse;
+                .body(KhaltiPaymentInitiateResponseDto.class);
+        logger.warn("KhaltiPaymentInitiateResponseDto is: {}", khaltiPaymentInitiateResponseDto);
+        return khaltiPaymentInitiateResponseDto;
     }
 
     @Transactional(rollbackFor = {MessagingException.class, MailFailedException.class, Exception.class})
-    public void getFinesByMember(HttpServletRequest request) throws MessagingException, MailFailedException {
-        final String status = request.getParameter("status");
-        final String pidx = request.getParameter("pidx");
-        final String txnId = request.getParameter("txnId");
-        final String tidx = request.getParameter("tidx");
-        final String total_amount = request.getParameter("total_amount");
-        final String purchase_order_id = request.getParameter("purchase_order_id");
-        final String purchase_order_name = request.getParameter("purchase_order_name");
+    public Boolean verifyKhaltiPayment(KhaltiPaymentVerificationRequestDto khaltiPaymentVerificationRequestDto) throws MessagingException, MailFailedException {
+        final String status = khaltiPaymentVerificationRequestDto.status();
+        final String pidx = khaltiPaymentVerificationRequestDto.pidx();
+        final String txnId = khaltiPaymentVerificationRequestDto.txnId();
+        final String tidx = khaltiPaymentVerificationRequestDto.tidx();
+        final String total_amount = khaltiPaymentVerificationRequestDto.total_amount();
+        final String purchase_order_id = khaltiPaymentVerificationRequestDto.purchase_order_id();
+        final String purchase_order_name = khaltiPaymentVerificationRequestDto.purchase_order_name();
 
         Fine fine = fineRepository.findById(Integer.parseInt(purchase_order_id)).orElseThrow(() -> new ResourceEntityNotFoundException("Fine", "Id", Long.valueOf(purchase_order_id)));
         fine.setPaidStatus(true);
@@ -119,6 +119,8 @@ public class MemberPaymentService {
         emailUtil.finePaidMail(user, book, borrow, bookReturn, payment);
 
         logger.warn(purchase_order_name);
+
+        return true;
     }
 
 }

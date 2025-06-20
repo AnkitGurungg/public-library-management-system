@@ -1,12 +1,11 @@
-import { Button } from "@/components/ui/button";
 import GLOBAL_SERVICE, {
   BACKEND_SERVER_BASE_URL,
 } from "@/services/GlobalServices";
 import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
-import { useState } from "react";
 import toast from "react-hot-toast";
 
 export const columns = (refetchMemberFines) => [
+  
   {
     accessorKey: "getImageURL",
     header: "Book",
@@ -96,25 +95,6 @@ export const columns = (refetchMemberFines) => [
     },
   },
 
-  // {
-  //   accessorKey: "getReturnDate",
-  //   header: "Returned Date",
-  //   cell: ({ row }) => {
-  //     const returnDate = row.getValue("getReturnDate");
-  //     if (!returnDate) {
-  //       return (
-  //         <Button
-  //           variant="destructive"
-  //           className="h-5 px-2 text-[10px] pointer-events-none cursor-default"
-  //         >
-  //           NOT RETURNED
-  //         </Button>
-  //       );
-  //     }
-  //     return <span>{returnDate}</span>;
-  //   },
-  // },
-
   {
     id: "isExtended",
     accessorFn: (row) => String(row?.isExtended) || "",
@@ -174,7 +154,8 @@ export const columns = (refetchMemberFines) => [
     cell: ({ row }) => {
       const isPaid = row.getValue("isPaidStatus");
       const paymentHandler = async (currBookFine) => {
-        console.log(currBookFine);
+        // console.log(currBookFine);
+
         const paymentData = {
           totalAmount: currBookFine.getTotalFine,
           fineId: currBookFine.getFineId,
@@ -185,12 +166,12 @@ export const columns = (refetchMemberFines) => [
 
         try {
           const response = await GLOBAL_SERVICE.post(
-            "/api/v1/m/user/profile/fine/pay",
+            "/api/v1/mla/payments/khalti/initiate",
             paymentData
           );
-          console.log(response);
-          const url = response?.data?.payment_url;
+          // console.log("Initiate Khalti: ", response);
 
+          const url = response?.data?.payment_url;
           if (url) {
             window.open(url, "_blank", "noopener,noreferrer");
           }
@@ -204,7 +185,6 @@ export const columns = (refetchMemberFines) => [
         return (
           <button
             disabled
-            // onClick={paymentHandler}
             className="rounded-md text-white bg-[#1b5c8c] opacity-60 hover:text-white hover:bg-[#206ea6] px-3 py-0.5 text-sm cursor-not-allowed w-14 uppercase"
           >
             Paid

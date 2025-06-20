@@ -1,8 +1,6 @@
 package com.csplms.dto.requestDto;
 
-import com.csplms.entity.Fine;
-
-public record InitiateKhaltiRequestDto(
+public record KhaltiPaymentRequest(
         String return_url,
         String website_url,
         long amount,

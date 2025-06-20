@@ -1,6 +1,6 @@
 package com.csplms.dto.requestDto;
 
-public record ReceiveKhaltiRequestDto(
+public record KhaltiPaymentInitiateRequestDto(
         Long totalAmount,
         Integer fineId,
         String borrowedBookName,

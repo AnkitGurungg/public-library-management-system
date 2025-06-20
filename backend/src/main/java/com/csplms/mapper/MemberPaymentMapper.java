@@ -2,19 +2,19 @@ package com.csplms.mapper;
 
 import com.csplms.dto.requestDto.UserRequestDto;
 import org.springframework.stereotype.Component;
-import com.csplms.dto.requestDto.ReceiveKhaltiRequestDto;
-import com.csplms.dto.requestDto.InitiateKhaltiRequestDto;
+import com.csplms.dto.requestDto.KhaltiPaymentInitiateRequestDto;
+import com.csplms.dto.requestDto.KhaltiPaymentRequest;
 
 @Component
 public class MemberPaymentMapper {
 
-    public InitiateKhaltiRequestDto toInitiateKhaltiRequestDto(ReceiveKhaltiRequestDto receiveKhaltiRequestDto) {
-        return new InitiateKhaltiRequestDto(
-                "http://localhost:8080/get/fines/response",
-                "http://localhost:8080/",
-                receiveKhaltiRequestDto.totalAmount() * 100,
-                receiveKhaltiRequestDto.fineId(),
-                "Fine: " + receiveKhaltiRequestDto.fineId(),
+    public KhaltiPaymentRequest prepareKhaltiPayment(KhaltiPaymentInitiateRequestDto khaltiPaymentInitiateRequestDto) {
+        return new KhaltiPaymentRequest(
+                "http://localhost:5173/payment/response",
+                "http://localhost:5173/",
+                khaltiPaymentInitiateRequestDto.totalAmount() * 100,
+                khaltiPaymentInitiateRequestDto.fineId(),
+                "Fine: " + khaltiPaymentInitiateRequestDto.fineId(),
                 new UserRequestDto("Ankit", "9806140735", "xyz@gmail.com", "Pokhara-29")
         );
     }
