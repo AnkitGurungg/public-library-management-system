@@ -1,8 +1,11 @@
 package com.csplms.service.Member;
 
 import com.csplms.dto.requestDto.KhaltiPaymentInitiateRequestDto;
+import com.csplms.dto.requestDto.KhaltiPaymentLookupRequestDto;
 import com.csplms.dto.requestDto.KhaltiPaymentVerificationRequestDto;
 import com.csplms.dto.responseDto.KhaltiPaymentInitiateResponseDto;
+import com.csplms.dto.responseDto.KhaltiPaymentLookupResponseDto;
+import com.csplms.dto.responseDto.KhaltiPaymentVerificationResponseDto;
 import com.csplms.entity.*;
 import com.csplms.exception.MailFailedException;
 import com.csplms.exception.ResourceEntityNotFoundException;
@@ -20,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
 import com.csplms.dto.requestDto.KhaltiPaymentRequest;
+
+import java.util.Map;
 
 @Service
 public class MemberPaymentService {
@@ -60,7 +65,7 @@ public class MemberPaymentService {
         KhaltiPaymentInitiateResponseDto khaltiPaymentInitiateResponseDto = restClient
                 .post()
                 .uri("https://dev.khalti.com/api/v2/epayment/initiate/")
-                .header("Authorization", "key 78d4ab4e77364e189f8fffe6f014ffee")
+                .header("Authorization", "Key 78d4ab4e77364e189f8fffe6f014ffee")
                 .body(khaltiPaymentRequest)
                 .retrieve()
                 .body(KhaltiPaymentInitiateResponseDto.class);
@@ -69,58 +74,104 @@ public class MemberPaymentService {
     }
 
     @Transactional(rollbackFor = {MessagingException.class, MailFailedException.class, Exception.class})
-    public Boolean verifyKhaltiPayment(KhaltiPaymentVerificationRequestDto khaltiPaymentVerificationRequestDto) throws MessagingException, MailFailedException {
-        final String status = khaltiPaymentVerificationRequestDto.status();
-        final String pidx = khaltiPaymentVerificationRequestDto.pidx();
-        final String txnId = khaltiPaymentVerificationRequestDto.txnId();
-        final String tidx = khaltiPaymentVerificationRequestDto.tidx();
-        final String total_amount = khaltiPaymentVerificationRequestDto.total_amount();
-        final String purchase_order_id = khaltiPaymentVerificationRequestDto.purchase_order_id();
-        final String purchase_order_name = khaltiPaymentVerificationRequestDto.purchase_order_name();
+    public KhaltiPaymentVerificationResponseDto verifyKhaltiPayment(KhaltiPaymentVerificationRequestDto verificationRequestDto) throws MessagingException, MailFailedException {
+        final String status = verificationRequestDto.status();
+        final String pidx = verificationRequestDto.pidx();
+        final String txnId = verificationRequestDto.txnId();
+        final String tidx = verificationRequestDto.tidx();
+        final String total_amount = verificationRequestDto.total_amount();
+        final String purchase_order_id = verificationRequestDto.purchase_order_id();
+        final String purchase_order_name = verificationRequestDto.purchase_order_name();
+        logger.warn("KhaltiPaymentVerificationRequestDto: {}", verificationRequestDto);
 
-        Fine fine = fineRepository.findById(Integer.parseInt(purchase_order_id)).orElseThrow(() -> new ResourceEntityNotFoundException("Fine", "Id", Long.valueOf(purchase_order_id)));
-        fine.setPaidStatus(true);
-        fine = fineRepository.save(fine);
-        fineRepository.flush();
+//        Assigning messages based on khalti payment status
+        final Map<String, String> khaltiPaymentStatusMessages = Map.of(
+                "Completed", "Payment successful. Fine has been marked as paid.",
+                "Pending", "Payment is pending. Please wait or contact support.",
+                "Refunded", "Payment has been refunded. Fine is not marked as paid.",
+                "Expired", "Payment link has expired. Please try again.",
+                "User canceled", "Payment was canceled by the user.",
+                "Initiated", "Payment has been initiated but not completed."
+        );
 
-        // convert to rupees
-        Double totalAmount = Double.valueOf(total_amount)/100;
-        Integer roundedIntegerValue =(int) Math.floor(totalAmount);
+        KhaltiPaymentLookupResponseDto lookupResponse = restClient
+                .post()
+                .uri("https://dev.khalti.com/api/v2/epayment/lookup/")
+                .header("Authorization", "Key 78d4ab4e77364e189f8fffe6f014ffee")
+                .body(new KhaltiPaymentLookupRequestDto(pidx))
+                .retrieve()
+                .body(KhaltiPaymentLookupResponseDto.class);
+        logger.warn("khaltiPaymentLookupResponseDto: {}", lookupResponse);
 
-        // for payment table
-        Payment payment = new Payment();
-        payment.setAmount(roundedIntegerValue);
-        payment.setDate(globalDateUtil.getCurrentDate());
-        payment.setPidx(pidx);
-        payment.setTxnId(txnId);
-        payment.setTidx(tidx);
-        payment.setFine(fine);
-        payment = paymentRepository.save(payment);
-        paymentRepository.flush();
+//        Null response - verification failed, do not process payment
+        if (lookupResponse == null ){
+            return new KhaltiPaymentVerificationResponseDto(
+                    false,
+                    "Unknown",
+                    "Could not verify payment. Please contact support.",
+                    null
+            );
+        } else {
+            String paymentStatus = lookupResponse.status();
+            String message = khaltiPaymentStatusMessages.getOrDefault(
+                    paymentStatus,
+                    "Unknown payment status. Please contact support."
+            );
+            Map<String, Object> data = Map.of(
+                    "pidx", lookupResponse.pidx(),
+                    "totalAmount", lookupResponse.total_amount()
+            );
 
-//        For mail
-//        Get the user
-        Integer userId = fine.getReturns().getBorrows().getBorrowUsers().getUserId();
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceEntityNotFoundException("User", "Id", 0));
-        logger.warn("User id is: {}", userId);
+//            Only the status with Completed must be treated as success.
+            if ("Completed".equals(lookupResponse.status())){
+                Fine fine = fineRepository.findById(Integer.parseInt(purchase_order_id)).orElseThrow(() -> new ResourceEntityNotFoundException("Fine", "Id", Long.valueOf(purchase_order_id)));
+                fine.setPaidStatus(true);
+                fine = fineRepository.save(fine);
+                fineRepository.flush();
 
-//        Get book
-        Integer bookId = fine.getReturns().getBorrows().getBorrowBooks().getBookId();
-        Book book = bookRepository.findById(bookId).orElseThrow(() -> new ResourceEntityNotFoundException("Book", "Id", bookId));
+                // Convert to rupees
+                Double totalAmount = Double.valueOf(total_amount)/100;
+                Integer roundedIntegerValue =(int) Math.floor(totalAmount);
 
-//        Get borrow
-        Integer borrowId = fine.getReturns().getBorrows().getBorrowId();
-        Borrow borrow = borrowRepository.findById(borrowId).orElseThrow(() -> new ResourceEntityNotFoundException("Borrow", "Id", borrowId));
+                // For payment table
+                Payment payment = new Payment();
+                payment.setAmount(roundedIntegerValue);
+                payment.setDate(globalDateUtil.getCurrentDate());
+                payment.setPidx(pidx);
+                payment.setTxnId(txnId);
+                payment.setTidx(tidx);
+                payment.setFine(fine);
+                payment = paymentRepository.save(payment);
+                paymentRepository.flush();
 
-//        Get return
-        Integer returnId = fine.getReturns().getReturnId();
-        Return bookReturn = returnRepository.findById(returnId).orElseThrow(() -> new ResourceEntityNotFoundException("Return", "Id", borrowId));
+                // For mail
+                // Get the user
+                Integer userId = fine.getReturns().getBorrows().getBorrowUsers().getUserId();
+                User user = userRepository.findById(userId).orElseThrow(() -> new ResourceEntityNotFoundException("User", "Id", 0));
+                logger.warn("User id is: {}", userId);
 
-        emailUtil.finePaidMail(user, book, borrow, bookReturn, payment);
+                // Get book
+                Integer bookId = fine.getReturns().getBorrows().getBorrowBooks().getBookId();
+                Book book = bookRepository.findById(bookId).orElseThrow(() -> new ResourceEntityNotFoundException("Book", "Id", bookId));
 
-        logger.warn(purchase_order_name);
+                // Get borrow
+                Integer borrowId = fine.getReturns().getBorrows().getBorrowId();
+                Borrow borrow = borrowRepository.findById(borrowId).orElseThrow(() -> new ResourceEntityNotFoundException("Borrow", "Id", borrowId));
 
-        return true;
+                // Get return
+                Integer returnId = fine.getReturns().getReturnId();
+                Return bookReturn = returnRepository.findById(returnId).orElseThrow(() -> new ResourceEntityNotFoundException("Return", "Id", borrowId));
+
+                emailUtil.finePaidMail(user, book, borrow, bookReturn, payment);
+
+                return new KhaltiPaymentVerificationResponseDto(true, paymentStatus, message, data);
+            }
+
+//            Other statuses must be treated as failed.
+            else {
+                return new KhaltiPaymentVerificationResponseDto(false, paymentStatus, message, null);
+            }
+        }
     }
 
 }

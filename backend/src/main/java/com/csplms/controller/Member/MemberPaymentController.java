@@ -3,6 +3,7 @@ package com.csplms.controller.Member;
 import com.csplms.dto.requestDto.KhaltiPaymentInitiateRequestDto;
 import com.csplms.dto.responseDto.KhaltiPaymentInitiateResponseDto;
 import com.csplms.dto.requestDto.KhaltiPaymentVerificationRequestDto;
+import com.csplms.dto.responseDto.KhaltiPaymentVerificationResponseDto;
 import com.csplms.exception.MailFailedException;
 import com.csplms.service.Member.MemberPaymentService;
 import jakarta.mail.MessagingException;
@@ -32,7 +33,7 @@ public class MemberPaymentController {
     }
 
     @PostMapping(value = "api/v1/mla/payments/khalti/verify")
-    public ResponseEntity<Boolean> verifyKhaltiPayment(@RequestBody KhaltiPaymentVerificationRequestDto khaltiPaymentVerificationRequestDto) throws MessagingException, MailFailedException {
+    public ResponseEntity<KhaltiPaymentVerificationResponseDto> verifyKhaltiPayment(@RequestBody KhaltiPaymentVerificationRequestDto khaltiPaymentVerificationRequestDto) throws MessagingException, MailFailedException {
         return new ResponseEntity<>(this.memberPaymentService.verifyKhaltiPayment(khaltiPaymentVerificationRequestDto), HttpStatus.OK);
     }
 
