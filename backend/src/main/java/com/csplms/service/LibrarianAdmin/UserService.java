@@ -76,14 +76,18 @@ public class UserService {
         }
 
         Evidence evidence = user.getEvidence();
-        EvidenceDto evidenceDto = new EvidenceDto(
-                evidence.getEvidenceId(),
-                evidence.getUserImage(),
-                evidence.getEvidenceOne(),
-                evidence.getEvidenceTwo(),
-                evidence.getDocumentType(),
-                evidence.getDescription()
-        );
+        EvidenceDto evidenceDto = null;
+
+        if (evidence != null) {
+            evidenceDto = new EvidenceDto(
+                    evidence.getEvidenceId(),
+                    evidence.getUserImage(),
+                    evidence.getEvidenceOne(),
+                    evidence.getEvidenceTwo(),
+                    evidence.getDocumentType(),
+                    evidence.getDescription()
+            );
+        }
 
         return new UserAccountInfoDto(
                 user.getUserId(),

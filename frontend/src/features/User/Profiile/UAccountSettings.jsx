@@ -4,7 +4,6 @@ import GLOBAL_SERVICE, {
 } from "@/services/GlobalServices";
 import { useEffect, useState } from "react";
 import KYC from "../Register/KYC";
-import { BookOpen, Settings } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
