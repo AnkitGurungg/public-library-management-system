@@ -3,6 +3,7 @@ package com.csplms.controller.LibrarianAdmin;
 import com.csplms.dto.responseDto.AdminBorrowDto;
 import com.csplms.entity.Borrow;
 import jakarta.mail.MessagingException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.csplms.exception.MailFailedException;
@@ -48,8 +49,17 @@ public class BorrowController {
     }
 
     @GetMapping("/borrowed-books")
-    public ResponseEntity<List<AdminBorrowDto>> getAllBorrowRecords() {
-        return new ResponseEntity<>(this.borrowService.getAllBorrowRecords(), HttpStatus.OK);
+    public ResponseEntity<Page<AdminBorrowDto>> getAllBorrowRecords(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Boolean extended,
+            @RequestParam(required = false) Boolean returnStatus
+    ) {
+        return new ResponseEntity<>(
+                this.borrowService.getAllBorrowRecords(page, size, name, extended, returnStatus),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping("/overdue-books")

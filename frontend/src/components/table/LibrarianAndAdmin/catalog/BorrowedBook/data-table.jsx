@@ -1,12 +1,8 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import React from "react";
 import {
   flexRender,
   getCoreRowModel,
-  getSortedRowModel,
-  getPaginationRowModel,
   useReactTable,
-  getFilteredRowModel,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -17,36 +13,26 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
-export function DataTable({ columns, data }) {
-  const [columnFilters, setColumnFilters] = useState([]);
-  const [sorting, setSorting] = useState([]);
-
-  const [pagination, setPagination] = React.useState({
-    pageIndex: 0,
-    pageSize: 11,
-  });
-
+export function DataTable({
+  columns,
+  data,
+  pagination,
+  setPagination,
+  pageCount,
+  isLoading,
+  filters,
+  setFilters,
+}) {
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-
-    pageCount: Math.ceil(data?.length / pagination?.pageSize),
-
+    pageCount,
+    manualPagination: true,
     onPaginationChange: setPagination,
-
-    state: {
-      pagination,
-      sorting,
-      columnFilters,
-    },
+    state: { pagination },
+    getCoreRowModel: getCoreRowModel(),
   });
 
   return (
@@ -55,32 +41,41 @@ export function DataTable({ columns, data }) {
         <Input
           className="w-1/4 h-10 bg-white border-gray-300"
           placeholder="Search by name..."
-          value={table.getColumn("name")?.getFilterValue() ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+          value={filters.name}
+          onChange={(e) =>
+            setFilters((prev) => ({ ...prev, name: e.target.value }))
           }
         />
+
         <div className="flex gap-2.5">
           <select
             className="border rounded-lg text-gray-800 px-3 py-2 bg-white "
-            value={table.getColumn("extended")?.getFilterValue() ?? ""}
+            value={filters.extended ?? ""}
             onChange={(e) =>
-              table.getColumn("extended")?.setFilterValue(e.target.value)
+              setFilters((prev) => ({
+                ...prev,
+                extended:
+                  e.target.value === "" ? null : e.target.value === "true",
+              }))
             }
           >
             <option value="" disabled selected>
               Select Extended Status
             </option>
             <option value="">ALL</option>
-            <option value={true}>YES</option>
-            <option value={false}>NO</option>
+            <option value="true">YES</option>
+            <option value="false">NO</option>
           </select>
 
           <select
             className="border rounded-lg px-3 py-2  bg-white"
-            value={table.getColumn("returnStatus")?.getFilterValue() ?? ""}
+            value={filters.returnStatus ?? ""}
             onChange={(e) =>
-              table.getColumn("returnStatus")?.setFilterValue(e.target.value)
+              setFilters((prev) => ({
+                ...prev,
+                returnStatus:
+                  e.target.value === "" ? null : e.target.value === "true",
+              }))
             }
           >
             <option value="" disabled selected>
@@ -158,6 +153,11 @@ export function DataTable({ columns, data }) {
           >
             Previous
           </Button>
+
+          <span className="text-sm">
+            Page {pagination.pageIndex + 1} of {pageCount <= 0 ? 1 : pageCount}
+          </span>
+
           <Button
             variant="outline"
             size="sm"

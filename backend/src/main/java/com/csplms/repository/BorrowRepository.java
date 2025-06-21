@@ -23,8 +23,26 @@ public interface BorrowRepository extends JpaRepository<Borrow, Integer> {
     @Query(value = "select * from borrow_records where return_status=0 AND user_id=:userId order by borrow_date desc", nativeQuery = true)
     List<Borrow> userBorrows(Integer userId);
 
-    @Query(value = "select * from borrow_records order by return_status asc, borrow_id desc, borrow_date desc", nativeQuery = true)
-    List<Borrow> getAllBorrowRecords();
+    @Query(
+            value = "SELECT b.* FROM borrow_records b " +
+                    "JOIN users u ON b.user_id = u.user_id " +
+                    "WHERE (:name IS NULL OR u.name LIKE %:name%) " +
+                    "AND (:extended IS NULL OR b.extended = :extended) " +
+                    "AND (:returnStatus IS NULL OR b.return_status = :returnStatus) " +
+                    "ORDER BY b.return_status ASC, b.borrow_id DESC, b.borrow_date DESC",
+            countQuery = "SELECT COUNT(*) FROM borrow_records b " +
+                    "JOIN users u ON b.user_id = u.user_id " +
+                    "WHERE (:name IS NULL OR u.name LIKE %:name%) " +
+                    "AND (:extended IS NULL OR b.extended = :extended) " +
+                    "AND (:returnStatus IS NULL OR b.return_status = :returnStatus)",
+            nativeQuery = true
+    )
+    Page<Borrow> getAllBorrowRecords(
+            Pageable pageable,
+            @Param("name") String name,
+            @Param("extended") Boolean extended,
+            @Param("returnStatus") Boolean returnStatus
+    );
 
     @Query(
             value = """

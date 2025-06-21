@@ -17,7 +17,9 @@ import com.csplms.dto.responseDto.FinesInfo;
 import com.csplms.repository.BookRepository;
 import com.csplms.repository.UserRepository;
 import com.csplms.repository.BorrowRepository;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.csplms.exception.MailFailedException;
 import com.csplms.dto.requestDto.BorrowRequestDto;
@@ -132,31 +134,30 @@ public class BorrowService {
         return this.borrowMapper.toBorrowResponseDto(borrow);
     }
 
-    public List<AdminBorrowDto> getAllBorrowRecords() {
-        List<Borrow> borrows = this.borrowRepository.getAllBorrowRecords();
+    public Page<AdminBorrowDto> getAllBorrowRecords(int page, int size, String name, Boolean extended, Boolean returnStatus) {
+
+        logger.info("BorrowRecords Get Arguments: {}, {}, {}, {}, {}", page, size, name, extended, returnStatus);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Borrow> borrows = this.borrowRepository.getAllBorrowRecords(pageable, name, extended, returnStatus);
+
         if (borrows.isEmpty()) {
             throw new ResourceListNotFoundException("Borrow records");
         }
 
-        List<AdminBorrowDto> list = new ArrayList<>();
-        for (Borrow borrow : borrows){
-            AdminBorrowDto item = new AdminBorrowDto(
-                    borrow.getBorrowId(),
-                    borrow.getBorrowDate(),
-                    borrow.getDueDate(),
-                    borrow.isExtended(),
-                    borrow.isReturnStatus(),
+        return borrows.map(borrow -> new AdminBorrowDto(
+                borrow.getBorrowId(),
+                borrow.getBorrowDate(),
+                borrow.getDueDate(),
+                borrow.isExtended(),
+                borrow.isReturnStatus(),
 
-                    borrow.getBorrowBooks() != null ? borrow.getBorrowBooks().getBookId() : null,
-                    borrow.getBorrowBooks() != null ? borrow.getBorrowBooks().getTitle() : null,
+                borrow.getBorrowBooks() != null ? borrow.getBorrowBooks().getBookId() : null,
+                borrow.getBorrowBooks() != null ? borrow.getBorrowBooks().getTitle() : null,
 
-                    borrow.getBorrowUsers() != null ? borrow.getBorrowUsers().getUserId() : null,
-                    borrow.getBorrowUsers() != null ? borrow.getBorrowUsers().getName() : null
-            );
-            list.add(item);
-        }
-
-        return list;
+                borrow.getBorrowUsers() != null ? borrow.getBorrowUsers().getUserId() : null,
+                borrow.getBorrowUsers() != null ? borrow.getBorrowUsers().getName() : null
+                )
+        );
     }
 
     public List<AdminBorrowDto> getAllOverdueBooks() {
