@@ -17,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
-import java.util.List;
-
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/la/borrows")
@@ -63,8 +61,17 @@ public class BorrowController {
     }
 
     @GetMapping("/overdue-books")
-    public ResponseEntity<List<AdminBorrowDto>> getAllOverdueBooks() {
-        return new ResponseEntity<>(this.borrowService.getAllOverdueBooks(), HttpStatus.OK);
+    public ResponseEntity<Page<AdminBorrowDto>> getAllOverdueBorrowBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "11") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Boolean extended,
+            @RequestParam(required = false) Boolean returnStatus
+    ) {
+        return new ResponseEntity<>(
+                this.borrowService.getAllOverdueBorrowBooks(page, size, name, extended, returnStatus),
+                HttpStatus.OK
+        );
     }
 
     @DeleteMapping("/{id}")
