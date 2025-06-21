@@ -1,11 +1,5 @@
 package com.csplms.service.Member;
 
-import com.csplms.dto.requestDto.KhaltiPaymentInitiateRequestDto;
-import com.csplms.dto.requestDto.KhaltiPaymentLookupRequestDto;
-import com.csplms.dto.requestDto.KhaltiPaymentVerificationRequestDto;
-import com.csplms.dto.responseDto.KhaltiPaymentInitiateResponseDto;
-import com.csplms.dto.responseDto.KhaltiPaymentLookupResponseDto;
-import com.csplms.dto.responseDto.KhaltiPaymentVerificationResponseDto;
 import com.csplms.entity.*;
 import com.csplms.exception.MailFailedException;
 import com.csplms.exception.ResourceEntityNotFoundException;
@@ -23,6 +17,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
 import com.csplms.dto.requestDto.KhaltiPaymentRequest;
+import com.csplms.config.KhaltiAPIProperties;
+import com.csplms.dto.requestDto.KhaltiPaymentInitiateRequestDto;
+import com.csplms.dto.requestDto.KhaltiPaymentLookupRequestDto;
+import com.csplms.dto.requestDto.KhaltiPaymentVerificationRequestDto;
+import com.csplms.dto.responseDto.KhaltiPaymentInitiateResponseDto;
+import com.csplms.dto.responseDto.KhaltiPaymentLookupResponseDto;
+import com.csplms.dto.responseDto.KhaltiPaymentVerificationResponseDto;
 
 import java.util.Map;
 
@@ -31,7 +32,6 @@ public class MemberPaymentService {
 
     private final RestClient restClient;
     private final MemberPaymentMapper memberPaymentMapper;
-    private static final Logger logger = LoggerFactory.getLogger(MemberPaymentService.class);
     private final FineRepository fineRepository;
     private final DateTimeUtil dateTimeUtil;
     private final GlobalDateUtil globalDateUtil;
@@ -42,9 +42,12 @@ public class MemberPaymentService {
     private final BookRepository bookRepository;
     private final BorrowRepository borrowRepository;
     private final ReturnRepository returnRepository;
+    private final KhaltiAPIProperties khaltiProperties;
+
+    private static final Logger logger = LoggerFactory.getLogger(MemberPaymentService.class);
 
     @Autowired
-    public MemberPaymentService(RestClient restClient, MemberPaymentMapper memberPaymentMapper, FineRepository fineRepository, DateTimeUtil dateTimeUtil, GlobalDateUtil globalDateUtil, PaymentRepository paymentRepository, EmailUtil emailUtil, GetAuthUserUtil getAuthUserUtil, UserRepository userRepository, BookRepository bookRepository, BorrowRepository borrowRepository, ReturnRepository returnRepository) {
+    public MemberPaymentService(RestClient restClient, MemberPaymentMapper memberPaymentMapper, FineRepository fineRepository, DateTimeUtil dateTimeUtil, GlobalDateUtil globalDateUtil, PaymentRepository paymentRepository, EmailUtil emailUtil, GetAuthUserUtil getAuthUserUtil, UserRepository userRepository, BookRepository bookRepository, BorrowRepository borrowRepository, ReturnRepository returnRepository, KhaltiAPIProperties khaltiProperties) {
         this.restClient = restClient;
         this.memberPaymentMapper = memberPaymentMapper;
         this.fineRepository = fineRepository;
@@ -57,6 +60,7 @@ public class MemberPaymentService {
         this.bookRepository = bookRepository;
         this.borrowRepository = borrowRepository;
         this.returnRepository = returnRepository;
+        this.khaltiProperties = khaltiProperties;
     }
 
     public KhaltiPaymentInitiateResponseDto initiateFinePayment(KhaltiPaymentInitiateRequestDto khaltiPaymentInitiateRequestDto) {
@@ -64,8 +68,8 @@ public class MemberPaymentService {
         KhaltiPaymentRequest khaltiPaymentRequest = memberPaymentMapper.prepareKhaltiPayment(khaltiPaymentInitiateRequestDto);
         KhaltiPaymentInitiateResponseDto khaltiPaymentInitiateResponseDto = restClient
                 .post()
-                .uri("https://dev.khalti.com/api/v2/epayment/initiate/")
-                .header("Authorization", "Key 78d4ab4e77364e189f8fffe6f014ffee")
+                .uri(khaltiProperties.getInitiateUrl())
+                .header(khaltiProperties.getAuthHeaderName(), khaltiProperties.getAuthHeaderValue())
                 .body(khaltiPaymentRequest)
                 .retrieve()
                 .body(KhaltiPaymentInitiateResponseDto.class);
@@ -94,14 +98,20 @@ public class MemberPaymentService {
                 "Initiated", "Payment has been initiated but not completed."
         );
 
-        KhaltiPaymentLookupResponseDto lookupResponse = restClient
-                .post()
-                .uri("https://dev.khalti.com/api/v2/epayment/lookup/")
-                .header("Authorization", "Key 78d4ab4e77364e189f8fffe6f014ffee")
-                .body(new KhaltiPaymentLookupRequestDto(pidx))
-                .retrieve()
-                .body(KhaltiPaymentLookupResponseDto.class);
-        logger.warn("khaltiPaymentLookupResponseDto: {}", lookupResponse);
+        KhaltiPaymentLookupResponseDto lookupResponse;
+        try {
+            lookupResponse = restClient
+                    .post()
+                    .uri(khaltiProperties.getLookupUrl())
+                    .header(khaltiProperties.getAuthHeaderName(), khaltiProperties.getAuthHeaderValue())
+                    .body(new KhaltiPaymentLookupRequestDto(pidx))
+                    .retrieve()
+                    .body(KhaltiPaymentLookupResponseDto.class);
+            logger.warn("khaltiPaymentLookupResponseDto: {}", lookupResponse);
+        } catch (Exception e) {
+            logger.error("Unexpected error during Khalti payment verification!", e);
+            return new KhaltiPaymentVerificationResponseDto(false, "Error", "Unexpected payment verification error!", null);
+        }
 
 //        Null response - verification failed, do not process payment
         if (lookupResponse == null ){
@@ -119,12 +129,17 @@ public class MemberPaymentService {
             );
             Map<String, Object> data = Map.of(
                     "pidx", lookupResponse.pidx(),
-                    "totalAmount", lookupResponse.total_amount()
+                    "totalAmount", Math.floor(Double.valueOf(total_amount)/100)
             );
 
 //            Only the status with Completed must be treated as success.
             if ("Completed".equals(lookupResponse.status())){
                 Fine fine = fineRepository.findById(Integer.parseInt(purchase_order_id)).orElseThrow(() -> new ResourceEntityNotFoundException("Fine", "Id", Long.valueOf(purchase_order_id)));
+
+                if(fine.isPaidStatus()){
+                    return new KhaltiPaymentVerificationResponseDto(true, paymentStatus, message, data);
+                }
+
                 fine.setPaidStatus(true);
                 fine = fineRepository.save(fine);
                 fineRepository.flush();

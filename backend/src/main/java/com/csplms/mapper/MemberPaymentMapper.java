@@ -1,6 +1,7 @@
 package com.csplms.mapper;
 
 import com.csplms.dto.requestDto.UserRequestDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import com.csplms.dto.requestDto.KhaltiPaymentInitiateRequestDto;
 import com.csplms.dto.requestDto.KhaltiPaymentRequest;
@@ -8,10 +9,16 @@ import com.csplms.dto.requestDto.KhaltiPaymentRequest;
 @Component
 public class MemberPaymentMapper {
 
+    @Value("${frontend.base-url}")
+    private String baseUrl;
+
+    @Value("${frontend.payment-response-url}")
+    private String paymentResponseUrl;
+
     public KhaltiPaymentRequest prepareKhaltiPayment(KhaltiPaymentInitiateRequestDto khaltiPaymentInitiateRequestDto) {
         return new KhaltiPaymentRequest(
-                "http://localhost:5173/payment/response",
-                "http://localhost:5173/",
+                paymentResponseUrl,
+                baseUrl,
                 khaltiPaymentInitiateRequestDto.totalAmount() * 100,
                 khaltiPaymentInitiateRequestDto.fineId(),
                 "Fine: " + khaltiPaymentInitiateRequestDto.fineId(),
