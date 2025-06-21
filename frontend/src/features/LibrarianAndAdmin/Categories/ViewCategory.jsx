@@ -7,24 +7,19 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Component, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import GLOBAL_SERVICE from "@/services/GlobalServices";
+import { useFetchCategoryById } from "@/hooks/useFetchCategoryById";
 
 const ViewCategory = ({ id }) => {
-  const [category, setCategory] = useState(null);
+  const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const res = GLOBAL_SERVICE.get(`/api/v1/la/categories/${id}`);
-    res.then((response) => {
-      setCategory(response.data);
-    });
-  }, [id]);
+  const { data: category, isLoading } = useFetchCategoryById(id, open);
 
   return (
     <div>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <Eye size={20} />
         </DialogTrigger>
