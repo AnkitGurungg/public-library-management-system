@@ -8,30 +8,25 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { BookOpenText, Eye, NotepadText } from "lucide-react";
-import { useEffect, useState } from "react";
-import GLOBAL_SERVICE, { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
+import { BookOpenText, Eye } from "lucide-react";
+import { useState } from "react";
+import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
 import { Button } from "@/components/ui/button";
+import { useFetchBookById } from "@/hooks/useFetchBookById";
 
 const ViewBook = ({ id }) => {
-  const [book, setBook] = useState(null);
+  const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const res = GLOBAL_SERVICE.get(`/api/v1/la/books/${id}`);
-    res.then((response) => {
-      setBook(response.data);
-      // console.log(response);
-    });
-  }, [id]);
+  const { data: book, isLoading } = useFetchBookById(id, open);
 
   return (
     <div>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <Eye size={20} />
         </DialogTrigger>
 
-        <DialogContent className="w-full">
+        <DialogContent className="w-full" aria-describedby={undefined}>
           <DialogHeader className="sm:max-w-[500px]">
             <DialogTitle className="text-2xl font-semibold flex items-center mb-0 mx-2">
               <div className="flex flex-row items-center h-11 w-11 justify-center bg-[#d7d7d7] rounded-md mr-3">

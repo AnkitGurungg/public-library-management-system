@@ -152,11 +152,8 @@ public class BookService {
 
     public BookDto getBook(int bookId) {
         Book book = this.bookRepository.findById(bookId).orElseThrow(() -> new ResourceEntityNotFoundException("Book", "Id", bookId));
-        if (!book.isAvailable()){
-            throw new ResourceEntityNotFoundException("Book", "Id", bookId);
-        }
 
-        BookDto dto = new BookDto(
+        return new BookDto(
                 book.getBookId(),
                 book.getIsbn(),
                 book.getTitle(),
@@ -178,8 +175,6 @@ public class BookService {
                 book.getShelf() != null ? book.getShelf().getShelfId() : null,
                 book.getShelf() != null ? book.getShelf().getName() : null
         );
-
-        return dto;
     }
 
     public String getBookAddedUser(int bookId) {

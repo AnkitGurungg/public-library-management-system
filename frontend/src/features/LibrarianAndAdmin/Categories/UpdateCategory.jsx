@@ -213,3 +213,14 @@ const UpdateCategory = ({ id }) => {
 };
 
 export default UpdateCategory;
+
+// useEffect(() => {
+//   if (category) {
+//     reset({
+//       name: category.name ?? "",
+//       startingNumber: category.startingNumber ?? 0,
+//       endingNumber: category.endingNumber ?? 0,
+//       description: category.description ?? "",
+//     });
+//   }
+// }, [category, reset]);
