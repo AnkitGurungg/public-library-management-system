@@ -85,13 +85,13 @@ export function DataTable({ columns, data = [] }) {
           </select>
           <select
             className="border rounded-lg text-gray-800 px-3 py-2 bg-white"
-            value={table.getColumn("available")?.getFilterValue() ?? ""}
+            value={table.getColumn("active")?.getFilterValue() ?? ""}
             onChange={(e) =>
-              table.getColumn("available")?.setFilterValue(e.target.value)
+              table.getColumn("active")?.setFilterValue(e.target.value)
             }
           >
             <option value="" disabled selected>
-              Select available status
+              Select active status
             </option>
             <option value="">ALL</option>
             <option value={true}>YES</option>

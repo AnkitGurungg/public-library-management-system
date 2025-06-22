@@ -8,23 +8,18 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Eye, NotepadText, SquareLibrary } from "lucide-react";
+import { Eye, SquareLibrary } from "lucide-react";
 import { useState, useEffect } from "react";
-import GLOBAL_SERVICE from "@/services/GlobalServices";
+import { useFetchShelfById } from "@/hooks/useFetchShelfById";
 
 const ViewShelf = ({ id }) => {
-  const [shelf, setShelf] = useState(null);
+  const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const res = GLOBAL_SERVICE.get(`/api/v1/la/shelves/${id}`);
-    res.then((response) => {
-      setShelf(response.data);
-    });
-  }, [id]);
+  const { data: shelf, isLoading } = useFetchShelfById(id, open);
 
   return (
     <div>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <Eye size={20} />
         </DialogTrigger>
@@ -65,7 +60,8 @@ const ViewShelf = ({ id }) => {
                 <div className="grid grid-cols-2 gap-6">
                   <div className="col-span-1">
                     <p>
-                      <strong>Active Capacity:</strong> {shelf?.availableCapacity}
+                      <strong>Active Capacity:</strong>{" "}
+                      {shelf?.availableCapacity}
                     </p>
                   </div>
                   <div className="col-span-1">

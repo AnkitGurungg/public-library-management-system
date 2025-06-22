@@ -1,7 +1,5 @@
 import Delete from "@/components/Delete";
 import RestoreBook from "@/components/Restore";
-import UpdateBook from "@/features/LibrarianAndAdmin/Books/UpdateBook";
-import ViewBook from "@/features/LibrarianAndAdmin/Books/ViewBook";
 import UpdateShelf from "@/features/LibrarianAndAdmin/Shelf/UpdateShelf";
 import ViewShelf from "@/features/LibrarianAndAdmin/Shelf/ViewShelf";
 import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
