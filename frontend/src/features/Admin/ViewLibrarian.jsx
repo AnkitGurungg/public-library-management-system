@@ -9,25 +9,19 @@ import {
   DialogClose,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Eye, Users } from "lucide-react";
-import GLOBAL_SERVICE from "@/services/GlobalServices";
+import { useFetchUserById } from "@/hooks/useFetchUserById";
 
 const ViewLibrarian = ({ id, type }) => {
-  const [librarian, setLibrarian] = useState(null);
-  const BACKEND_SERVER_BASE_URL = "http://localhost:8080/";
+  const [open, setOpen] = useState(false);
+  const { data: librarian, error } = useFetchUserById(id, open);
 
-  useEffect(() => {
-    const res = GLOBAL_SERVICE.get(`/api/v1/a/librarians/${id}`);
-    res.then((response) => {
-      setLibrarian(response.data);
-      // console.log(response);
-    });
-  }, [id]);
+  const BACKEND_SERVER_BASE_URL = "http://localhost:8080/";
 
   return (
     <div>
-      <Dialog aria-describedby={undefined}>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <Eye size={20} />
         </DialogTrigger>
@@ -42,98 +36,109 @@ const ViewLibrarian = ({ id, type }) => {
             </DialogTitle>
             <div className="my-0 h-px bg-gray-800 mx-4" />
           </DialogHeader>
-          <div className="max-h-[70vh] overflow-y-auto border border-gray-300 rounded-lg">
-            <div className="flex flex-col items-center mb-4">
-              <Avatar className="h-24 w-24 mt-1">
-                {librarian?.evidence?.userImage ? (
-                  <a
-                    href={
-                      BACKEND_SERVER_BASE_URL + librarian?.evidence?.userImage
-                    }
-                    target="_blank"
-                  >
-                    <AvatarImage
-                      src={`${BACKEND_SERVER_BASE_URL}${librarian?.evidence?.userImage}`}
-                      alt="Librarian"
-                      className="object-cover"
-                    />
-                  </a>
-                ) : (
-                  <AvatarFallback>N/A</AvatarFallback>
-                )}
-              </Avatar>
-            </div>
 
-            <div className="space-y-3 text-base mx-5">
-              <div>
-                <span className="font-semibold">Name:</span>{" "}
-                {librarian?.name || "N/A"}
-              </div>
-              <div>
-                <span className="font-semibold">Contact:</span>{" "}
-                {librarian?.contactNumber || "N/A"}
-              </div>
-              <div>
-                <span className="font-semibold">Email:</span>{" "}
-                {librarian?.email || "N/A"}
-              </div>
-              <div>
-                <span className="font-semibold">Address:</span>{" "}
-                {librarian?.address || "N/A"}
-              </div>
-              <div>
-                <span className="font-semibold">Applied Date:</span>{" "}
-                {librarian?.appliedDate || "N/A"}
+          {librarian ? (
+            <div className="max-h-[70vh] overflow-y-auto border border-gray-300 rounded-lg">
+              <div className="flex flex-col items-center mb-4">
+                <Avatar className="h-24 w-24 mt-1">
+                  {librarian?.evidence?.userImage ? (
+                    <a
+                      href={
+                        BACKEND_SERVER_BASE_URL + librarian?.evidence?.userImage
+                      }
+                      target="_blank"
+                    >
+                      <AvatarImage
+                        src={`${BACKEND_SERVER_BASE_URL}${librarian?.evidence?.userImage}`}
+                        alt="Librarian"
+                        className="object-cover"
+                      />
+                    </a>
+                  ) : (
+                    <AvatarFallback>N/A</AvatarFallback>
+                  )}
+                </Avatar>
               </div>
 
-              <div className="">
-                <span className="font-semibold">Verified Date:</span>{" "}
-                {librarian?.verifiedDate || "N/A"}
-              </div>
-            </div>
+              <div className="space-y-3 text-base mx-5">
+                <div>
+                  <span className="font-semibold">Name:</span>{" "}
+                  {librarian?.name || "N/A"}
+                </div>
+                <div>
+                  <span className="font-semibold">Contact:</span>{" "}
+                  {librarian?.contactNumber || "N/A"}
+                </div>
+                <div>
+                  <span className="font-semibold">Email:</span>{" "}
+                  {librarian?.email || "N/A"}
+                </div>
+                <div>
+                  <span className="font-semibold">Address:</span>{" "}
+                  {librarian?.address || "N/A"}
+                </div>
+                <div>
+                  <span className="font-semibold">Applied Date:</span>{" "}
+                  {librarian?.appliedDate || "N/A"}
+                </div>
 
-            <div className="mt-6 space-y-4 mx-4 mb-2">
-              <h3 className="font-bold mb-0 ml-0.5">Attached Images</h3>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1 overflow-hidden rounded-lg border">
-                  <a
-                    href={
-                      BACKEND_SERVER_BASE_URL + librarian?.evidence?.evidenceOne
-                    }
-                    target="_blank"
-                  >
-                    <img
-                      src={
+                <div className="">
+                  <span className="font-semibold">Verified Date:</span>{" "}
+                  {librarian?.verifiedDate || "N/A"}
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-4 mx-4 mb-2">
+                <h3 className="font-bold mb-0 ml-0.5">Attached Images</h3>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1 overflow-hidden rounded-lg border">
+                    <a
+                      href={
+                        BACKEND_SERVER_BASE_URL +
                         librarian?.evidence?.evidenceOne
-                          ? `${BACKEND_SERVER_BASE_URL}${librarian?.evidence?.evidenceOne}`
-                          : ""
                       }
-                      alt="N/A"
-                      className={`h-auto w-full object-cover min-h-20`}
-                    />
-                  </a>
-                </div>
-                <div className="flex-1 overflow-hidden rounded-lg border">
-                  <a
-                    href={
-                      BACKEND_SERVER_BASE_URL + librarian?.evidence?.evidenceTwo
-                    }
-                    target="_blank"
-                  >
-                    <img
-                      src={
+                      target="_blank"
+                    >
+                      <img
+                        src={
+                          librarian?.evidence?.evidenceOne
+                            ? `${BACKEND_SERVER_BASE_URL}${librarian?.evidence?.evidenceOne}`
+                            : ""
+                        }
+                        alt="N/A"
+                        className={`h-auto w-full object-cover min-h-20`}
+                      />
+                    </a>
+                  </div>
+                  <div className="flex-1 overflow-hidden rounded-lg border">
+                    <a
+                      href={
+                        BACKEND_SERVER_BASE_URL +
                         librarian?.evidence?.evidenceTwo
-                          ? `${BACKEND_SERVER_BASE_URL}${librarian?.evidence?.evidenceTwo}`
-                          : ""
                       }
-                      alt="N/A"
-                      className={`h-auto w-full object-cover min-h-20`}
-                    />
-                  </a>
+                      target="_blank"
+                    >
+                      <img
+                        src={
+                          librarian?.evidence?.evidenceTwo
+                            ? `${BACKEND_SERVER_BASE_URL}${librarian?.evidence?.evidenceTwo}`
+                            : ""
+                        }
+                        alt="N/A"
+                        className={`h-auto w-full object-cover min-h-20`}
+                      />
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : (
+            error && (
+              <p className="flex items-center justify-center h-40 text-red-500">
+                Error loading user: {error?.message || "Something went wrong"}
+              </p>
+            )
+          )}
           <DialogFooter className="mt-2">
             <DialogClose className="w-full">
               <Button className="w-full">Close</Button>

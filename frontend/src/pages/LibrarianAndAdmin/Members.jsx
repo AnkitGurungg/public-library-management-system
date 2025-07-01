@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { UserRoundX, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import VmNonVMMembers from "@/features/LibrarianAndAdmin/Members/VmNonVMMembers";
+import VNonVMembers from "@/features/LibrarianAndAdmin/Members/VNonVMembers";
 import NonVerifiedMembers from "@/features/LibrarianAndAdmin/Members/NonVerifiedMembers";
 
 const Members = () => {
@@ -36,7 +36,7 @@ const Members = () => {
       </div>
 
       {showNONVM && <NonVerifiedMembers />}
-      {showVM && <VmNonVMMembers />}
+      {showVM && <VNonVMembers />}
     </div>
   );
 };

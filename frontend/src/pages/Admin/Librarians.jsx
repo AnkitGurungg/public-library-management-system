@@ -16,7 +16,7 @@ const Librarians = () => {
   }, []);
 
   useEffect(() => {
-    console.log(librarians);
+    // console.log(librarians);
   }, [librarians]);
 
   return (

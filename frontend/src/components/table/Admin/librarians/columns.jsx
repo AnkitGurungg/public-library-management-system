@@ -2,7 +2,6 @@ import Delete from "@/components/Delete";
 import RestoreBook from "@/components/Restore";
 import UpdateLibrarian from "@/features/Admin/UpdateLibrarian";
 import ViewLibrarian from "@/features/Admin/ViewLibrarian";
-import VerifyMember from "@/features/LibrarianAndAdmin/Members/VerifyMember";
 import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
 
 export const columns = [

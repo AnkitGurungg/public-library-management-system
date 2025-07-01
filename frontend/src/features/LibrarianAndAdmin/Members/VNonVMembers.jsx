@@ -3,7 +3,7 @@ import { useFetchVerifiedMembers } from "@/hooks/useFetchVerifiedMembers";
 import { columns } from "@/components/table/LibrarianAndAdmin/members/Members/columns";
 import { DataTable } from "@/components/table/LibrarianAndAdmin/members/Members/data-table";
 
-const VmNonVMMembers = () => {
+const VNonVMembers = () => {
   const { data: verifiedMembers, refetch: refetchVerifiedMembers } =
     useFetchVerifiedMembers();
 
@@ -26,4 +26,4 @@ const VmNonVMMembers = () => {
   );
 };
 
-export default VmNonVMMembers;
+export default VNonVMembers;
