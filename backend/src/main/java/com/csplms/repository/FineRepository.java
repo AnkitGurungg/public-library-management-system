@@ -1,6 +1,8 @@
 package com.csplms.repository;
 
 import com.csplms.entity.Fine;
+import jakarta.persistence.LockModeType;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,9 +10,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FineRepository extends JpaRepository<Fine, Integer> {
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT f FROM Fine f WHERE f.fineId = :id")
+    Optional<Fine> findByIdForUpdate(@Param("id") Integer id);
 
 //    For second chart
     @Query("SELECT " +

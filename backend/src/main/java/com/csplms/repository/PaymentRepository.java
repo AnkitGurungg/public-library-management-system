@@ -8,11 +8,14 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 
-//    Both for 1st chart
+    Optional<Payment> findByPidx(String integer);
+
+    //    Both for 1st chart
     @Query("SELECT YEAR(p.date) as year, MONTH(p.date) as month, SUM(p.amount) as totalRevenue " +
             "FROM Payment p " +
             "WHERE p.date >= :startDate AND p.date <= :endDate " +

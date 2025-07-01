@@ -61,9 +61,9 @@ export const PaymentResponse = () => {
         data
       );
       setVerificationResponse(response.data);
-      console.log("Payment verification response:", response);
+      // console.log("Payment verification response:", response);
     } catch (err) {
-      console.error("Payment verification error:", err);
+      // console.error("Payment verification error:", err);
       setError(
         err.response?.data?.message ||
           "Failed to verify payment. Please try again."

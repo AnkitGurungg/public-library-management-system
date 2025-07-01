@@ -43,4 +43,13 @@ public class Fine {
         this.paidStatus = paidStatus;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Fine{");
+        sb.append("fineId=").append(fineId);
+        sb.append(", totalFine=").append(totalFine);
+        sb.append(", paidStatus=").append(paidStatus);
+        sb.append('}');
+        return sb.toString();
+    }
 }

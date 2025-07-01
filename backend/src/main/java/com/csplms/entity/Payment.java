@@ -25,15 +25,23 @@ public class Payment {
 
     private Date date;
 
+    @Column(unique = true, columnDefinition = "uk_pidx")
     private String pidx;
 
     private String txnId;
-
-    private String tidx;
 
     @OneToOne
     @JsonBackReference
     @JoinColumn(name = "fine_id")
     private Fine fine;
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Payment{");
+        sb.append("paymentId=").append(paymentId);
+        sb.append(", amount=").append(amount);
+        sb.append(", pidx='").append(pidx).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }
