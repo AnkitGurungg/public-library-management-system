@@ -112,6 +112,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(KhaltiPaymentInitiateFailedException.class)
+    public ResponseEntity<ResponseAPI> initiateKhaltiPaymentExceptionHandler(KhaltiPaymentInitiateFailedException ex) {
+        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), ex.isStatus()), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseAPI> exceptionHandler(Exception ex) {
 

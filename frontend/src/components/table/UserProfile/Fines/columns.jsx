@@ -5,7 +5,6 @@ import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
 
 export const columns = (refetchMemberFines) => [
-  
   {
     accessorKey: "getImageURL",
     header: "Book",
@@ -167,7 +166,7 @@ export const columns = (refetchMemberFines) => [
         try {
           const response = await GLOBAL_SERVICE.post(
             "/api/v1/mla/payments/khalti/initiate",
-            paymentData
+            paymentData,
           );
           // console.log("Initiate Khalti: ", response);
 
@@ -176,8 +175,11 @@ export const columns = (refetchMemberFines) => [
             window.open(url, "_blank", "noopener,noreferrer");
           }
         } catch (error) {
-          toast.error("Payment failed!");
-          console.error("Payment failed!", error);
+          toast.error(
+            error?.response?.data?.message ||
+              "Payment initiation failed! Please try again later.",
+          );
+          // console.error("Payment failed!", error);
         }
       };
 

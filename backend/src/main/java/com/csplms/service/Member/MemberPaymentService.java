@@ -1,6 +1,7 @@
 package com.csplms.service.Member;
 
 import com.csplms.entity.*;
+import com.csplms.exception.KhaltiPaymentInitiateFailedException;
 import com.csplms.exception.MailFailedException;
 import com.csplms.exception.ResourceEntityNotFoundException;
 import com.csplms.mapper.MemberPaymentMapper;
@@ -59,17 +60,22 @@ public class MemberPaymentService {
     }
 
     public KhaltiPaymentInitiateResponseDto initiateFinePayment(KhaltiPaymentInitiateRequestDto khaltiPaymentInitiateRequestDto) {
-        logger.warn("KhaltiPaymentInitiateRequestDto is: {}", khaltiPaymentInitiateRequestDto);
-        KhaltiPaymentRequest khaltiPaymentRequest = memberPaymentMapper.prepareKhaltiPayment(khaltiPaymentInitiateRequestDto);
-        KhaltiPaymentInitiateResponseDto khaltiPaymentInitiateResponseDto = restClient
-                .post()
-                .uri(khaltiProperties.getInitiateUrl())
-                .header(khaltiProperties.getAuthHeaderName(), khaltiProperties.getAuthHeaderValue())
-                .body(khaltiPaymentRequest)
-                .retrieve()
-                .body(KhaltiPaymentInitiateResponseDto.class);
-        logger.warn("KhaltiPaymentInitiateResponseDto is: {}", khaltiPaymentInitiateResponseDto);
-        return khaltiPaymentInitiateResponseDto;
+        try {
+            logger.warn("KhaltiPaymentInitiateRequestDto is: {}", khaltiPaymentInitiateRequestDto);
+            KhaltiPaymentRequest khaltiPaymentRequest = memberPaymentMapper.prepareKhaltiPayment(khaltiPaymentInitiateRequestDto);
+            KhaltiPaymentInitiateResponseDto khaltiPaymentInitiateResponseDto = restClient
+                    .post()
+                    .uri(khaltiProperties.getInitiateUrl())
+                    .header(khaltiProperties.getAuthHeaderName(), khaltiProperties.getAuthHeaderValue())
+                    .body(khaltiPaymentRequest)
+                    .retrieve()
+                    .body(KhaltiPaymentInitiateResponseDto.class);
+            logger.warn("KhaltiPaymentInitiateResponseDto is: {}", khaltiPaymentInitiateResponseDto);
+            return khaltiPaymentInitiateResponseDto;
+        } catch (Exception e){
+            logger.error("KhaltiPaymentInitiateFailedException: {}", e.getMessage());
+            throw new KhaltiPaymentInitiateFailedException(false, "Service temporarily unavailable. Please try again later.");
+        }
     }
 
     @Transactional(rollbackFor = {MessagingException.class, MailFailedException.class, Exception.class})
