@@ -1,24 +1,55 @@
 import { useQuery } from "@tanstack/react-query";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
+import { useEffect, useState } from "react";
 
-export const useFetchMemberWishList = () => {
+export function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+export const useFetchMemberWishList = ({
+  page = 0,
+  size = 11,
+  filters = {},
+} = {}) => {
+  const debouncedFilters = useDebounce(filters, 400);
+
   return useQuery({
-    queryKey: ["memberWishList"],
+    queryKey: ["memberWishList", page, size, debouncedFilters],
     queryFn: async () => {
       try {
-        const response = await GLOBAL_SERVICE.get("/api/v1/m/wishlists");
-        // console.log(response);
-        
-        return { status: response.status, data: response.data };
-      } catch (error) {
-        console.log(error);
-        if (error.response.status === 404) {
-          return {
-            status: error.response.status,
-            data: error.response.message,
-          };
+        const params = new URLSearchParams();
+        params.append("page", page);
+        params.append("size", size);
+
+        if (debouncedFilters.title) {
+          params.append("title", debouncedFilters.title);
         }
-        return { status: 500, data: "Internal Server Error!!!" };
+        if (debouncedFilters.language) {
+          params.append("language", debouncedFilters.language);
+        }
+        if (!!debouncedFilters.categoryId) {
+          params.append("categoryId", debouncedFilters.categoryId);
+        }
+        if (typeof debouncedFilters.inStock === "boolean") {
+          params.append("inStock", debouncedFilters.inStock);
+        }
+
+        const response = await GLOBAL_SERVICE.get(
+          `/api/v1/m/wishlists?${params.toString()}`,
+        );
+        return response.data;
+      } catch (error) {
+        return [];
       }
     },
   });

@@ -1,12 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import React from "react";
 import {
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
-  getFilteredRowModel,
-  getSortedRowModel,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -17,52 +13,28 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
-export function DataTable({ columns, data }) {
-  const [columnFilters, setColumnFilters] = useState([]);
-  const [sorting, setSorting] = useState([]);
-
-  const categories = Array.isArray(data)
-    ? [
-        ...new Set(
-          data.map((wishlistItem) => wishlistItem?.categoryName).filter(Boolean)
-        ),
-      ]
-    : [];
-
-  const languages = Array.isArray(data)
-    ? [
-        ...new Set(
-          data.map((wishlistItem) => wishlistItem?.language).filter(Boolean)
-        ),
-      ]
-    : [];
-
-  const [pagination, setPagination] = React.useState({
-    pageIndex: 0,
-    pageSize: 7,
-  });
-
+export function DataTable({
+  columns,
+  data,
+  pagination,
+  setPagination,
+  pageCount,
+  isLoading,
+  filters,
+  setFilters,
+  categories,
+  languages,
+}) {
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-
-    pageCount: Math.ceil(data?.length / pagination?.pageSize),
-
+    pageCount,
+    manualPagination: true,
     onPaginationChange: setPagination,
-
-    state: {
-      pagination,
-      sorting,
-      columnFilters,
-    },
+    state: { pagination },
+    getCoreRowModel: getCoreRowModel(),
   });
 
   return (
@@ -72,71 +44,74 @@ export function DataTable({ columns, data }) {
           <Input
             className="w-1/3 bg-[#f1f1f1] h-11 placeholder:text-sm placeholder:text-gray-500 border border-gray-200"
             placeholder="Search by title..."
-            value={table.getColumn("title")?.getFilterValue() ?? ""}
-            onChange={(event) =>
-              table.getColumn("title")?.setFilterValue(event.target.value)
+            value={filters.title ?? ""}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, title: e.target.value }))
             }
           />
           <div className="flex gap-2.5">
             <select
               className="border text-base font-normal rounded-lg text-gray-600 px-3 py-2 bg-[#f1f1f1] border-gray-200"
-              value={table.getColumn("category")?.getFilterValue() ?? ""}
-              onChange={(e) =>
-                table.getColumn("category")?.setFilterValue(e.target.value)
-              }
+              value={filters.categoryId ?? ""}
+              onChange={(e) => {
+                const value = Number.parseInt(e.target.value, 10);
+
+                setFilters((prev) => ({
+                  ...prev,
+                  categoryId: Number.isNaN(value) ? null : value,
+                }));
+              }}
             >
-              <option
-                value=""
-                disabled
-                selected
-                className="placeholder:text-sm"
-              >
+              <option value="" disabled className="placeholder:text-sm">
                 Select category
               </option>
               <option value="">ALL</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
+              {categories.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
                 </option>
               ))}
             </select>
 
             <select
               className="border text-base font-normal rounded-lg text-gray-600 px-3 py-2 bg-[#f1f1f1] border-gray-200"
-              value={table.getColumn("language")?.getFilterValue() ?? ""}
+              value={filters.language ?? ""}
               onChange={(e) =>
-                table.getColumn("language")?.setFilterValue(e.target.value)
+                setFilters((prev) => ({ ...prev, language: e.target.value }))
               }
             >
-              <option
-                value=""
-                disabled
-                selected
-                className="placeholder:text-sm"
-              >
+              <option value="" disabled className="placeholder:text-sm">
                 Select language
               </option>
               <option value="">ALL</option>
-              {languages.map((language) => (
-                <option key={language} value={language}>
-                  {language}
+              {languages.map((item) => (
+                <option key={item} value={item}>
+                  {item}
                 </option>
               ))}
             </select>
 
             <select
               className="border text-base font-normal rounded-lg text-gray-600 px-3 py-2 bg-[#f1f1f1] border-gray-200"
-              value={table.getColumn("inStock")?.getFilterValue() ?? ""}
+              value={filters.inStock ?? ""}
               onChange={(e) =>
-                table.getColumn("inStock")?.setFilterValue(e.target.value)
+                setFilters((prev) => ({
+                  ...prev,
+                  inStock:
+                    e.target.value === ""
+                      ? null
+                      : e.target.value === "true"
+                        ? true
+                        : false,
+                }))
               }
             >
-              <option value="" disabled selected className="plceholder:text-sm">
+              <option value="" disabled className="plceholder:text-sm">
                 Select stock status
               </option>
               <option value="">ALL</option>
-              <option value="YES">YES</option>
-              <option value="NO">NO</option>
+              <option value="true">YES</option>
+              <option value="false">NO</option>
             </select>
           </div>
         </div>
@@ -159,7 +134,7 @@ export function DataTable({ columns, data }) {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -179,7 +154,7 @@ export function DataTable({ columns, data }) {
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -209,6 +184,11 @@ export function DataTable({ columns, data }) {
         >
           Previous
         </Button>
+
+        <span className="text-sm">
+          Page {pagination.pageIndex + 1} of {pageCount <= 0 ? 1 : pageCount}
+        </span>
+
         <Button
           variant="outline"
           size="sm"

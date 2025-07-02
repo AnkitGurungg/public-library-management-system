@@ -2,8 +2,10 @@ package com.csplms.repository;
 
 import com.csplms.dto.responseDto.CategoryCountDTO;
 import com.csplms.entity.Book;
+import com.csplms.entity.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -69,5 +71,8 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
             nativeQuery = true
     )
     Page<Book> findBooksOrderByPublishedDate(Pageable pageable);
+
+    @Query("SELECT DISTINCT b.language FROM WishList w JOIN w.book b WHERE w.user.userId = :userId")
+    List<String> findDistinctLanguagesByWishlistUser(@Param("userId") Integer userId);
 
 }

@@ -1,6 +1,7 @@
 package com.csplms.repository;
 
 import com.csplms.entity.Category;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,5 +23,8 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     @Query("SELECT c, COUNT(br) as borrowCount FROM Category c " +
             "JOIN c.books b JOIN b.borrows br GROUP BY c ORDER BY borrowCount DESC")
     List<Object[]> findMostPopularCategories();
+
+    @Query("SELECT DISTINCT b.category FROM WishList w JOIN w.book b WHERE w.user.userId = :userId")
+    List<Category> findDistinctByWishlistUser(@Param("userId") Integer userId);
 
 }
