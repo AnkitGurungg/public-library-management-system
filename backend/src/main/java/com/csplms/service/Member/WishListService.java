@@ -1,8 +1,7 @@
 package com.csplms.service.Member;
 
-import com.csplms.dto.requestDto.WishListRequestDto;
-import com.csplms.dto.responseDto.WishListDto;
 import com.csplms.entity.*;
+import com.csplms.dto.responseDto.WishListDto;
 import com.csplms.exception.ResourceEntityNotFoundException;
 import com.csplms.exception.UserNotPresentException;
 import com.csplms.mapper.WishListMapper;
@@ -11,15 +10,12 @@ import com.csplms.repository.UserRepository;
 import com.csplms.repository.WishListRepository;
 import com.csplms.security.JwtService;
 import com.csplms.util.GetAuthUserUtil;
-import jakarta.servlet.http.HttpServletRequest;
+import com.csplms.dto.requestDto.WishListRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class WishListService {
@@ -93,6 +89,22 @@ public class WishListService {
         }
 
         return wishListDtoList;
+    }
+
+    public List<Integer> getMemberWishListIds() {
+        String email = getAuthUserUtil.getAuthUser();
+        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new UserNotPresentException("User Not Found"));
+
+        List<WishList> userWishList = user.getUserWishLists();
+        List<Integer> wishListIds = new ArrayList<>();
+
+        if (userWishList != null) {
+            for (WishList item : userWishList){
+                wishListIds.add(item.getBook().getBookId());
+            }
+        }
+
+        return wishListIds;
     }
 
     public Integer deleteFromWishList(Long wishListId) {

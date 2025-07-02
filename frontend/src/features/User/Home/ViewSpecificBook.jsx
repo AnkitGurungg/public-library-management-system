@@ -16,7 +16,7 @@ import { UserContext } from "@/contexts/UserContext";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate, useParams } from "react-router-dom";
 import React, { useContext, useEffect, useState } from "react";
-import { useFetchMemberWishList } from "@/hooks/useFetchMemberWishList";
+import { useFetchMemberWishListIds } from "@/hooks/useFetchMemberWishListIds";
 
 export default function ViewSpecificBook() {
   const navigate = useNavigate();
@@ -25,9 +25,8 @@ export default function ViewSpecificBook() {
   const [book, setBook] = useState({});
   const [isExpanded, setIsExpanded] = useState(false);
   const { token, setToken, userInfo } = useContext(UserContext);
-
-  const { data: memberWishList, refetch: refetchMemberWishList } =
-    useFetchMemberWishList();
+  const { data: memberWishListIds, refetch: refetchMemberWishListIds } =
+    useFetchMemberWishListIds(!!token);
 
   const toggleReadMore = () => {
     setIsExpanded(!isExpanded);
@@ -40,7 +39,7 @@ export default function ViewSpecificBook() {
   const getBook = async () => {
     try {
       const response = await GLOBAL_SERVICE.get(
-        `/api/v1/p/resource/books/${bookId}`
+        `/api/v1/p/resource/books/${bookId}`,
       );
       // console.log(response);
 
@@ -74,12 +73,10 @@ export default function ViewSpecificBook() {
       const response = await GLOBAL_SERVICE.post("/api/v1/m/wishlists", {
         bookId: book.bookId,
       });
-      refetchMemberWishList();
+      refetchMemberWishListIds();
       toast.success("Added to wishlist!");
-      console.log(response.data);
     } catch (error) {
-      console.error("Error adding to wishlist:", error);
-      toast.error("Please try again!");
+      toast.error("Error! Please try again.");
     }
   };
 
@@ -106,10 +103,8 @@ export default function ViewSpecificBook() {
                 )}
               </Badge>
 
-              {Array.isArray(memberWishList?.data) &&
-              memberWishList?.data?.some(
-                (wishlistBook) => wishlistBook?.bookId === book?.bookId
-              ) ? (
+              {Array.isArray(memberWishListIds) &&
+              memberWishListIds?.some((item) => item === book?.bookId) ? (
                 <Button
                   onClick={() => navigate("/member/profile/wish-list")}
                   className="w-full text-white border-1 border-[#206ea6] bg-[#206ea6] uppercase hover:text-[#206ea6] hover:bg-white  rounded-none"
@@ -141,8 +136,8 @@ export default function ViewSpecificBook() {
                 {book?.description && isExpanded
                   ? book?.description
                   : book?.description?.length > 300
-                  ? `${book?.description?.slice(0, 300)}...`
-                  : book?.description}
+                    ? `${book?.description?.slice(0, 300)}...`
+                    : book?.description}
 
                 {(!book?.description || book.description.length === 0) &&
                   "No description available."}

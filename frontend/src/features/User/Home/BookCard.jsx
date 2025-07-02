@@ -5,15 +5,16 @@ import { UserContext } from "@/contexts/UserContext";
 import { useEffect } from "react";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
-import { useFetchMemberWishList } from "@/hooks/useFetchMemberWishList";
 import toast from "react-hot-toast";
+import { useFetchMemberWishListIds } from "@/hooks/useFetchMemberWishListIds";
 
 const BookCard = ({ curBook }) => {
   const navigate = useNavigate();
   const { token, setToken, userInfo } = useContext(UserContext);
   const { imageURL, title, author } = curBook;
-  const { data: memberWishList, refetch: refetchMemberWishList } =
-    useFetchMemberWishList();
+
+  const { data: memberWishListIds, refetch: refetchMemberWishListIds } =
+    useFetchMemberWishListIds(!!token);
 
   useEffect(() => {
     setToken(localStorage.getItem("Authorization"));
@@ -25,33 +26,20 @@ const BookCard = ({ curBook }) => {
 
   const handleAddToWishlist = async (e) => {
     e.stopPropagation();
-
+    
     if (!token) {
       toast.error("Please Login!");
       return;
     }
 
-    // if (userInfo?.role !== "ROLE_MEMBER") {
-    //   toast.error("Not allowed!");
-    //   return;
-    // }
-
     try {
-      const response = await GLOBAL_SERVICE.post(
-        "/api/v1/m/wishlists",
-        { bookId: curBook.bookId }
-        // {
-        //   headers: {
-        //     Authorization: `Bearer ${token}`,
-        //   },
-        // }
-      );
-      refetchMemberWishList();
+      const response = await GLOBAL_SERVICE.post("/api/v1/m/wishlists", {
+        bookId: curBook.bookId,
+      });
+      refetchMemberWishListIds();
       toast.success("Added to wishlist!");
-      console.log(response.data);
     } catch (error) {
-      console.error("Error adding to wishlist:", error);
-      toast.error("Please try again!");
+      toast.error("Error! Please try again.");
     }
   };
 
@@ -73,9 +61,8 @@ const BookCard = ({ curBook }) => {
 
       <div className="space-y-2">
         <div className="flex justify-center items-center w-full">
-          {Array.isArray(memberWishList?.data) && memberWishList?.data?.some(
-            (wishlistBook) => wishlistBook?.bookId === curBook?.bookId
-          ) ? (
+          {Array.isArray(memberWishListIds) &&
+          memberWishListIds?.some((item) => item === curBook?.bookId) ? (
             <Button
               onClick={() => navigate("/member/profile/wish-list")}
               className="w-full text-white border-1 border-[#206ea6] bg-[#206ea6] uppercase hover:text-[#206ea6] hover:bg-white  rounded-none"

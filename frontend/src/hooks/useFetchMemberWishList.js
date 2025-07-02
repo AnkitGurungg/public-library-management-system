@@ -6,12 +6,10 @@ export const useFetchMemberWishList = () => {
     queryKey: ["memberWishList"],
     queryFn: async () => {
       try {
-        const response = await GLOBAL_SERVICE.get(
-          "/api/v1/m/wishlists"
-        );
+        const response = await GLOBAL_SERVICE.get("/api/v1/m/wishlists");
         // console.log(response);
-        return { status: response.status, data: response.data };
         
+        return { status: response.status, data: response.data };
       } catch (error) {
         console.log(error);
         if (error.response.status === 404) {
@@ -23,6 +21,5 @@ export const useFetchMemberWishList = () => {
         return { status: 500, data: "Internal Server Error!!!" };
       }
     },
-    
   });
 };

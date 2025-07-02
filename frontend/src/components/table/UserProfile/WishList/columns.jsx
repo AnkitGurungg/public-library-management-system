@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { useFetchMemberWishList } from "@/hooks/useFetchMemberWishList";
 import GLOBAL_SERVICE, {
   BACKEND_SERVER_BASE_URL,
 } from "@/services/GlobalServices";

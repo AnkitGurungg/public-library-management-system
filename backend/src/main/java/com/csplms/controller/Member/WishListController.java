@@ -38,6 +38,11 @@ public class WishListController {
         return new ResponseEntity<>(this.wishListService.getMemberWishList(), HttpStatus.OK);
     }
 
+    @GetMapping("/ids")
+    public ResponseEntity<List<Integer>> getMemberWishListIds() {
+        return new ResponseEntity<>(this.wishListService.getMemberWishListIds(), HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> getMemberWishList(@PathVariable("id") Long wishListId) {
         return new ResponseEntity<>(this.wishListService.deleteFromWishList(wishListId), HttpStatus.OK);
