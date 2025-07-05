@@ -1,13 +1,18 @@
 package com.csplms.controller.Admin;
 
+import com.csplms.dto.requestDto.KYCFillUpDto;
 import com.csplms.dto.responseDto.AdminUserDto;
 import com.csplms.dto.responseDto.UserDto;
+import com.csplms.entity.User;
+import com.csplms.exception.MailFailedException;
 import com.csplms.service.Admin.LibrarianService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,6 +27,17 @@ public class LibrarianController {
     @Autowired
     public LibrarianController(LibrarianService librarianService){
         this.librarianService = librarianService;
+    }
+
+    @PostMapping
+    public ResponseEntity<User> addLibrarianUser(
+            @RequestPart KYCFillUpDto kycFillUpDto,
+            @RequestPart MultipartFile userImage,
+            @RequestPart MultipartFile[] evidenceImages) throws MessagingException, MailFailedException {
+        return new ResponseEntity<>(
+                librarianService.addLibrarianUser(kycFillUpDto, userImage, evidenceImages),
+                HttpStatus.CREATED
+        );
     }
 
     @GetMapping

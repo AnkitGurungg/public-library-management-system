@@ -57,7 +57,7 @@ const AddLibrarian = () => {
 
     const formData = new FormData();
     formData.append(
-      "userRequestDto",
+      "kycFillUpDto",
       new Blob([JSON.stringify(data)], { type: "application/json" })
     );
     formData.append("userImage", userImage);
@@ -67,7 +67,7 @@ const AddLibrarian = () => {
 
     try {
       const response = await GLOBAL_SERVICE.post(
-        "/api/v1/a/user/add/librarian",
+        "/api/v1/a/librarians",
         formData,
         {
           headers: {
@@ -189,7 +189,7 @@ const AddLibrarian = () => {
                         message: "Please enter atleast 5 characters",
                       },
                       maxLength: {
-                        value: 20,
+                        value: 40,
                         message: "Please enter no more than 20 characters.",
                       },
                     })}

@@ -10,13 +10,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AddLibrarianMapper {
+public class LibrarianMapper {
 
     private final GlobalDateUtil globalDateUtil;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AddLibrarianMapper(GlobalDateUtil globalDateUtil, PasswordEncoder passwordEncoder) {
+    public LibrarianMapper(GlobalDateUtil globalDateUtil, PasswordEncoder passwordEncoder) {
         this.globalDateUtil = globalDateUtil;
         this.passwordEncoder = passwordEncoder;
     }
