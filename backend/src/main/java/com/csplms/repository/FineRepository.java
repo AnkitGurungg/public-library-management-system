@@ -49,6 +49,28 @@ public interface FineRepository extends JpaRepository<Fine, Integer> {
             LEFT JOIN b.category c
             LEFT JOIN f.payment p
             WHERE br.borrowUsers.userId = :userId
+            ORDER BY r.returnDate DESC, f.fineId DESC
+        """
+    )
+    List<MemberFineDto> finesInfoByUserId(@Param("userId") Integer userId);
+
+    @Query(
+            """
+            SELECT new com.csplms.dto.responseDto.MemberFineDto(
+                f.fineId, f.totalFine, f.paidStatus,
+                b.bookId, b.title, b.language, b.imageURL,
+                c.categoryId, c.name,
+                br.borrowDate, br.dueDate, br.extended,
+                r.returnDate,
+                p.paymentId, p.amount
+            )
+            FROM Fine f
+            JOIN f.returns r
+            JOIN r.borrows br
+            JOIN br.borrowBooks b
+            LEFT JOIN b.category c
+            LEFT JOIN f.payment p
+            WHERE br.borrowUsers.userId = :userId
               AND (:title IS NULL OR LOWER(b.title) LIKE LOWER(CONCAT('%', :title, '%')))
               AND (:categoryId IS NULL OR c.categoryId = :categoryId)
               AND (:extended IS NULL OR br.extended = :extended)

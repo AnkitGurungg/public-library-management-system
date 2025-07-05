@@ -1,7 +1,8 @@
 package com.csplms.service.LibrarianAdmin;
 
-import com.csplms.dto.responseDto.AdminBorrowDto;
+import com.csplms.dto.responseDto.*;
 import com.csplms.dto.responseDto.reports.OverdueStatsDTO;
+import com.csplms.repository.FineRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.csplms.entity.Book;
@@ -12,8 +13,6 @@ import com.csplms.mapper.BorrowMapper;
 import com.csplms.util.GlobalDateUtil;
 import com.csplms.helper.BorrowHelper;
 import jakarta.mail.MessagingException;
-import com.csplms.dto.responseDto.FinesDto;
-import com.csplms.dto.responseDto.FinesInfo;
 import com.csplms.repository.BookRepository;
 import com.csplms.repository.UserRepository;
 import com.csplms.repository.BorrowRepository;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import com.csplms.exception.MailFailedException;
 import com.csplms.dto.requestDto.BorrowRequestDto;
 import com.csplms.dto.requestDto.ExtendDueDateDto;
-import com.csplms.dto.responseDto.BorrowResponseDto;
 import com.csplms.exception.ResourceListNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import com.csplms.exception.ResourceAlreadyExistsException;
@@ -38,6 +36,7 @@ import java.util.List;
 public class BorrowService {
 
     private final EmailUtil emailUtil;
+    private final FineRepository fineRepository;
 
     @Value("${extend.due.date}")
     private long extendDays;
@@ -52,7 +51,7 @@ public class BorrowService {
     private static final Logger logger = LoggerFactory.getLogger(BorrowService.class);
 
     @Autowired
-    public BorrowService(BorrowMapper borrowMapper, BorrowRepository borrowRepository, BookRepository bookRepository, UserRepository userRepository, BorrowHelper borrowHelper, GlobalDateUtil globalDateUtil, EmailUtil emailUtil) {
+    public BorrowService(BorrowMapper borrowMapper, BorrowRepository borrowRepository, BookRepository bookRepository, UserRepository userRepository, BorrowHelper borrowHelper, GlobalDateUtil globalDateUtil, EmailUtil emailUtil, FineRepository fineRepository) {
         this.borrowMapper = borrowMapper;
         this.borrowRepository = borrowRepository;
         this.bookRepository = bookRepository;
@@ -60,6 +59,7 @@ public class BorrowService {
         this.borrowHelper = borrowHelper;
         this.globalDateUtil = globalDateUtil;
         this.emailUtil = emailUtil;
+        this.fineRepository = fineRepository;
     }
 
     @Transactional(rollbackFor = {MessagingException.class, MailFailedException.class, Exception.class})
@@ -76,18 +76,17 @@ public class BorrowService {
         borrowHelper.checkBorrowLimit(user);
 
 //        Get user Fines
-        List<FinesInfo> rawFines = userRepository.finesInfo(Long.valueOf(borrowRequestDto.userId()));
-//         Map fines to dto
-        List<FinesDto> finesDtoList = borrowHelper.getFinesDtoResult(rawFines);
+        List<MemberFineDto> fineDtos = fineRepository.finesInfoByUserId(borrowRequestDto.userId());
+
 //        Check if the user has paid fines
-        borrowHelper.checkFinePaidStatus(finesDtoList, user);
+        borrowHelper.checkFinePaidStatus(fineDtos, user);
 
 //        Check available quantity of the Book
         borrowHelper.checkQuantity(book);
 
 //        Save borrow record
         Borrow borrow = borrowMapper.toBorrow(borrowRequestDto);
-        System.out.println(borrow);
+
         borrow = borrowRepository.save(borrow);
         borrowRepository.flush();
 

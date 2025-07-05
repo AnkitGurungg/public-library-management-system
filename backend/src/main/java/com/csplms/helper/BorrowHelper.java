@@ -5,11 +5,10 @@ import com.csplms.entity.Book;
 import com.csplms.entity.User;
 import org.slf4j.LoggerFactory;
 import com.csplms.entity.Borrow;
-import com.csplms.dto.responseDto.FinesDto;
-import com.csplms.dto.responseDto.FinesInfo;
 import com.csplms.repository.BorrowRepository;
 import org.springframework.stereotype.Component;
 import com.csplms.exception.InvalidBorrowException;
+import com.csplms.dto.responseDto.MemberFineDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -62,53 +61,9 @@ public class BorrowHelper {
         return true;
     }
 
-    public List<FinesDto> getFinesDtoResult(List<FinesInfo> rawFines){
-        List<FinesDto> finesDtoList = rawFines.stream()
-                .map(r -> new FinesDto(
-                        r.getBookId(),
-                        r.getTitle(),
-                        r.getAuthor(),
-                        r.getLanguage(),
-                        r.getEdition(),
-                        r.getPageCount(),
-                        r.getTotalQuantity(),
-                        r.getPublishedDate(),
-                        r.getPrice(),
-                        r.getImageURL(),
-                        r.getDescription(),
-                        r.getCategoryId(),
-                        r.getCategoryName(),
-                        r.getCategory(),
-
-                        r.getBorrowId(),
-                        r.getBorrowBooks(),
-                        r.getBorrowUsers(),
-                        r.isReturnStatus(),
-                        r.getBorrowDate(),
-                        r.getDueDate(),
-                        r.isExtended(),
-
-                        r.getReturnId(),
-                        r.getReturnDate(),
-                        r.getBorrows(),
-
-                        r.getFineId(),
-                        r.getTotalFine(),
-                        r.isPaidStatus(),
-                        r.getReturns(),
-                        r.getPayment(),
-
-                        r.getPaymentId(),
-                        r.getAmount(),
-                        r.getDate()
-                ))
-                .toList();
-        return finesDtoList;
-    }
-
-    public boolean checkFinePaidStatus(List<FinesDto> results, User user) {
-        for (FinesDto finesDto : results) {
-            if (!finesDto.isPaidStatus()) {
+    public boolean checkFinePaidStatus(List<MemberFineDto> fineDtos, User user) {
+        for (MemberFineDto finesDto : fineDtos) {
+            if (!finesDto.paidStatus()) {
                 throw new InvalidBorrowException("User has not cleared previous fines");
             }
         }

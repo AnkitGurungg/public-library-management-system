@@ -1,6 +1,5 @@
 package com.csplms.repository;
 
-import com.csplms.dto.responseDto.FinesInfo;
 import com.csplms.entity.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
@@ -51,30 +50,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying(clearAutomatically = true)
     @Query(value = "update users set present=0, verified=0 where user_id=:userId", nativeQuery = true)
     int deleteLibrarian(Integer userId);
-
-    @Query(value = """
-        SELECT
-            b.*,
-            br.*,
-            u.*,
-            c.category_id AS categoryId,
-            c.name AS categoryName,
-            rr.return_id AS returnId,
-            rr.return_date AS returnDate,
-            f.*,
-            p.payment_id as paymentId,
-            p.amount as amount,
-            p.date as date
-        FROM books b
-        LEFT JOIN categories c ON b.category_id = c.category_id
-        JOIN borrow_records br ON b.book_id = br.book_id
-        JOIN users u ON u.user_id = br.user_id
-        JOIN return_records rr ON br.borrow_id = rr.borrow_id
-        JOIN fines f on rr.return_id = f.return_id
-        LEFT JOIN payments p on f.fine_id = p.fine_id
-        WHERE u.user_id=:userId order by rr.return_date desc, f.fine_id desc
-        """, nativeQuery = true
-    )
-    List<FinesInfo> finesInfo(Long userId);
 
 }
