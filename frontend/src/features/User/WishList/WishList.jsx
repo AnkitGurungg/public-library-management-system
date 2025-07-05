@@ -38,11 +38,15 @@ const WishList = () => {
 
   return (
     <div className="ml-64 p-3">
-      <div className="flex items-center pt-3 justify-between text-2xl text-[#206ea6]">
-        <div className="px-2">
-          <h1 className="text-2xl font-bold text-[#206ea6] mb-6 pb-2 border-b-2 border-[#206ea6] inline-block">
+      <div className="flex items-center pt-1 justify-between text-2xl text-[#206ea6]">
+        <div className="px-2 mb-6">
+          <h1 className="text-2xl font-bold text-[#206ea6] pb-0.5 border-b-2 border-[#206ea6] inline-block">
             WishList ({memberWishList?.content?.length || "0"})
           </h1>
+
+          <p className="mt-0.5 text-sm text-gray-500 max-w-2xl leading-relaxed">
+            All books added to the wishlist appear here. Books can be saved for future reference.
+          </p>
         </div>
       </div>
       {memberWishList?.content && (
