@@ -112,4 +112,22 @@ export const columns = [
         </span>
       ),
   },
+
+  {
+    id: "returnStatus",
+    accessorFn: (row) => String(row?.returnStatus) || "",
+    header: "Returned",
+    cell: ({ row }) =>
+      row?.original?.returnStatus ? (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold bg-[#206ea6] text-white rounded-md">
+          <CheckCircle size={16} className="text-white" />
+          YES
+        </span>
+      ) : (
+        <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold bg-red-600 opacity-80 text-white rounded-md">
+          <XCircle size={16} className="text-white" />
+          NO
+        </span>
+      ),
+  },
 ];
