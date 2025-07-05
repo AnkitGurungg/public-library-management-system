@@ -6,10 +6,10 @@ import toast from "react-hot-toast";
 
 export const columns = (refetchMemberFines) => [
   {
-    accessorKey: "getImageURL",
+    accessorKey: "imageURL",
     header: "Book",
     cell: ({ row }) => {
-      const imageUrl = row.getValue("getImageURL");
+      const imageUrl = row.getValue("imageURL");
       const fullImageUrl = imageUrl
         ? `${BACKEND_SERVER_BASE_URL}${imageUrl}`
         : null;
@@ -26,21 +26,21 @@ export const columns = (refetchMemberFines) => [
   },
 
   {
-    accessorKey: "getTitle",
+    accessorKey: "title",
     header: "Title",
   },
 
   {
-    id: "getCategoryName",
+    id: "categoryName",
     header: "Category",
-    accessorFn: (row) => row?.getCategoryName || "N/A",
-    cell: ({ row }) => row?.original?.getCategoryName || "N/A",
+    accessorFn: (row) => row?.categoryName || "N/A",
+    cell: ({ row }) => row?.original?.categoryName || "N/A",
   },
 
   {
-    id: "getBorrowDate",
-    cell: ({ row }) => row?.original?.getBorrowDate || "N/A",
-    accessorFn: (row) => row?.getBorrowDate || "",
+    id: "borrowDate",
+    cell: ({ row }) => row?.original?.borrowDate || "N/A",
+    accessorFn: (row) => row?.borrowDate || "",
     header: ({ column }) => {
       return (
         <div className="flex justify-center w-full text-center">
@@ -57,9 +57,9 @@ export const columns = (refetchMemberFines) => [
   },
 
   {
-    id: "getDueDate",
-    cell: ({ row }) => row?.original?.getDueDate || "N/A",
-    accessorFn: (row) => row?.getDueDate || "N/A",
+    id: "dueDate",
+    cell: ({ row }) => row?.original?.dueDate || "N/A",
+    accessorFn: (row) => row?.dueDate || "N/A",
     header: ({ column }) => {
       return (
         <div className="flex justify-center w-full text-center">
@@ -76,9 +76,9 @@ export const columns = (refetchMemberFines) => [
   },
 
   {
-    id: "getReturnDate",
-    cell: ({ row }) => row?.original?.getReturnDate || "N/A",
-    accessorFn: (row) => row?.getReturnDate || "N/A",
+    id: "returnDate",
+    cell: ({ row }) => row?.original?.returnDate || "N/A",
+    accessorFn: (row) => row?.returnDate || "N/A",
     header: ({ column }) => {
       return (
         <div className="flex justify-center w-full text-center">
@@ -95,11 +95,11 @@ export const columns = (refetchMemberFines) => [
   },
 
   {
-    id: "isExtended",
-    accessorFn: (row) => String(row?.isExtended) || "",
+    id: "extended",
+    accessorFn: (row) => String(row?.extended) || "",
     header: "Extended",
     cell: ({ row }) =>
-      row?.original?.isExtended ? (
+      row?.original?.extended ? (
         <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-white bg-[#206ea6] rounded-md">
           <CheckCircle size={16} className="text-white" />
           YES
@@ -113,7 +113,7 @@ export const columns = (refetchMemberFines) => [
   },
 
   {
-    accessorKey: "getTotalFine",
+    accessorKey: "totalFine",
     header: ({ column }) => {
       return (
         <div className="flex justify-center w-full text-center">
@@ -130,11 +130,11 @@ export const columns = (refetchMemberFines) => [
   },
 
   {
-    id: "isPaidStatus",
-    accessorFn: (row) => String(row?.isPaidStatus) || "",
+    id: "paidStatus",
+    accessorFn: (row) => String(row?.paidStatus) || "",
     header: "Paid",
     cell: ({ row }) =>
-      row?.original?.isPaidStatus ? (
+      row?.original?.paidStatus ? (
         <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold text-white bg-[#206ea6] rounded-md">
           <CheckCircle size={16} className="text-white" />
           YES
@@ -151,16 +151,17 @@ export const columns = (refetchMemberFines) => [
     accessorKey: "paymentAction",
     header: "Action",
     cell: ({ row }) => {
-      const isPaid = row.getValue("isPaidStatus");
+      const isPaid = row.getValue("paidStatus");
       const paymentHandler = async (currBookFine) => {
+        // some cleanup
         // console.log(currBookFine);
 
         const paymentData = {
-          totalAmount: currBookFine.getTotalFine,
-          fineId: currBookFine.getFineId,
-          borrowedBookName: currBookFine.getTitle,
+          totalAmount: currBookFine.totalFine,
+          fineId: currBookFine.fineId,
+          borrowedBookName: currBookFine.title,
           // userId: "user-id",
-          bookId: currBookFine.getBookId,
+          bookId: currBookFine.bookId,
         };
 
         try {
@@ -168,7 +169,7 @@ export const columns = (refetchMemberFines) => [
             "/api/v1/mla/payments/khalti/initiate",
             paymentData,
           );
-          // console.log("Initiate Khalti: ", response);
+          // console.log("InitiateKhalti: ", response);
 
           const url = response?.data?.payment_url;
           if (url) {
@@ -179,7 +180,7 @@ export const columns = (refetchMemberFines) => [
             error?.response?.data?.message ||
               "Payment initiation failed! Please try again later.",
           );
-          // console.error("Payment failed!", error);
+          // console.error("FailedInitiatePayment!", error);
         }
       };
 

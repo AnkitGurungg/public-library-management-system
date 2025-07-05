@@ -1,23 +1,55 @@
 import { useQuery } from "@tanstack/react-query";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
+import { useEffect, useState } from "react";
 
-export const useFetchMemberFines = () => {
+export function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+export const useFetchMemberFines = ({
+  page = 0,
+  size = 11,
+  filters = {},
+} = {}) => {
+  const debouncedFilters = useDebounce(filters, 400);
+
   return useQuery({
-    queryKey: ["memberFines"],
+    queryKey: ["memberFines", page, size, debouncedFilters],
     queryFn: async () => {
       try {
-        const res = await GLOBAL_SERVICE.get(
-          "/api/v1/mla/user/profile/fines"
-        );
-        return { status: res.status, data: res.data };
-      } catch (error) {
-        if (error && error.response.status === 404) {
-          return {
-            status: error.response.status,
-            data: error.response.message,
-          };
+        const params = new URLSearchParams();
+        params.append("page", page);
+        params.append("size", size);
+
+        if (debouncedFilters.title) {
+          params.append("title", debouncedFilters.title);
         }
-        return { status: 500, data: "Internal Server Error!!!" };
+        if (!!debouncedFilters.categoryId) {
+          params.append("categoryId", debouncedFilters.categoryId);
+        }
+        if (typeof debouncedFilters.extended === "boolean") {
+          params.append("extended", debouncedFilters.extended);
+        }
+        if (typeof debouncedFilters.paid === "boolean") {
+          params.append("paid", debouncedFilters.paid);
+        }
+
+        const res = await GLOBAL_SERVICE.get(
+          `/api/v1/mla/user/fines?${params.toString()}`,
+        );
+        return res.data;
+      } catch (error) {
+        return [];
       }
     },
   });

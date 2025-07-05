@@ -1,12 +1,8 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
-  getFilteredRowModel,
-  getSortedRowModel,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -18,33 +14,25 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 
-export function DataTable({ columns, data }) {
-  const [columnFilters, setColumnFilters] = useState([]);
-  const [sorting, setSorting] = useState([]);
-
-  const categories = Array.isArray(data)
-    ? [
-        ...new Set(
-          data.map((category) => category?.getCategoryName).filter(Boolean)
-        ),
-      ]
-    : [];
-
+export function DataTable({
+  columns,
+  data,
+  isLoading,
+  pageCount,
+  pagination,
+  setPagination,
+  filters,
+  setFilters,
+  categories,
+}) {
   const table = useReactTable({
     data,
     columns,
+    pageCount,
+    manualPagination: true,
+    onPaginationChange: setPagination,
+    state: { pagination },
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-
-    state: {
-      sorting,
-      columnFilters,
-    },
   });
 
   return (
@@ -54,64 +42,79 @@ export function DataTable({ columns, data }) {
           <Input
             className="w-1/3 bg-[#f1f1f1] h-11 placeholder:text-sm placeholder:text-gray-500 border border-gray-200"
             placeholder="Search by title..."
-            value={table.getColumn("getTitle")?.getFilterValue() ?? ""}
-            onChange={(event) =>
-              table.getColumn("getTitle")?.setFilterValue(event.target.value)
+            value={filters.title ?? ""}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, title: e.target.value }))
             }
           />
           <div className="flex gap-2.5">
             <select
               className="border text-base font-normal rounded-lg text-gray-600 px-3 py-2 bg-[#f1f1f1] border-gray-200"
-              value={table.getColumn("getCategoryName")?.getFilterValue() ?? ""}
-              onChange={(e) =>
-                table
-                  .getColumn("getCategoryName")
-                  ?.setFilterValue(e.target.value)
-              }
+              value={filters.categoryId ?? ""}
+              onChange={(e) => {
+                const value = Number.parseInt(e.target.value, 10);
+
+                setFilters((prev) => ({
+                  ...prev,
+                  categoryId: Number.isNaN(value) ? null : value,
+                }));
+              }}
             >
-              <option
-                value=""
-                disabled
-                selected
-                className="placeholder:text-sm"
-              >
+              <option value="" disabled className="placeholder:text-sm">
                 Select category
               </option>
               <option value="">ALL</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
+              {categories.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
                 </option>
               ))}
-            </select>
-            <select
-              className="border text-base font-normal rounded-lg text-gray-600 px-3 py-2 bg-[#f1f1f1] border-gray-200"
-              value={table.getColumn("isExtended")?.getFilterValue() ?? ""}
-              onChange={(e) =>
-                table.getColumn("isExtended")?.setFilterValue(e.target.value)
-              }
-            >
-              <option value="" disabled selected className="plceholder:text-sm">
-                Select extended status
-              </option>
-              <option value="">ALL</option>
-              <option value={true}>YES</option>
-              <option value={false}>NO</option>
             </select>
 
             <select
               className="border text-base font-normal rounded-lg text-gray-600 px-3 py-2 bg-[#f1f1f1] border-gray-200"
-              value={table.getColumn("isPaidStatus")?.getFilterValue() ?? ""}
+              value={filters.extended ?? ""}
               onChange={(e) =>
-                table.getColumn("isPaidStatus")?.setFilterValue(e.target.value)
+                setFilters((prev) => ({
+                  ...prev,
+                  extended:
+                    e.target.value === ""
+                      ? null
+                      : e.target.value === "true"
+                        ? true
+                        : false,
+                }))
               }
             >
-              <option value="" disabled selected className="plceholder:text-sm">
+              <option value="" disabled className="plceholder:text-sm">
+                Select extended status
+              </option>
+              <option value="">ALL</option>
+              <option value="true">YES</option>
+              <option value="false">NO</option>
+            </select>
+
+            <select
+              className="border text-base font-normal rounded-lg text-gray-600 px-3 py-2 bg-[#f1f1f1] border-gray-200"
+              value={filters.paid ?? ""}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  paid:
+                    e.target.value === ""
+                      ? null
+                      : e.target.value === "true"
+                        ? true
+                        : false,
+                }))
+              }
+            >
+              <option value="" disabled className="plceholder:text-sm">
                 Select paid status
               </option>
               <option value="">ALL</option>
-              <option value={true}>YES</option>
-              <option value={false}>NO</option>
+              <option value="true">YES</option>
+              <option value="false">NO</option>
             </select>
           </div>
         </div>
@@ -130,7 +133,7 @@ export function DataTable({ columns, data }) {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -149,7 +152,7 @@ export function DataTable({ columns, data }) {
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -178,6 +181,11 @@ export function DataTable({ columns, data }) {
         >
           Previous
         </Button>
+
+        <span className="text-sm">
+          Page {pagination?.pageIndex + 1} of {pageCount <= 0 ? 1 : pageCount}
+        </span>
+
         <Button
           variant="outline"
           size="sm"

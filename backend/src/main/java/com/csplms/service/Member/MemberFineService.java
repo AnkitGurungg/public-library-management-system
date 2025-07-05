@@ -1,81 +1,45 @@
 package com.csplms.service.Member;
 
-import com.csplms.dto.responseDto.FinesDto;
-import com.csplms.dto.responseDto.FinesInfo;
+import com.csplms.dto.responseDto.MemberFineDto;
 import com.csplms.entity.User;
-import com.csplms.exception.ResourceListNotFoundException;
 import com.csplms.exception.UserNotPresentException;
+import com.csplms.repository.FineRepository;
 import com.csplms.repository.UserRepository;
 import com.csplms.util.GetAuthUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MemberFineService {
 
     private final GetAuthUserUtil getAuthUserUtil;
     private final UserRepository userRepository;
+    private final FineRepository fineRepository;
+
 
     @Autowired
-    public MemberFineService(GetAuthUserUtil getAuthUserUtil, UserRepository userRepository) {
+    public MemberFineService(GetAuthUserUtil getAuthUserUtil, UserRepository userRepository, FineRepository fineRepository) {
         this.getAuthUserUtil = getAuthUserUtil;
         this.userRepository = userRepository;
+        this.fineRepository = fineRepository;
     }
 
-    public List<FinesDto> getMemberFines() {
+    public Page<MemberFineDto> getMemberFines(int page, int size, String title, Integer categoryId, Boolean extended, Boolean paid) {
         String email = getAuthUserUtil.getAuthUser();
-        Optional<User> user = userRepository.findUserByEmail(email);
-        if (user.isEmpty()) {
-            throw new UserNotPresentException("User not found");
-        }
+        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new UserNotPresentException("User not found"));
 
-        List<FinesInfo> rawFines = userRepository.finesInfo(Long.valueOf(user.get().getUserId()));
-        if (rawFines.isEmpty()) {
-            throw new ResourceListNotFoundException("Fines");
-        }
-        List<FinesDto> results = rawFines.stream()
-                .map(r -> new FinesDto(
-                        r.getBookId(),
-                        r.getTitle(),
-                        r.getAuthor(),
-                        r.getLanguage(),
-                        r.getEdition(),
-                        r.getPageCount(),
-                        r.getTotalQuantity(),
-                        r.getPublishedDate(),
-                        r.getPrice(),
-                        r.getImageURL(),
-                        r.getDescription(),
-                        r.getCategoryId(),
-                        r.getCategoryName(),
-                        r.getCategory(),
-
-                        r.getBorrowId(),
-                        r.getBorrowBooks(),
-                        r.getBorrowUsers(),
-                        r.isReturnStatus(),
-                        r.getBorrowDate(),
-                        r.getDueDate(),
-                        r.isExtended(),
-
-                        r.getReturnId(),
-                        r.getReturnDate(),
-                        r.getBorrows(),
-
-                        r.getFineId(),
-                        r.getTotalFine(),
-                        r.isPaidStatus(),
-                        r.getReturns(),
-                        r.getPayment(),
-
-                        r.getPaymentId(),
-                        r.getAmount(),
-                        r.getDate()
-                ))
-                .toList();
-        return results;
+        Pageable pageable = PageRequest.of(page, size);
+        return fineRepository.findFinesByUserId(
+                pageable,
+                user.getUserId(),
+                title,
+                categoryId,
+                extended,
+                paid
+        );
     }
+
 }

@@ -1,21 +1,38 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { columns } from "@/components/table/UserProfile/Fines/columns";
 import { DataTable } from "@/components/table/UserProfile/Fines/data-table";
 import { useFetchMemberFines } from "@/hooks/useFetchMemberFines";
+import { useFetchBorrowedBooksFilters } from "@/hooks/useFetchBorrowedBooksFilters";
 
 const MemberFines = () => {
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 5,
+  });
+  const [filters, setFilters] = useState({
+    title: "",
+    categoryId: null,
+    extended: null,
+    paid: null,
+  });
+
   const {
     data: memberFines,
     refetch: refetchMemberFines,
     isLoading,
-  } = useFetchMemberFines();
+  } = useFetchMemberFines({
+    page: pagination.pageIndex,
+    size: pagination.pageSize,
+    filters: filters,
+  });
+  const { data: filterData } = useFetchBorrowedBooksFilters();
 
   useEffect(() => {
     refetchMemberFines();
   }, []);
 
   useEffect(() => {
-    // console.log("Member Fines: ", memberFines);
+    // console.log("MemberFines: ", memberFines);
   }, [memberFines]);
 
   return (
@@ -23,15 +40,22 @@ const MemberFines = () => {
       <div className="flex items-center pt-3 justify-between text-2xl text-[#206ea6]">
         <div className="px-2">
           <h1 className="text-2xl font-bold text-[#206ea6] mb-6 pb-2 border-b-2 border-[#206ea6] inline-block">
-            Fines ({memberFines?.data?.length || "0"})
+            Fines ({memberFines?.content?.length || "0"})
           </h1>
         </div>
       </div>
       <div>
-        {memberFines?.data && (
+        {memberFines && (
           <DataTable
             columns={columns(refetchMemberFines)}
-            data={memberFines?.data}
+            data={memberFines?.content}
+            isLoading={isLoading}
+            pageCount={memberFines?.totalPages ?? 0}
+            pagination={pagination}
+            setPagination={setPagination}
+            filters={filters}
+            setFilters={setFilters}
+            categories={filterData?.categories ?? []}
           />
         )}
       </div>
