@@ -1,22 +1,20 @@
 package com.csplms.controller.Member;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.csplms.dto.responseDto.BookReturnDto;
 import com.csplms.service.Member.BorrowedBooksService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
-import java.util.List;
+import java.util.Map;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/v1/mla/user/profile")
+@RequestMapping("/api/v1/mla/user/borrowed-books")
 @EnableMethodSecurity(prePostEnabled = true)
 @PreAuthorize("hasAnyAuthority('ROLE_MEMBER', 'ROLE_LIBRARIAN', 'ROLE_ADMIN')")
 public class BorrowedBooksController {
@@ -28,9 +26,24 @@ public class BorrowedBooksController {
         this.borrowedBooksService = borrowedBooksService;
     }
 
-    @GetMapping("/borrowed-books")
-    public ResponseEntity<List<BookReturnDto>> getBorrowedBooks() {
-        return new ResponseEntity<>(this.borrowedBooksService.getBorrowedBooks(), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<Page<BookReturnDto>> getBorrowedBooks(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "11") int pageSize,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String language,
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) Boolean extended
+    ) {
+        return new ResponseEntity<>(
+                this.borrowedBooksService.getBorrowedBooks(pageNumber, pageSize, title, language, categoryId, extended),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/filters")
+    public ResponseEntity<Map<String, Object>> getBorrowedBookFilters() {
+        return new ResponseEntity<>(this.borrowedBooksService.getBorrowedBookFilters(), HttpStatus.OK);
     }
 
 }

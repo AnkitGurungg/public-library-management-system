@@ -1,23 +1,54 @@
 import { useQuery } from "@tanstack/react-query";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
+import { useEffect, useState } from "react";
 
-export const useFetchMemberBorrowedBooks = () => {
+export function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+export const useFetchMemberBorrowedBooks = ({
+  pageNumber = 0,
+  pageSize = 11,
+  filters = {},
+} = {}) => {
+  const debouncedFilters = useDebounce(filters, 400);
   return useQuery({
-    queryKey: ["memberBorrowedBooks"],
+    queryKey: ["memberBorrowedBooks", pageNumber, pageSize, debouncedFilters],
     queryFn: async () => {
       try {
-        const res = await GLOBAL_SERVICE.get(
-          "/api/v1/mla/user/profile/borrowed-books"
-        );
-        return { status: res.status, data: res.data };
-      } catch (error) {
-        if (error && error.response.status !== 500) {
-          return {
-            status: error.response.status,
-            data: error.response.message,
-          };
+        const params = new URLSearchParams();
+        params.append("pageNumber", pageNumber);
+        params.append("pageSize", pageSize);
+
+        if (debouncedFilters.title) {
+          params.append("title", debouncedFilters.title);
         }
-        return { status: 500, data: "Internal Server Error!!!" };
+        if (debouncedFilters.language) {
+          params.append("language", debouncedFilters.language);
+        }
+        if (!!debouncedFilters.categoryId) {
+          params.append("categoryId", debouncedFilters.categoryId);
+        }
+        if (typeof debouncedFilters.extended === "boolean") {
+          params.append("extended", debouncedFilters.extended);
+        }
+
+        const res = await GLOBAL_SERVICE.get(
+          `/api/v1/mla/user/borrowed-books?${params.toString()}`,
+        );
+        return res.data;
+      } catch (error) {
+        return [];
       }
     },
   });

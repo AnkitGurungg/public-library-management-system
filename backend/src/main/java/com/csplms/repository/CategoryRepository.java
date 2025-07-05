@@ -27,4 +27,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     @Query("SELECT DISTINCT b.category FROM WishList w JOIN w.book b WHERE w.user.userId = :userId")
     List<Category> findDistinctByWishlistUser(@Param("userId") Integer userId);
 
+    @Query("SELECT DISTINCT b.category FROM Borrow br JOIN br.borrowBooks b WHERE br.borrowUsers.userId = :userId")
+    List<Category> findDistinctByBorrowUser(@Param("userId") Integer userId);
+
 }

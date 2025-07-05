@@ -1,13 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
 import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
 
 export const columns = [
   {
-    accessorKey: "getImageURL",
+    accessorKey: "imageURL",
     header: "Book",
     cell: ({ row }) => {
-      const imageUrl = row.getValue("getImageURL");
+      const imageUrl = row.getValue("imageURL");
       const fullImageUrl = imageUrl
         ? `${BACKEND_SERVER_BASE_URL}${imageUrl}`
         : null;
@@ -24,28 +23,28 @@ export const columns = [
   },
 
   {
-    accessorKey: "getTitle",
+    accessorKey: "title",
     header: "Title",
   },
 
   {
-    id: "getCategoryName",
+    id: "categoryName",
     header: "Category",
-    accessorFn: (row) => row?.getCategoryName || "N/A",
-    cell: ({ row }) => row?.original?.getCategoryName || "N/A",
+    accessorFn: (row) => row?.categoryName || "N/A",
+    cell: ({ row }) => row?.original?.categoryName || "N/A",
   },
 
   {
-    id: "getLanguage",
+    id: "language",
     header: "Language",
-    accessorFn: (row) => row?.getLanguage || "N/A",
-    cell: ({ row }) => row?.original?.getLanguage || "N/A",
+    accessorFn: (row) => row?.language || "N/A",
+    cell: ({ row }) => row?.original?.language || "N/A",
   },
 
   {
-    id: "getBorrowDate",
-    cell: ({ row }) => row?.original?.getBorrowDate || "N/A",
-    accessorFn: (row) => row?.getBorrowDate || "",
+    id: "borrowDate",
+    cell: ({ row }) => row?.original?.borrowDate || "N/A",
+    accessorFn: (row) => row?.borrowDate || "",
     header: ({ column }) => {
       return (
         <div className="flex justify-center w-full text-center">
@@ -62,9 +61,9 @@ export const columns = [
   },
 
   {
-    id: "getDueDate",
-    cell: ({ row }) => row?.original?.getDueDate || "N/A",
-    accessorFn: (row) => row?.getDueDate || "N/A",
+    id: "dueDate",
+    cell: ({ row }) => row?.original?.dueDate || "N/A",
+    accessorFn: (row) => row?.dueDate || "N/A",
     header: ({ column }) => {
       return (
         <div className="flex justify-center w-full text-center">
@@ -81,10 +80,10 @@ export const columns = [
   },
 
   {
-    accessorKey: "getReturnDate",
+    accessorKey: "returnDate",
     header: "Returned Date",
     cell: ({ row }) => {
-      const returnDate = row.getValue("getReturnDate");
+      const returnDate = row.getValue("returnDate");
       if (!returnDate) {
         return (
           <span className="bg-red-600 font-medium text-white opacity-80 px-1 py-1 rounded-2xl text-[11px]">
@@ -96,21 +95,12 @@ export const columns = [
     },
   },
 
-  // {
-  //   accessorKey: "isExtended",
-  //   header: "Extended",
-  //   cell: ({ row }) => {
-  //     const isExtended = row.getValue("isExtended");
-  //     return isExtended ? "YES" : "NO";
-  //   },
-  // },
-
   {
-    id: "isExtended",
-    accessorFn: (row) => String(row?.isExtended) || "",
+    id: "extended",
+    accessorFn: (row) => String(row?.extended) || "",
     header: "Extended",
     cell: ({ row }) =>
-      row?.original?.isExtended ? (
+      row?.original?.extended ? (
         <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold bg-[#206ea6] text-white rounded-md">
           <CheckCircle size={16} className="text-white" />
           YES

@@ -2,7 +2,6 @@ package com.csplms.repository;
 
 import com.csplms.dto.responseDto.CategoryCountDTO;
 import com.csplms.entity.Book;
-import com.csplms.entity.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
@@ -53,7 +52,6 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     )
     Page<Book> getAllNewArrivalBooks(Pageable pageable);
 
-
     @Query("SELECT new com.csplms.dto.responseDto.CategoryCountDTO(c.name, COUNT(b)) " +
             "FROM Book b JOIN b.category c " +
             "GROUP BY c.name " +
@@ -74,5 +72,8 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     @Query("SELECT DISTINCT b.language FROM WishList w JOIN w.book b WHERE w.user.userId = :userId")
     List<String> findDistinctLanguagesByWishlistUser(@Param("userId") Integer userId);
+
+    @Query("SELECT DISTINCT b.language FROM Borrow br JOIN br.borrowBooks b WHERE br.borrowUsers.userId = :userId")
+    List<String> findDistinctLanguagesByBorrowUser(@Param("userId") Integer userId);
 
 }
