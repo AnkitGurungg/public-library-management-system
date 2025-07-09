@@ -3,6 +3,7 @@ import { DataTable } from "@/components/table/UserProfile/BorrowedBooks/data-tab
 import { columns } from "@/components/table/UserProfile/BorrowedBooks/columns";
 import { useFetchMemberBorrowedBooks } from "@/hooks/useFetchMemberBorrowedBooks";
 import { useFetchBorrowedBooksFilters } from "@/hooks/useFetchBorrowedBooksFilters";
+import BorrowedBookSearchFilters from "@/components/UserProfile/BorrowedBookSearchFilters";
 
 const UBorrowedBooks = () => {
   const [pagination, setPagination] = useState({
@@ -44,7 +45,15 @@ const UBorrowedBooks = () => {
           </p>
         </div>
       </div>
+
       <div>
+        <BorrowedBookSearchFilters
+          filters={filters}
+          setFilters={setFilters}
+          categories={filterData?.categories ?? []}
+          languages={filterData?.languages ?? []}
+        />
+
         {memberBorrowedBooks && (
           <DataTable
             columns={columns}
@@ -53,10 +62,6 @@ const UBorrowedBooks = () => {
             pageCount={memberBorrowedBooks?.totalPages ?? 0}
             pagination={pagination}
             setPagination={setPagination}
-            filters={filters}
-            setFilters={setFilters}
-            categories={filterData?.categories ?? []}
-            languages={filterData?.languages ?? []}
           />
         )}
       </div>
