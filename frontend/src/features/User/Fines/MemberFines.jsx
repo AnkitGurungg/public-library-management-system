@@ -3,6 +3,7 @@ import { columns } from "@/components/table/UserProfile/Fines/columns";
 import { DataTable } from "@/components/table/UserProfile/Fines/data-table";
 import { useFetchMemberFines } from "@/hooks/useFetchMemberFines";
 import { useFetchBorrowedBooksFilters } from "@/hooks/useFetchBorrowedBooksFilters";
+import MemberFineSearchFilters from "@/components/UserProfile/MemberFineSearchFilters";
 
 const MemberFines = () => {
   const [pagination, setPagination] = useState({
@@ -44,11 +45,19 @@ const MemberFines = () => {
           </h1>
 
           <p className="mt-0.5 text-sm text-gray-500 max-w-2xl leading-relaxed">
-            All fines for overdue books are shown here. Clear pending fines to continue borrowing books.
+            All fines for overdue books are shown here. Clear pending fines to
+            continue borrowing books.
           </p>
         </div>
       </div>
+      
       <div>
+        <MemberFineSearchFilters
+          filters={filters}
+          setFilters={setFilters}
+          categories={filterData?.categories ?? []}
+        />
+
         {memberFines && (
           <DataTable
             columns={columns(refetchMemberFines)}
@@ -57,9 +66,6 @@ const MemberFines = () => {
             pageCount={memberFines?.totalPages ?? 0}
             pagination={pagination}
             setPagination={setPagination}
-            filters={filters}
-            setFilters={setFilters}
-            categories={filterData?.categories ?? []}
           />
         )}
       </div>
