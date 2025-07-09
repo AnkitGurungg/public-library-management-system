@@ -3,6 +3,7 @@ import { useFetchMemberWishList } from "@/hooks/useFetchMemberWishList";
 import { columns } from "@/components/table/UserProfile/WishList/columns";
 import { DataTable } from "@/components/table/UserProfile/WishList/data-table";
 import { useFetchWishlistFilters } from "@/hooks/useFetchWishlistFilters";
+import WishListSearchFilters from "@/components/UserProfile/WishListSearchFilters";
 
 const WishList = () => {
   const [pagination, setPagination] = useState({
@@ -45,10 +46,19 @@ const WishList = () => {
           </h1>
 
           <p className="mt-0.5 text-sm text-gray-500 max-w-2xl leading-relaxed">
-            All books added to the wishlist appear here. Books can be saved for future reference.
+            All books added to the wishlist appear here. Books can be saved for
+            future reference.
           </p>
         </div>
       </div>
+
+      <WishListSearchFilters
+        filters={filters}
+        setFilters={setFilters}
+        categories={filterData?.categories ?? []}
+        languages={filterData?.languages ?? []}
+      />
+
       {memberWishList?.content && (
         <DataTable
           columns={columns(refetchMemberWishList)}
@@ -57,10 +67,6 @@ const WishList = () => {
           setPagination={setPagination}
           pageCount={memberWishList?.totalPages ?? 0}
           isLoading={isLoading}
-          filters={filters}
-          setFilters={setFilters}
-          categories={filterData?.categories ?? []}
-          languages={filterData?.languages ?? []}
         />
       )}
     </div>
