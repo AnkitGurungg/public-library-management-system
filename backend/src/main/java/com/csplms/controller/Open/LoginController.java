@@ -1,11 +1,9 @@
 package com.csplms.controller.Open;
 
-import com.csplms.dto.responseDto.GetUserResponseDto;
-import com.csplms.exception.MailFailedException;
-import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.csplms.security.JwtService;
+import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import com.csplms.service.Open.LoginService;
@@ -16,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import com.csplms.exception.UnauthorizedException;
 import com.csplms.dto.responseDto.LoginResponseDto;
 import com.csplms.dto.requestDto.GetUserRequestDto;
+import com.csplms.exception.MailFailedException;
+import com.csplms.dto.responseDto.GetUserResponseDto;
 import com.csplms.dto.requestDto.RefreshTokenRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -50,6 +50,7 @@ public class LoginController {
         }
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", loginResponseDto.accessToken());
+        headers.add("refreshToken", loginResponseDto.refreshToken());
         return new ResponseEntity<>(loginResponseDto, headers, HttpStatus.OK);
     }
 

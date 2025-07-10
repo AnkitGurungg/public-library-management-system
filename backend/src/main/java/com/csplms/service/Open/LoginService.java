@@ -6,7 +6,6 @@ import com.csplms.dto.requestDto.LoginRequestDto;
 import com.csplms.dto.requestDto.GetUserRequestDto;
 import com.csplms.dto.responseDto.LoginResponseDto;
 import com.csplms.exception.MailFailedException;
-import com.csplms.exception.MailNotVerifiedException;
 import com.csplms.exception.UnauthorizedException;
 import com.csplms.exception.UserNotPresentException;
 import com.csplms.mapper.LoginMapper;
@@ -16,15 +15,11 @@ import com.csplms.util.DateTimeUtil;
 import com.csplms.util.EmailUtil;
 import com.csplms.util.OtpUtil;
 import jakarta.mail.MessagingException;
+import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 public class LoginService {
@@ -51,6 +46,8 @@ public class LoginService {
     public LoginResponseDto loginUser(LoginRequestDto loginRequestDto) throws MessagingException, MailFailedException {
         String otp = otpUtil.generateOTP();
         final String accessToken = jwtService.generateToken(loginRequestDto.email());
+        final String refreshToken = jwtService.generateRefreshToken(loginRequestDto.email());
+
 //        check user presence on db
         User user = this.userRepository.findUserByEmail(loginRequestDto.email())
                 .orElseThrow(() -> new UserNotPresentException("User not found"));
@@ -75,13 +72,13 @@ public class LoginService {
             user.setOtpGeneratedTime(dateTimeUtil.getLocalDateTime());
             user.setOtp(otp);
             userRepository.save(user);
-            return new LoginResponseDto(user.getUserId(), user.getEmail(), user.getRoles(), accessToken ,user.isVerified(), user.isPresent(), user.isActive());
+            return new LoginResponseDto(user.getUserId(), user.getEmail(), user.getRoles(), accessToken, refreshToken, user.isVerified(), user.isPresent(), user.isActive());
         }
 
         if (authentication.isAuthenticated() && user.isActive() && user.isPresent()) {
 //            final String accessToken = jwtService.generateToken(loginRequestDto.email());
 //            final String refreshToken = jwtService.generateRefreshToken(loginRequestDto.email());
-            return this.loginMapper.toLoginResponseDto(user, accessToken);
+            return this.loginMapper.toLoginResponseDto(user, accessToken, refreshToken);
         }
         else {
             throw new UnauthorizedException("Invalid username or password");

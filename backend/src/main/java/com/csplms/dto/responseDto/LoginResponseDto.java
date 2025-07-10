@@ -5,6 +5,7 @@ public record LoginResponseDto (
         String email,
         String role,
         String accessToken,
+        String refreshToken,
         boolean verified,
         boolean present,
         boolean active

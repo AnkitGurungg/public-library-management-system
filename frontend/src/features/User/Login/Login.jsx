@@ -51,6 +51,8 @@ const Login = ({ isOpenLogin, setIsOpenLogin }) => {
         const token = response.headers.get("Authorization");
         localStorage.setItem("Authorization", token);
         setToken(token);
+        const refreshToken = response.headers.get("refreshToken");
+        localStorage.setItem("refreshToken", refreshToken);
         // getUserInfo();
 
         if (response?.data?.role === "ROLE_MEMBER") {
