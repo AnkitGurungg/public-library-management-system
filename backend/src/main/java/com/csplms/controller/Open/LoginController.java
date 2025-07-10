@@ -59,11 +59,11 @@ public class LoginController {
         return new ResponseEntity<>(loginService.getUser(getUserRequestDto), HttpStatus.OK);
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequestDTO refreshRequest) {
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequestDTO refTokenReq) {
         try {
             // Extract token from request (remove "Bearer " if present)
-            String refreshToken = refreshRequest.getRefreshToken();
+            String refreshToken = refTokenReq.refreshToken();
             if (refreshToken.startsWith("Bearer ")) {
                 refreshToken = refreshToken.substring(7);
             }
@@ -71,11 +71,13 @@ public class LoginController {
             // Extract username from token
             String username = jwtService.extractUsername(refreshToken);
 
-            // Generate new access token
+            // Generate both new access and refresh token
             String newAccessToken = jwtService.refreshToken(refreshToken);
+            String newRefreshToken = jwtService.generateRefreshToken(username);
 
             Map<String, String> response = new HashMap<>();
-            response.put("accessToken", "Bearer " + newAccessToken);
+            response.put("Authorization", newAccessToken);
+            response.put("refreshToken", newRefreshToken);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {

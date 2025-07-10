@@ -45,11 +45,13 @@ public class JwtService {
     // Generate token with given username/email
     public String generateToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("tokenType", "ACCESS");
         return createToken(claims, userName, accessTokenExpTime);
     }
 
     public String generateRefreshToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("tokenType", "REFRESH");
         return createToken(claims, userName, refreshTokenExpTime);
     }
 
@@ -149,16 +151,16 @@ public class JwtService {
             throw new RuntimeException("Refresh token expired");
         }
 
-        final String username = extractUsername(refreshToken);
-        if (username == null) {
-            throw new RuntimeException("Invalid refresh token");
-        }
-
         // Verify this is a refresh token (optional additional check)
         String tokenType = extractClaim(refreshToken, claims ->
                 claims.get("tokenType", String.class));
-        if (!"refresh".equals(tokenType)) {
+        if (!"REFRESH".equals(tokenType)) {
             throw new RuntimeException("Invalid token type");
+        }
+
+        final String username = extractUsername(refreshToken);
+        if (username == null) {
+            throw new RuntimeException("Invalid refresh token");
         }
 
         // Generate a new access token
