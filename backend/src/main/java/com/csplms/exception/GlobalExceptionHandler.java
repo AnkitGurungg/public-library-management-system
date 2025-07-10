@@ -121,7 +121,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseAPI> exceptionHandler(Exception ex) {
 
         if (ex instanceof ExpiredJwtException expiredJwtException){
-            return new ResponseEntity<>(new ResponseAPI(expiredJwtException.getMessage(), false), HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(new ResponseAPI(expiredJwtException.getMessage(), false), HttpStatus.UNAUTHORIZED);
         }
 
         if (ex instanceof BadCredentialsException badCredentialsException){

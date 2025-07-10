@@ -34,43 +34,67 @@ GLOBAL_SERVICE.interceptors.request.use(
   (error) => {
     // console.log("Interceptor request error: ", error);
     return Promise.reject(error);
-  }
+  },
 );
 
 GLOBAL_SERVICE.interceptors.response.use(
-  function (response) {
-    // console.log("Intercptor Response: ", response);
-    return response;
-  },
+  (response) => response,
+  async (error) => {
+    // if (error.config?.skipAuthInterceptor) {
+    //   return Promise.reject(error);
+    // }
 
-  function (error) {
-    console.log(error.config);
-    if (error.config?.skipAuthInterceptor) {
-      return Promise.reject(error);
+    const status = error.response?.status;
+    const originalRequest = error.config;
+
+    if (status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        const refreshToken = localStorage.getItem("refreshToken");
+        const res = await axios.post(
+          `${BACKEND_SERVER_BASE_URL}auth/refresh-token`,
+          { refreshToken },
+          { skipAuthInterceptor: true },
+        );
+
+        const newAccessToken = res.data.Authorization;
+        const newRefreshToken = res.data.refreshToken;
+
+        // Save new tokens
+        localStorage.setItem("Authorization", newAccessToken);
+        localStorage.setItem("refreshToken", newRefreshToken);
+
+        // Update Authorization header and retry original request
+        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        return GLOBAL_SERVICE(originalRequest);
+      } catch (refreshError) {
+        // Refresh token expired or invalid -> force logout
+        localStorage.removeItem("Authorization");
+        localStorage.removeItem("refreshToken");
+        window.location.href = "/"; // Or your login page
+        return Promise.reject(refreshError);
+      }
     }
 
-    // console.log("Intercptor Response Error: ", error);
-    if (error.status === 401) {
-      toast.success(error.response?.data?.message || "Not Authorized");
-      // alert("You are not unauthorized")
-      // localStorage.clear();
-    }
     if (error.status === 403) {
       toast.dismiss("No Permission!");
       // alert("Pemission not provided")
       // localStorage.clear();
     }
+
     if (error.status === 406) {
       toast.success("Please Login!");
       localStorage.removeItem("Authorization");
       // localStorage.clear();
     }
+
     if (error.status === 500) {
       toast.error("Server error!");
       // localStorage.clear();
     }
+
     return Promise.reject(error);
-  }
+  },
 );
 
 export default GLOBAL_SERVICE;
