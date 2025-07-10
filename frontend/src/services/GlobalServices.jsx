@@ -3,8 +3,7 @@ import toast from "react-hot-toast";
 
 export const BACKEND_SERVER_BASE_URL = "http://localhost:8080/";
 
-const getToken = () => {
-  // localStorage.setItem("x-refresh-token", localStorage.getItem("x-refresh-token"));
+const getAccessToken = () => {
   return localStorage.getItem("Authorization");
 };
 
@@ -16,27 +15,22 @@ const GLOBAL_SERVICE = axios.create({
   // timeout: 100000,
 });
 
+// - REQUEST INTERCEPTOR -
 GLOBAL_SERVICE.interceptors.request.use(
   (config) => {
-    if (!config.skipAuthInterceptor && getToken()) {
-      console.log(`Bearer ${getToken()}`);
-      config.headers["Authorization"] = `Bearer ${getToken()}`;
+    const accessToken = getAccessToken();
+    if (!config.skipAuthInterceptor && accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
-
-    // if (getToken()) {
-    //   console.log(`Bearer ${getToken()}`);
-    //   config.headers["Authorization"] = `Bearer ${getToken()}`;
-    // }
-
-    // console.warn("Intercptor Request: ", config);
+    // console.warn("IntercptorRequestConfig: ", config);
     return config;
   },
   (error) => {
-    // console.log("Interceptor request error: ", error);
     return Promise.reject(error);
   },
 );
 
+// - RESPONSE INTERCEPTOR -
 GLOBAL_SERVICE.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -54,7 +48,10 @@ GLOBAL_SERVICE.interceptors.response.use(
         const res = await axios.post(
           `${BACKEND_SERVER_BASE_URL}auth/refresh-token`,
           { refreshToken },
-          { skipAuthInterceptor: true },
+          {
+            skipAuthInterceptor: true,
+            headers: { "Content-Type": "application/json" },
+          },
         );
 
         const newAccessToken = res.data.Authorization;
