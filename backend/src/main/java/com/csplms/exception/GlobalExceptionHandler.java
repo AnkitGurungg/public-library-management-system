@@ -3,10 +3,12 @@ package com.csplms.exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import com.csplms.dto.responseAPI.ResponseAPI;
 import org.springframework.http.ResponseEntity;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -92,6 +94,21 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ResponseAPI> badCredentialsExceptionExceptionHandler(BadCredentialsException ex) {
+        return new ResponseEntity<>(new ResponseAPI("Invalid username or password", false), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ResponseAPI> expiredJwtExceptionHandler(ExpiredJwtException ex) {
+        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({ MalformedJwtException.class, UnsupportedJwtException.class, SignatureException.class })
+    public ResponseEntity<ResponseAPI> jwtExceptionHandler(Exception ex) {
+        return new ResponseEntity<>(new ResponseAPI("Invalid token", false), HttpStatus.NOT_ACCEPTABLE);
+    }
+
     @ExceptionHandler(OTPTimeFailedException.class)
     public ResponseEntity<ResponseAPI> otpTimeFailedExceptionHandler(OTPTimeFailedException ex) {
         return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.CONFLICT);
@@ -119,14 +136,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseAPI> exceptionHandler(Exception ex) {
-
-        if (ex instanceof ExpiredJwtException expiredJwtException){
-            return new ResponseEntity<>(new ResponseAPI(expiredJwtException.getMessage(), false), HttpStatus.UNAUTHORIZED);
-        }
-
-        if (ex instanceof BadCredentialsException badCredentialsException){
-            return new ResponseEntity<>(new ResponseAPI("Invalid username or password!", false), HttpStatus.UNAUTHORIZED);
-        }
+        System.err.println("EX: " + ex);
 
         if (ex instanceof AuthorizationDeniedException authorizationDeniedException){
             logger.warn(authorizationDeniedException.getMessage());
@@ -139,12 +149,6 @@ public class GlobalExceptionHandler {
 
         if (ex instanceof HttpRequestMethodNotSupportedException hrmnse) {
             return new ResponseEntity<>(new ResponseAPI(hrmnse.getMessage(), false), HttpStatus.METHOD_NOT_ALLOWED);
-        }
-
-        if (ex instanceof MalformedJwtException malformedJwtException) {
-            logger.warn(malformedJwtException.getMessage());
-//            logger.warn(ex.getCause().toString());
-            return new ResponseEntity<>(new ResponseAPI(malformedJwtException.getMessage(), false), HttpStatus.NOT_ACCEPTABLE);
         }
 
         if (ex instanceof DataIntegrityViolationException dive){

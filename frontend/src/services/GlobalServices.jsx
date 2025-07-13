@@ -38,6 +38,8 @@ GLOBAL_SERVICE.interceptors.response.use(
     //   return Promise.reject(error);
     // }
 
+    console.log(error)
+
     const status = error.response?.status;
     const originalRequest = error.config;
 
@@ -75,19 +77,15 @@ GLOBAL_SERVICE.interceptors.response.use(
 
     if (error.status === 403) {
       toast.dismiss("No Permission!");
-      // alert("Pemission not provided")
-      // localStorage.clear();
     }
 
     if (error.status === 406) {
       toast.success("Please Login!");
-      localStorage.removeItem("Authorization");
-      // localStorage.clear();
+      localStorage.clear();
     }
 
     if (error.status === 500) {
       toast.error("Server error!");
-      // localStorage.clear();
     }
 
     return Promise.reject(error);
