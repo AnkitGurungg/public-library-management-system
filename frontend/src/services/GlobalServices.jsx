@@ -38,8 +38,6 @@ GLOBAL_SERVICE.interceptors.response.use(
     //   return Promise.reject(error);
     // }
 
-    console.log(error)
-
     const status = error.response?.status;
     const originalRequest = error.config;
 

@@ -1,14 +1,9 @@
-import GLOBAL_SERVICE from "@/services/GlobalServices";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import toast from "react-hot-toast";
 
 export function UserProvider({ children }) {
-  // const [token, setToken] = useState(
-  //   () => localStorage.getItem("Authorization") || ""
-  // );
-
   const [token, setToken] = useState(localStorage.getItem("Authorization"));
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,15 +11,11 @@ export function UserProvider({ children }) {
   const getUserInfo = async () => {
     if (token) {
       try {
-        const response = await axios.post(
-          "http://localhost:8080/auth/get-user",
-          { jwtToken: `Bearer ${token}` }
-          // {
-          //   headers: {
-          //     Authorization: token,
-          //   },
-          // }
-        );
+        const response = await axios.get("http://localhost:8080/auth/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setUserInfo(response.data);
       } catch (error) {
         if (error.status === 404) {

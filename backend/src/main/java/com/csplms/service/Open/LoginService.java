@@ -1,16 +1,18 @@
 package com.csplms.service.Open;
 
 import com.csplms.dto.responseDto.GetUserResponseDto;
+import com.csplms.entity.Evidence;
 import com.csplms.entity.User;
 import com.csplms.dto.requestDto.LoginRequestDto;
-import com.csplms.dto.requestDto.GetUserRequestDto;
 import com.csplms.dto.responseDto.LoginResponseDto;
 import com.csplms.exception.MailFailedException;
 import com.csplms.exception.UnauthorizedException;
 import com.csplms.exception.UserNotPresentException;
 import com.csplms.mapper.LoginMapper;
+import com.csplms.repository.EvidenceRepository;
 import com.csplms.repository.UserRepository;
 import com.csplms.security.JwtService;
+import com.csplms.security.UserDetailsServiceImpl;
 import com.csplms.util.DateTimeUtil;
 import com.csplms.util.EmailUtil;
 import com.csplms.util.OtpUtil;
@@ -26,6 +28,8 @@ public class LoginService {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final EvidenceRepository evidenceRepository;
+    private final UserDetailsServiceImpl userDetailsService;
     private final LoginMapper loginMapper;
     private final AuthenticationManager authenticationManager;
     private final EmailUtil emailUtil;
@@ -33,8 +37,10 @@ public class LoginService {
     private final DateTimeUtil dateTimeUtil;
 
     @Autowired
-    public LoginService(UserRepository userRepository, LoginMapper loginMapper, JwtService jwtService, AuthenticationManager authenticationManager, EmailUtil emailUtil, OtpUtil otpUtil, DateTimeUtil dateTimeUtil) {
+    public LoginService(UserRepository userRepository, EvidenceRepository evidenceRepository, UserDetailsServiceImpl userDetailsService, LoginMapper loginMapper, JwtService jwtService, AuthenticationManager authenticationManager, EmailUtil emailUtil, OtpUtil otpUtil, DateTimeUtil dateTimeUtil) {
         this.userRepository = userRepository;
+        this.evidenceRepository = evidenceRepository;
+        this.userDetailsService = userDetailsService;
         this.loginMapper = loginMapper;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
@@ -85,8 +91,38 @@ public class LoginService {
         }
     }
 
-    public GetUserResponseDto getUser(GetUserRequestDto getUserRequestDto) {
-        return jwtService.getUser(getUserRequestDto);
+    public GetUserResponseDto getUser(String rawToken) {
+        if (rawToken != null){
+            final String token = rawToken.substring(7);
+            final String username = jwtService.extractUsername(token);
+
+            User user = this.userDetailsService.loadUserByUsernameForToken(username);
+            Evidence evidence = evidenceRepository.findByUserId(user.getUserId());
+
+            return new GetUserResponseDto(
+                    user.getUserId(),
+                    user.getName(),
+                    user.getEmail(),
+                    user.getRoles(),
+                    evidence,
+                    token,
+                    user.isVerified(),
+                    user.isPresent(),
+                    user.isActive()
+            );
+        } else {
+            return new GetUserResponseDto(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    false,
+                    false,
+                    false
+            );
+        }
     }
 
 }

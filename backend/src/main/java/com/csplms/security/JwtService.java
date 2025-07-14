@@ -1,18 +1,12 @@
 package com.csplms.security;
 
-import com.csplms.dto.responseDto.GetUserResponseDto;
-import com.csplms.entity.Evidence;
-import com.csplms.repository.EvidenceRepository;
 import io.jsonwebtoken.Jwts;
-import com.csplms.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Service;
-import com.csplms.dto.requestDto.GetUserRequestDto;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Map;
@@ -32,15 +26,6 @@ public class JwtService {
 
     @Value("${jwt.refresh.token.exp.time}")
     private long refreshTokenExpTime;
-
-    private final UserDetailsServiceImpl userDetailsService;
-    private final EvidenceRepository evidenceRepository;
-
-    @Autowired
-    public JwtService(UserDetailsServiceImpl userDetailsService, EvidenceRepository evidenceRepository) {
-        this.userDetailsService = userDetailsService;
-        this.evidenceRepository = evidenceRepository;
-    }
 
     // Generate token with given username/email
     public String generateToken(String userName) {
@@ -106,44 +91,6 @@ public class JwtService {
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
-
-    // Validate the token against user details and expiration
-    public GetUserResponseDto getUser(GetUserRequestDto getUserRequestDto) {
-        if (getUserRequestDto.jwtToken() != null){
-            final String username = extractUsername(getUserRequestDto.jwtToken().substring(7));
-            User user = this.userDetailsService.loadUserByUsernameForToken(username);
-            System.out.println("user: " + user.getUserId());
-
-            Evidence evidence = evidenceRepository.findByUserId(user.getUserId());
-            System.out.println("evidence: " + evidence);
-            return new GetUserResponseDto(
-                    user.getUserId(),
-                    user.getName(),
-                    user.getEmail(),
-                    user.getRoles(),
-                    evidence,
-                    getUserRequestDto.jwtToken(),
-                    user.isVerified(),
-                    user.isPresent(),
-                    user.isActive()
-            );
-        } else {
-            return new GetUserResponseDto(
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    false,
-                    false,
-                    false
-            );
-        }
-//        if (Boolean.FALSE.equals(isTokenExpired(getUserRequestDto.jwtToken()))) {
-//            throw new RuntimeException("JWT token has expired");
-//        }
     }
 
     public String refreshToken(String refreshToken) {

@@ -85,7 +85,7 @@ public class SecurityConfig {
                         .requestMatchers("/","images/**", "/static/**", "/*.png", "/*.jpg", "/*.jpeg", "/*.gif", "/*.webp", "/*.svg").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/p/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/get-user").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/auth/me").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register","/auth/login", "/auth/refresh-token").permitAll()
 
 //                        Permit all requests

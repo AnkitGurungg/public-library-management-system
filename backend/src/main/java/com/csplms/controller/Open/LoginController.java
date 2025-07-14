@@ -13,7 +13,6 @@ import com.csplms.dto.requestDto.LoginRequestDto;
 import org.springframework.web.bind.annotation.*;
 import com.csplms.exception.UnauthorizedException;
 import com.csplms.dto.responseDto.LoginResponseDto;
-import com.csplms.dto.requestDto.GetUserRequestDto;
 import com.csplms.exception.MailFailedException;
 import com.csplms.dto.responseDto.GetUserResponseDto;
 import com.csplms.dto.requestDto.RefreshTokenRequestDTO;
@@ -54,9 +53,14 @@ public class LoginController {
         return new ResponseEntity<>(loginResponseDto, headers, HttpStatus.OK);
     }
 
-    @PostMapping("/get-user")
-    public ResponseEntity<GetUserResponseDto> getUser(@RequestBody GetUserRequestDto getUserRequestDto) {
-        return new ResponseEntity<>(loginService.getUser(getUserRequestDto), HttpStatus.OK);
+    @GetMapping("/me")
+    public ResponseEntity<GetUserResponseDto> getUser(
+            @RequestHeader("Authorization") String rawToken
+    ) {
+        return new ResponseEntity<>(
+                loginService.getUser(rawToken),
+                HttpStatus.OK
+        );
     }
 
     @PostMapping("/refresh-token")
