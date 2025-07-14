@@ -1,4 +1,4 @@
-package com.csplms.service.MemberLibrarianAdmin;
+package com.csplms.service.Member;
 
 import com.csplms.dto.requestDto.ChangePasswordRequestDto;
 import com.csplms.dto.requestDto.ForgotPasswordRequestDto;
@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ChangePasswordService {
+public class PasswordService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -27,7 +27,7 @@ public class ChangePasswordService {
     private final EmailUtil emailUtil;
 
     @Autowired
-    public ChangePasswordService(UserRepository userRepository, PasswordEncoder passwordEncoder, GetAuthUserUtil getAuthUserUtil, OtpUtil otpUtil, DateTimeUtil dateTimeUtil, EmailUtil emailUtil) {
+    public PasswordService(UserRepository userRepository, PasswordEncoder passwordEncoder, GetAuthUserUtil getAuthUserUtil, OtpUtil otpUtil, DateTimeUtil dateTimeUtil, EmailUtil emailUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.getAuthUserUtil = getAuthUserUtil;

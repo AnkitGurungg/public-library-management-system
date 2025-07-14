@@ -1,9 +1,9 @@
-package com.csplms.controller.MemberLibrarianAdmin;
+package com.csplms.controller.Member;
 
 import com.csplms.dto.requestDto.ChangePasswordRequestDto;
 import com.csplms.dto.requestDto.ForgotPasswordRequestDto;
 import com.csplms.exception.MailFailedException;
-import com.csplms.service.MemberLibrarianAdmin.ChangePasswordService;
+import com.csplms.service.Member.PasswordService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,21 +19,21 @@ import org.springframework.web.bind.annotation.*;
 @PreAuthorize("hasAnyAuthority('ROLE_MEMBER', 'ROLE_LIBRARIAN', 'ROLE_ADMIN')")
 public class PasswordController {
 
-    private final ChangePasswordService changePasswordService;
+    private final PasswordService passwordService;
 
     @Autowired
-    public PasswordController(ChangePasswordService changePasswordService) {
-        this.changePasswordService = changePasswordService;
+    public PasswordController(PasswordService passwordService) {
+        this.passwordService = passwordService;
     }
 
     @PutMapping("/password/change")
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequestDto changePasswordRequestDto) {
-        return new ResponseEntity<>(this.changePasswordService.changePassword(changePasswordRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(this.passwordService.changePassword(changePasswordRequestDto), HttpStatus.OK);
     }
 
     @PutMapping("/forgot/password")
     public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequestDto forgotPasswordRequestDto) throws MessagingException, MailFailedException {
-        return new ResponseEntity<>(this.changePasswordService.forgotPassword(forgotPasswordRequestDto), HttpStatus.OK);
+        return new ResponseEntity<>(this.passwordService.forgotPassword(forgotPasswordRequestDto), HttpStatus.OK);
     }
 
 }
