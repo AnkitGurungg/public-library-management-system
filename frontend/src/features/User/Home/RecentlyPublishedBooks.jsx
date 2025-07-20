@@ -6,12 +6,7 @@ const RecentlyPublishedBooks = () => {
   const size = 10;
   const [page, setPage] = useState(0);
 
-  const { data: recentlyPublished, refetch: refetchRecentlyPublished } =
-    useFetchRecentlyPublished(page, size);
-
-  useEffect(() => {
-    refetchRecentlyPublished();
-  }, []);
+  const { data: recentlyPublished } = useFetchRecentlyPublished(page, size);
 
   useEffect(() => {
     // console.log(recentlyPublished);
@@ -25,10 +20,9 @@ const RecentlyPublishedBooks = () => {
       </p>
       <div className="flex flex-grow ">
         <div className="grid grid-cols-5 md:grid-cols-2 lg:grid-cols-5 gap-3">
-          {recentlyPublished?.status === 200 &&
-          Array.isArray(recentlyPublished?.data?.content) &&
-          recentlyPublished?.data?.content?.length !== 0 ? (
-            recentlyPublished?.data?.content?.map((element) => (
+          {Array.isArray(recentlyPublished?.content) &&
+          recentlyPublished?.content?.length !== 0 ? (
+            recentlyPublished?.content?.map((element) => (
               <div key={element?.bookId}>
                 <BookCard key={element?.bookId} curBook={element} />
               </div>
@@ -60,7 +54,7 @@ const RecentlyPublishedBooks = () => {
         </button>
 
         <button
-          disabled={recentlyPublished?.data?.last}
+          disabled={recentlyPublished?.last}
           onClick={() => setPage((p) => p + 1)}
           className="
             px-4 py-2 rounded

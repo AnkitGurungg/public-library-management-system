@@ -6,12 +6,7 @@ const AllTopBorrowedBooks = () => {
   const size = 10;
   const [page, setPage] = useState(0);
 
-  const { data: topBorrowedBooks, refetch: refetchTopBorrowedBooks } =
-    useFetchTopBorrowedBooks(page, size);
-
-  useEffect(() => {
-    refetchTopBorrowedBooks();
-  }, []);
+  const { data: topBorrowedBooks } = useFetchTopBorrowedBooks(page, size);
 
   useEffect(() => {
     // console.log(topBorrowedBooks);
@@ -25,10 +20,9 @@ const AllTopBorrowedBooks = () => {
       </p>
       <div className="flex flex-grow">
         <div className="grid grid-cols-5 md:grid-cols-2 lg:grid-cols-5 gap-3">
-          {topBorrowedBooks?.status === 200 &&
-          Array.isArray(topBorrowedBooks?.data?.content) &&
-          topBorrowedBooks?.data?.content?.length !== 0 ? (
-            topBorrowedBooks?.data?.content?.map((element) => (
+          {Array.isArray(topBorrowedBooks?.content) &&
+          topBorrowedBooks?.content?.length !== 0 ? (
+            topBorrowedBooks?.content?.map((element) => (
               <div key={element?.bookId}>
                 <BookCard key={element?.bookId} curBook={element} />
               </div>
@@ -36,7 +30,7 @@ const AllTopBorrowedBooks = () => {
           ) : (
             <p className="col-span-2">
               {topBorrowedBooks?.data?.message ||
-                "Book are currently unavailble!!1"}
+                "Book are currently unavailble!!!"}
             </p>
           )}
         </div>
@@ -60,7 +54,7 @@ const AllTopBorrowedBooks = () => {
         </button>
 
         <button
-          disabled={topBorrowedBooks?.data?.last}
+          disabled={topBorrowedBooks?.last}
           onClick={() => setPage((p) => p + 1)}
           className="
             px-4 py-2 rounded

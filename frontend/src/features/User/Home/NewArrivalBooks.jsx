@@ -1,17 +1,12 @@
 import BookCard from "./BookCard";
 import { useState, useEffect } from "react";
-import useFetchNewArrivalBooks from "@/hooks/useFetchNewArrivalBooks";
+import { useFetchNewArrivalBooks } from "@/hooks/useFetchNewArrivalBooks";
 
 const NewArrivalBooks = () => {
   const size = 10;
   const [page, setPage] = useState(0);
 
-  const { data: newArrivalBooks, refetch: refetchNewArrivalBooks } =
-    useFetchNewArrivalBooks(page, size);
-
-  useEffect(() => {
-    refetchNewArrivalBooks();
-  }, []);
+  const { data: newArrivalBooks } = useFetchNewArrivalBooks(page, size);
 
   useEffect(() => {
     // console.log(newArrivalBooks);
@@ -23,10 +18,9 @@ const NewArrivalBooks = () => {
       <p className="text-[16px] mb-5 "> New Arrivals. Our new arrivals list.</p>
       <div className="flex flex-grow ">
         <div className="grid grid-cols-5 md:grid-cols-2 lg:grid-cols-5 gap-3">
-          {newArrivalBooks?.status === 200 &&
-          Array.isArray(newArrivalBooks?.data?.content) &&
-          newArrivalBooks?.data?.content?.length !== 0 ? (
-            newArrivalBooks?.data?.content?.map((element) => (
+          {Array.isArray(newArrivalBooks?.content) &&
+          newArrivalBooks?.content?.length !== 0 ? (
+            newArrivalBooks?.content?.map((element) => (
               <div key={element?.bookId}>
                 <BookCard key={element?.bookId} curBook={element} />
               </div>
@@ -58,7 +52,7 @@ const NewArrivalBooks = () => {
         </button>
 
         <button
-          disabled={newArrivalBooks?.data?.last}
+          disabled={newArrivalBooks?.last}
           onClick={() => setPage((p) => p + 1)}
           className="
             px-4 py-2 rounded

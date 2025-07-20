@@ -8,7 +8,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { useNavigate } from "react-router-dom";
 
 import BookCard from "@/features/User/Home/BookCard";
-import useFetchNewArrivalBooks from "@/hooks/useFetchNewArrivalBooks";
+import { useFetchNewArrivalBooks } from "@/hooks/useFetchNewArrivalBooks";
 import { useFetchTopBorrowedBooks } from "@/hooks/useFetchTopBorrowedBooks";
 import { useFetchRecentlyPublished } from "@/hooks/useFetchRecentlyPublished";
 
@@ -17,18 +17,24 @@ const Home = () => {
   const pageSize = 5;
   const navigate = useNavigate();
 
-  const { data: topBorrowedBooks, refetch: refetchTopBorrowedBooks } =
-    useFetchTopBorrowedBooks(pageNumber, pageSize);
-  const { data: newArrivalBooks, refetch: refetchNewArrivalBooks } =
-    useFetchNewArrivalBooks(pageNumber, pageSize);
-  const { data: recentlyPublished, refetch: refetchRecentlyPublished } =
-    useFetchRecentlyPublished(pageNumber, pageSize);
+  const { data: topBorrowedBooks } = useFetchTopBorrowedBooks(
+    pageNumber,
+    pageSize,
+  );
+  const { data: newArrivalBooks } = useFetchNewArrivalBooks(
+    pageNumber,
+    pageSize,
+  );
+  const { data: recentlyPublished } = useFetchRecentlyPublished(
+    pageNumber,
+    pageSize,
+  );
 
   useEffect(() => {
-    refetchTopBorrowedBooks();
-    refetchNewArrivalBooks();
-    refetchRecentlyPublished();
-  }, []);
+    // console.log(topBorrowedBooks)
+    // console.log(newArrivalBooks)
+    // console.log(recentlyPublished)
+  }, [topBorrowedBooks, newArrivalBooks, recentlyPublished]);
 
   return (
     <section className="mt-9">
@@ -39,9 +45,6 @@ const Home = () => {
             stopOnInteraction: false,
           }),
         ]}
-        // opts={{
-        //   loop: true,
-        // }}
         className="-mx-1"
       >
         <CarouselContent className="px-4 m-auto">
@@ -119,9 +122,8 @@ const Home = () => {
             </p>
           </div>
           <ul className="grid grid-cols-5 justify-center items-center gap-5">
-            {topBorrowedBooks?.status === 200 &&
-              topBorrowedBooks?.data?.content?.length > 0 &&
-              topBorrowedBooks?.data?.content?.map((item) => (
+            {topBorrowedBooks?.content?.length > 0 &&
+              topBorrowedBooks?.content?.map((item) => (
                 <BookCard key={item.bookId} curBook={item} />
               ))}
           </ul>
@@ -143,9 +145,8 @@ const Home = () => {
             </p>
           </div>
           <ul className="grid grid-cols-5 justify-center items-center gap-5">
-            {newArrivalBooks?.status === 200 &&
-              newArrivalBooks?.data?.content?.length > 0 &&
-              newArrivalBooks?.data?.content?.map((item) => (
+            {newArrivalBooks?.content?.length > 0 &&
+              newArrivalBooks?.content?.map((item) => (
                 <BookCard key={item?.bookId} curBook={item} />
               ))}
           </ul>
@@ -169,9 +170,8 @@ const Home = () => {
             </p>
           </div>
           <ul className="grid grid-cols-5 justify-center items-center gap-5">
-            {recentlyPublished?.status === 200 &&
-              recentlyPublished?.data?.content?.length > 0 &&
-              recentlyPublished?.data?.content?.map((curBook) => (
+            {recentlyPublished?.content?.length > 0 &&
+              recentlyPublished?.content?.map((curBook) => (
                 <BookCard key={curBook?.bookId} curBook={curBook} />
               ))}
           </ul>

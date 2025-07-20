@@ -5,22 +5,15 @@ export const useFetchRecentlyPublished = (page, size) => {
   return useQuery({
     queryKey: ["recentlyPublished", page, size],
     queryFn: async () => {
-      try {
-        const res = await GLOBAL_SERVICE.get(
-          `/api/v1/p/resource/books/recently-published?page=${page}&size=${size}`
-        );
-        // console.log(res);
-
-        return { status: res.status, data: res.data };
-      } catch (error) {
-        if (error && error.response.status === 404) {
-          return {
-            status: error.response.status,
-            data: error.response.message,
-          };
-        }
-        return { status: 500, data: "Internal Server Error!!!" };
-      }
+      const res = await GLOBAL_SERVICE.get(
+        `/api/v1/p/resource/books/recently-published?page=${page}&size=${size}`,
+      );
+      return res.data;
+    },
+    keepPreviousData: true,
+    staleTime: 1000 * 60,
+    onError: (err) => {
+      console.error("Error fetching recently published books:", err);
     },
   });
 };
