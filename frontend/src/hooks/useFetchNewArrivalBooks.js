@@ -12,6 +12,7 @@ export const useFetchNewArrivalBooks = (page, size) => {
     },
     keepPreviousData: true,
     staleTime: 1000 * 60,
+    retry: 1,
     onError: (err) => {
       console.error("Error fetching new arrival books:", err);
     },
