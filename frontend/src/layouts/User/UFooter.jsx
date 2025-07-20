@@ -28,16 +28,16 @@ const UFooter = () => {
                 Home
               </Link>
               <Link
+                to="/popular-choices"
+                className="text-gray-800 hover:text-[#206ea6]"
+              >
+                Popular Choices
+              </Link>
+              <Link
                 to="/new-arrivals"
                 className="text-gray-800 hover:text-[#206ea6]"
               >
                 New Arrivals
-              </Link>
-              <Link
-                to="/top-borrowed-books"
-                className="text-gray-800 hover:text-[#206ea6]"
-              >
-                Top Borrowed
               </Link>
               <Link
                 to="/recently-published"
@@ -64,12 +64,12 @@ const UFooter = () => {
                 Contact Us
               </Link>
 
-              <button
+              <Link
                 onClick={downloadUserManual}
                 className="block text-gray-800 hover:text-[#206ea6] relative text-left"
               >
                 User Manual (PDF)
-              </button>
+              </Link>
             </nav>
           </div>
 
@@ -86,11 +86,18 @@ const UFooter = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Phone size={18} />
-                <p className="text-sm">+977 9806140735</p>
+                <a href="tel:+9779806140735" className="hover:text-[#206ea6]">
+                  <p className="text-sm">+977 9806140735</p>
+                </a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail size={18} />
-                <p className="text-sm">contact.csplms@gmail.com</p>
+                <a
+                  href="mailto:contact.csplms@gmail.com"
+                  className="text-sm hover:text-[#206ea6]"
+                >
+                  <p className="text-sm">contact.csplms@gmail.com</p>
+                </a>
               </div>
             </div>
           </div>
