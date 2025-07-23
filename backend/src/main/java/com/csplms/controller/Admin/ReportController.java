@@ -11,7 +11,6 @@ import com.csplms.dto.responseDto.reports.MostPopularCategoryDTO;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/a/reports")
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")

@@ -2,7 +2,6 @@ package com.csplms.controller.LibrarianAdmin;
 
 import com.csplms.dto.responseDto.AdminBooksDto;
 import com.csplms.dto.responseDto.BookDto;
-import com.csplms.entity.Book;
 import com.csplms.exception.MailFailedException;
 import com.csplms.service.LibrarianAdmin.BookService;
 import jakarta.mail.MessagingException;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.io.IOException;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/la/books")
 @EnableMethodSecurity(prePostEnabled = true)

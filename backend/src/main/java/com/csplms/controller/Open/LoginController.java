@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Map;
 import java.util.HashMap;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/auth")
 public class LoginController {

@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/la/borrows")
 @EnableMethodSecurity(prePostEnabled = true)

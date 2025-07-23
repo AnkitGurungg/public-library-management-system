@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 
 import java.util.Map;
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/mla/user/borrowed-books")
 @EnableMethodSecurity(prePostEnabled = true)

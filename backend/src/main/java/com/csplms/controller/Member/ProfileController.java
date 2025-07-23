@@ -1,7 +1,6 @@
 package com.csplms.controller.Member;
 
 import com.csplms.dto.responseDto.UserAccountInfoDto;
-import com.csplms.entity.User;
 import com.csplms.service.LibrarianAdmin.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +10,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/mla/user/profile")
 @EnableMethodSecurity(prePostEnabled = true)

@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import com.csplms.service.LibrarianAdmin.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 import java.util.List;
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/la/users")
 @EnableMethodSecurity(prePostEnabled = true)
