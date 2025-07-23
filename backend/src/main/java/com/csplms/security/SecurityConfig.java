@@ -3,6 +3,7 @@ package com.csplms.security;
 import org.springframework.http.HttpMethod;
 import com.csplms.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -24,6 +25,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import java.util.List;
 
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;

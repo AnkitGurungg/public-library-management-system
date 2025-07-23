@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.csplms.dto.requestDto.BookRequestDto;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 import com.csplms.dto.responseDto.BookResponseDto;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +19,6 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/la/books")
-@EnableMethodSecurity(prePostEnabled = true)
 @PreAuthorize("hasAnyAuthority('ROLE_LIBRARIAN', 'ROLE_ADMIN')")
 public class BookController {
 

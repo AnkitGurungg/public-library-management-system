@@ -10,14 +10,12 @@ import com.csplms.dto.responseDto.reports.MonthlyRevenueDTO;
 import com.csplms.service.LibrarianAdmin.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 import java.sql.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/m/payment")
-@EnableMethodSecurity(prePostEnabled = true)
 @PreAuthorize("hasAnyAuthority('ROLE_MEMBER', 'ROLE_LIBRARIAN', 'ROLE_ADMIN')")
 public class PaymentController {
 

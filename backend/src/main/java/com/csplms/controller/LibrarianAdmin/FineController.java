@@ -9,14 +9,12 @@ import com.csplms.dto.responseDto.reports.MonthlyFineStatsDTO;
 import com.csplms.dto.responseDto.reports.FineCollectionStatsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 import java.sql.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/la/fines")
-@EnableMethodSecurity(prePostEnabled = true)
 @PreAuthorize("hasAnyAuthority('ROLE_LIBRARIAN', 'ROLE_ADMIN')")
 public class FineController {
 

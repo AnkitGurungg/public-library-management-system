@@ -15,11 +15,9 @@ import com.csplms.dto.responseDto.BorrowResponseDto;
 import com.csplms.service.LibrarianAdmin.BorrowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @RestController
 @RequestMapping("/api/v1/la/borrows")
-@EnableMethodSecurity(prePostEnabled = true)
 @PreAuthorize("hasAnyAuthority('ROLE_LIBRARIAN', 'ROLE_ADMIN')")
 public class BorrowController {
 
