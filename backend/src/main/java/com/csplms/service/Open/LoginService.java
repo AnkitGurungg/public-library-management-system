@@ -17,6 +17,7 @@ import com.csplms.util.DateTimeUtil;
 import com.csplms.util.EmailUtil;
 import com.csplms.util.OtpUtil;
 import jakarta.mail.MessagingException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -35,9 +36,10 @@ public class LoginService {
     private final EmailUtil emailUtil;
     private final OtpUtil otpUtil;
     private final DateTimeUtil dateTimeUtil;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public LoginService(UserRepository userRepository, EvidenceRepository evidenceRepository, UserDetailsServiceImpl userDetailsService, LoginMapper loginMapper, JwtService jwtService, AuthenticationManager authenticationManager, EmailUtil emailUtil, OtpUtil otpUtil, DateTimeUtil dateTimeUtil) {
+    public LoginService(UserRepository userRepository, EvidenceRepository evidenceRepository, UserDetailsServiceImpl userDetailsService, LoginMapper loginMapper, JwtService jwtService, AuthenticationManager authenticationManager, EmailUtil emailUtil, OtpUtil otpUtil, DateTimeUtil dateTimeUtil, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.evidenceRepository = evidenceRepository;
         this.userDetailsService = userDetailsService;
@@ -47,6 +49,7 @@ public class LoginService {
         this.emailUtil = emailUtil;
         this.otpUtil = otpUtil;
         this.dateTimeUtil = dateTimeUtil;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public LoginResponseDto loginUser(LoginRequestDto loginRequestDto) throws MessagingException, MailFailedException {
@@ -73,10 +76,11 @@ public class LoginService {
             throw new UnauthorizedException("Invalid username or password");
         }
 
+//        if user has not verified email, then again send otp and ask to verify email
         if (!user.isActive()) {
             emailUtil.sendOtpEmail(loginRequestDto.email(), otp);
             user.setOtpGeneratedTime(dateTimeUtil.getLocalDateTime());
-            user.setOtp(otp);
+            user.setOtp(passwordEncoder.encode(otp));
             userRepository.save(user);
             return new LoginResponseDto(user.getUserId(), user.getEmail(), user.getRoles(), accessToken, refreshToken, user.isVerified(), user.isPresent(), user.isActive());
         }
