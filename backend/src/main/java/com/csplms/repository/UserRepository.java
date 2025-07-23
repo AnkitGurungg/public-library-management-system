@@ -31,7 +31,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "select * from users where active=1 and verified=0 and present=1 and is_profile_updated=1 and roles='ROLE_MEMBER' order by user_id desc, applied_date desc;", nativeQuery = true)
     List<User> getNonVerifiedMembers();
 
-    @Query(value = "select * from users where active=1 AND roles='ROLE_MEMBER' order by user_id desc, present desc, verified desc, applied_date desc", nativeQuery = true)
+    @Query(value = "select * from users where active=1 AND is_profile_updated=1 AND roles='ROLE_MEMBER' order by user_id desc, present desc, verified desc, applied_date desc", nativeQuery = true)
     List<User> getVerifiedMembers();
 
     @Query(value = "select * from users where active=1 and verified=1 and present=1;", nativeQuery = true)
