@@ -73,8 +73,8 @@ public class RegistrationService {
             throw new OTPTimeFailedException("OTP Expired, Try regenerating!");
         }
 
+//        Match the otp from db and input otp
         if (passwordEncoder.matches(verifyOtpRequestDto.otp(), user.getOtp())) {
-            logger.info("OTP verified");
             user.setActive(true);
             userRepository.save(user);
             return "Email verified";
@@ -83,12 +83,13 @@ public class RegistrationService {
     }
 
     public String regenerateOTP() throws MailFailedException, MessagingException {
+        String otp = otpUtil.generateOTP();
         String email = getAuthUserUtil.getAuthUser();
         User user = userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceEntityNotFoundException("User", "Id", 0));
-        user.setOtp(otpUtil.generateOTP());
+        user.setOtp(passwordEncoder.encode(otp));
         user.setOtpGeneratedTime(dateWithTimeUtil.getLocalDateTime());
         userRepository.save(user);
-        emailUtil.sendOtpEmail(user.getEmail(), user.getOtp());
+        emailUtil.sendOtpEmail(user.getEmail(), otp);
         return "OTP sent again";
     }
 
