@@ -50,14 +50,19 @@ const Register = ({ isOpenRegister, setIsOpenRegister, setIsOpenLogin }) => {
             "Content-Type": "application/json",
           },
           withCredentials: true,
-        }
+        },
       );
 
       if (response.status === 201) {
         localStorage.setItem(
           "Authorization",
-          response.headers.get("Authorization")
+          response.headers.get("Authorization"),
         );
+        localStorage.setItem(
+          "refreshToken",
+          response.headers.get("refreshToken"),
+        );
+
         toast.success("Check your email for otp!");
         setIsOpenRegister(false);
         setIsVerifyEmailOpen(true);

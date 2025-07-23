@@ -43,8 +43,11 @@ public class RegisterUserController {
     @PostMapping("/register")
     public ResponseEntity<User> registerMemberUser(@RequestBody RegistrationRequestDto registrationRequestDto) throws MailFailedException, MessagingException {
         String jwtToken = jwtService.generateToken(registrationRequestDto.email());
+        String refreshToken = jwtService.generateRefreshToken(registrationRequestDto.email());
+
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization",jwtToken);
+        headers.add("Authorization", jwtToken);
+        headers.add("refreshToken", refreshToken);
         return new ResponseEntity<>(registrationService.registerMemberUser(registrationRequestDto), headers, HttpStatus.CREATED);
     }
 

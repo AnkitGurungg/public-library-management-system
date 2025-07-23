@@ -67,10 +67,12 @@ const Login = ({ isOpenLogin, setIsOpenLogin }) => {
         return response;
       }
       if (response.status === 203) {
-        console.log("response 203", response);
         const token = response?.data?.accessToken;
         localStorage.setItem("Authorization", token);
         setToken(token);
+        const refreshToken = response?.data?.refreshToken;
+        localStorage.setItem("refreshToken", refreshToken);
+        
         navigate("/");
         setIsOpenLogin(false);
         toast.success("Verify your email first!");
