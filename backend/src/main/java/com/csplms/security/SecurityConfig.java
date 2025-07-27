@@ -1,5 +1,6 @@
 package com.csplms.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import com.csplms.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,9 @@ import java.util.List;
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+
+    @Value("${frontend.base-url}")
+    private String frontendBaseUrl;
 
     private final JwtAuthFilter jwtAuthFilter;
     private final UserRepository userRepository;
@@ -65,7 +69,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of(frontendBaseUrl));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true); // Required for withCredentials: true in Axios
