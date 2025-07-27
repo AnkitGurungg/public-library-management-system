@@ -1001,11 +1001,11 @@ public class EmailUtil {
                         </div>
                         <div class="fine-details">
                             <h2>Fine Details</h2>
-                            <p><strong>Per Day Rate:</strong> Nrs. %s</p>
-                            <p><strong>Total Fine Amount:</strong> Nrs. %s</p>
+                            <p><strong>Per Day Rate:</strong> Rs. %s</p>
+                            <p><strong>Total Fine Amount:</strong> Rs. %s</p>
                         </div>
                         <p class="announcement">Attached is the book’s cover image for your reference. Please complete the fine as soon as possbile to continue enjoying our library services.</p>
-                        <a href="http://localhost:5173/member/profile/fines" class="cta-button">View Fine Details</a>
+                        <a href="%s/member/profile/fines" class="cta-button">View Fine Details</a>
                         <p class="closing">We appreciate your understanding and continued support. Thank you for being a valued member.</p>
                         <p class="closing">Warm Regards,<br>CSPLMS Team<br>Pokhara-29, Bhandardhik</p>
                     </div>
@@ -1025,6 +1025,7 @@ public class EmailUtil {
                     returnDate,
                     perDayRate,
                     totalFineAmount,
+                    frontendBaseUrl,
                     frontendBaseUrl
             );
 
@@ -1043,11 +1044,12 @@ public class EmailUtil {
             Returned Date: %s
             
             Fine Details:
-            Fine Amount: N%s
+            Per Day Rate: Rs. %s
+            Fine Amount: Rs. %s
             
             Attached is the book’s cover image for your reference. Please settle the fine at your earliest convenience to continue enjoying our library services.
             
-            View fine details here: http://localhost:5173/account/fines
+            View fine details here: %s/member/profile/fines
             
             We appreciate your understanding and continued support. Thank you for being a valued member of CSPLMS.
             
@@ -1062,8 +1064,10 @@ public class EmailUtil {
                     book.getCategory() != null ? book.getCategory().getName() : "N/A",
                     borrowDate,
                     dueDate,
+                    returnDate,
                     perDayRate,
-                    totalFineAmount
+                    totalFineAmount,
+                    frontendBaseUrl
             );
 
             mimeMessageHelper.setText(plainText, htmlContent);
