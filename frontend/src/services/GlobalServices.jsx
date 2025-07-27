@@ -8,7 +8,7 @@ const getAccessToken = () => {
 };
 
 const GLOBAL_SERVICE = axios.create({
-  baseURL: "http://localhost:8080/",
+  baseURL: BACKEND_SERVER_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },

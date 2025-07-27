@@ -12,12 +12,11 @@ import {
 import { Eye, Users } from "lucide-react";
 import { useState } from "react";
 import { useFetchUserById } from "@/hooks/useFetchUserById";
+import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
 
 const ViewMember = ({ id, type }) => {
   const [open, setOpen] = useState(false);
   const { data: member, error } = useFetchUserById(id, open);
-
-  const BACKEND_SERVER_BASE_URL = "http://localhost:8080/";
 
   return (
     <div>

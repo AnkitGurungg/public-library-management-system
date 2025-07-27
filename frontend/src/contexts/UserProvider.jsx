@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import toast from "react-hot-toast";
+import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
 
 export function UserProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem("Authorization"));
@@ -11,7 +12,7 @@ export function UserProvider({ children }) {
   const getUserInfo = async () => {
     if (token) {
       try {
-        const response = await axios.get("http://localhost:8080/auth/me", {
+        const response = await axios.get(`${BACKEND_SERVER_BASE_URL}auth/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
