@@ -38,9 +38,13 @@ public class EmailUtil {
     @Value("${fine.rate}")
     private long perDayFineAmount;
 
+    @Value("${frontend.base-url}")
+    private String frontendBaseUrl;
+
     private final JavaMailSender javaMailSender;
-    private static final Logger logger = LoggerFactory.getLogger(EmailUtil.class);
     private final String ROOT_DIR_STRING = System.getProperty("user.dir");
+
+    private static final Logger logger = LoggerFactory.getLogger(EmailUtil.class);
 
     @Autowired
     public EmailUtil(JavaMailSender javaMailSender) {
@@ -48,129 +52,10 @@ public class EmailUtil {
     }
 
     public String getFilePath(String fileNameOnDB) {
-//        Absolute path of the saved image (uploads/img.png)
+        // Get absolute path of the saved image (uploads/img.png)
         Path getImagePath = Path.of(ROOT_DIR_STRING, fileNameOnDB);
-        logger.error("getImagePath: " + getImagePath);
+        logger.debug("getImagePath: {}", getImagePath);
         return getImagePath.toString();
-    }
-
-    public void sendOtpEmail(String userEmail, String otp) throws MailException, MessagingException, MailFailedException {
-        try {
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-            mimeMessageHelper.setFrom(from);
-            mimeMessageHelper.setTo(userEmail);
-            mimeMessageHelper.setSubject("CSPLMS OTP Verification");
-
-            // HTML email content
-            String htmlContent = """
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        background-color: #f4f4f4;
-                        margin: 0;
-                        padding: 0;
-                    }
-                    .container {
-                        max-width: 600px;
-                        margin: 20px auto;
-                        background-color: #ffffff;
-                        border-radius: 8px;
-                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                        overflow: hidden;
-                    }
-                    .header {
-                        background-color: #206ea6;
-                        color: #ffffff;
-                        padding: 20px;
-                        text-align: center;
-                    }
-                    .header h1 {
-                        margin: 0;
-                        font-size: 24px;
-                    }
-                    .content {
-                        padding: 20px;
-                        line-height: 1.6;
-                        color: #333333;
-                    }
-                    .otp {
-                        font-size: 24px;
-                        font-weight: bold;
-                        color: #206ea6;
-                        text-align: center;
-                        margin: 20px 0;
-                        background-color: #e6f0fa;
-                        padding: 10px;
-                        border-radius: 5px;
-                    }
-                    .warning {
-                        color: #d32f2f;
-                        font-weight: bold;
-                        text-align: center;
-                        margin: 15px 0;
-                    }
-                    .footer {
-                        background-color: #f4f4f4;
-                        padding: 10px;
-                        text-align: center;
-                        font-size: 12px;
-                        color: #666666;
-                    }
-                    .footer a {
-                        color: #206ea6;
-                        text-decoration: none;
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <div class="header">
-                        <h1>LMS OTP Verification</h1>
-                    </div>
-                    <div class="content">
-                        <p>Dear User,</p>
-                        <p>Thank you for registering with our Library. To complete your registration, please use the following One-Time Password (OTP):</p>
-                        <div class="otp">%s</div>
-                        <p class="warning">Never share your OTP with anyone. We never call or ask for your OTP.</p>
-                        <p>If you did not initiate this request, please contact our support team immediately.</p>
-                        <p>Best regards,<br>CSPLMS Team</p>
-                    </div>
-                    <div class="footer">
-                        <p>© 2025 LMS. All rights reserved. | <a href="http://localhost:5173">Visit our website</a></p>
-                    </div>
-                </div>
-            </body>
-            </html>
-            """.formatted(otp);
-
-//            Fallback email with plain text
-            String plainText = """
-            Dear User,
-            
-            Thank you for registering with our Library.
-            Your OTP is: %s
-            
-            Never share your OTP with anyone. We never call or ask for your OTP.
-            If you did not initiate this request, please contact our support team immediately.
-           
-            Best regards,
-            CSPLMS Team
-            """.formatted(otp);
-
-            mimeMessageHelper.setText(plainText, htmlContent);
-            javaMailSender.send(mimeMessage);
-        } catch (Exception ex) {
-            if (ex instanceof MailException || ex instanceof MessagingException) {
-                throw new MailFailedException("Failed to send OTP. Please try again later.");
-            }
-            throw ex;
-        }
     }
 
     public void newBookMail(Book book, String[] mails) throws MailException, MessagingException, MailFailedException, IOException {
@@ -323,11 +208,11 @@ public class EmailUtil {
                                 <p><strong>Description:</strong> %s</p>
                             </div>
                             <p class="closing">Explore this exciting book at our library! Thank you for being with us.</p>
-                            <a href="http://localhost:5173/books/book/%s" class="cta-button">View Book Details</a>
+                            <a href="%s/books/book/%s" class="cta-button">View Book Details</a>
                             <p>Warm Regards,<br>CSPLMS Team<br>Pokhara-29, Bhandardhik</p>
                         </div>
                         <div class="footer">
-                            <p>© 2025 CSPLMS. All rights reserved. | <a href="http://localhost:5173">Visit our website</a></p>
+                            <p>© 2025 CSPLMS. All rights reserved. | <a href="%s">Visit our website</a></p>
                         </div>
                     </div>
                 </body>
@@ -339,7 +224,9 @@ public class EmailUtil {
                     publishedDate,
                     addedDate,
                     book.getDescription() != null ? book.getDescription().substring(0, Math.min(book.getDescription().length(), 200)) + "..." : "No description available",
-                    book.getBookId()
+                    frontendBaseUrl,
+                    book.getBookId(),
+                    frontendBaseUrl
             );
 
             // Fallback email with plain text
@@ -380,249 +267,13 @@ public class EmailUtil {
         }
     }
 
-    public void librarianAddedMailToLibrarian(User librarianUser, Evidence evidence, String librarianPassword) throws MailException, MessagingException, MailFailedException {
+    public void sendOtpEmail(String userEmail, String otp) throws MailException, MessagingException, MailFailedException {
         try {
-            // Validate inputs
-            if (librarianUser == null || librarianUser.getEmail() == null || librarianUser.getName() == null) {
-                throw new MailFailedException("Librarian information cannot be null.");
-            }
-            if (evidence == null || evidence.getUserImage() == null || evidence.getEvidenceOne() == null || evidence.getEvidenceTwo() == null) {
-                throw new MailFailedException("Evidence images cannot be null.");
-            }
-
-            // Get absolute file paths
-            String userImagePath = getFilePath(evidence.getUserImage());
-            String evidenceOnePath = getFilePath(evidence.getEvidenceOne());
-            String evidenceTwoPath = getFilePath(evidence.getEvidenceTwo());
-
-            // Load resources
-            Resource userImage = new FileSystemResource(new File(userImagePath));
-            Resource evidenceOne = new FileSystemResource(new File(evidenceOnePath));
-            Resource evidenceTwo = new FileSystemResource(new File(evidenceTwoPath));
-
-            // Validate resources
-            if (!userImage.exists() || !userImage.isReadable() ||
-                    !evidenceOne.exists() || !evidenceOne.isReadable() ||
-                    !evidenceTwo.exists() || !evidenceTwo.isReadable()) {
-                throw new MailFailedException("Images not found or unreadable. Please try again.");
-            }
-
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(from);
-            mimeMessageHelper.setTo(librarianUser.getEmail());
-            mimeMessageHelper.setSubject("Welcome to CSPLMS Teams!");
-
-            // HTML email content
-            String htmlContent = """
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <style>
-                        body {
-                            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-                            background-color: #f4f4f4;
-                            margin: 0;
-                            padding: 0;
-                            font-size: 16px;
-                            line-height: 1.6;
-                            color: #333333;
-                        }
-                        .container {
-                            max-width: 700px;
-                            margin: 20px auto;
-                            background-color: #ffffff;
-                            border-radius: 8px !important;
-                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                        }
-                        .header {
-                            background-color: #206ea6;
-                            color: #ffffff;
-                            padding: 20px;
-                            text-align: center;
-                            border-top-left-radius: 8px;
-                            border-top-right-radius: 8px;
-                        }
-                        .header h1 {
-                            margin: 10px 0 0;
-                            font-size: 26px;
-                            font-weight: 600;
-                        }
-                        .content {
-                            padding: 25px;
-                        }
-                        .intro {
-                            font-size: 15px;
-                            font-weight: 500;
-                            margin-bottom: 10px;
-                        }
-                        .announcement {
-                            font-size: 14px;
-                            font-weight: 400;
-                            margin-bottom: 10px;
-                            line-height: 1.8;
-                        }
-                        .credentials {
-                            margin: 20px 0;
-                            background-color: #e6f0fa;
-                            padding: 20px;
-                            border-radius: 5px;
-                        }
-                        .credentials h2 {
-                            font-family: Georgia, serif;
-                            color: #206ea6;
-                            font-size: 22px;
-                            font-weight: normal;
-                            margin: 0 0 10px;
-                        }
-                        .credentials p {
-                            margin: 8px 0;
-                            font-size: 15px;
-                        }
-                        .cta-button {
-                            display: inline-block;
-                            padding: 10px 22px;
-                            margin: 7px 0;
-                            background-color: #206ea6;
-                            color: #ffffff !important;
-                            text-decoration: none;
-                            border-radius: 5px;
-                            font-weight: 600;
-                            text-align: center;
-                        }
-                        .closing {
-                            font-size: 12px;
-                            font-weight: 400;
-                            margin-bottom: 7px;
-                            line-height: 1.8;
-                        }
-                        .footer {
-                            background-color: #f4f4f4;
-                            padding: 15px;
-                            text-align: center;
-                            font-size: 13px;
-                            color: #666666;
-                            border-bottom-left-radius: 8px;
-                            border-bottom-right-radius: 8px;
-                        }
-                        .footer a {
-                            color: #206ea6;
-                            text-decoration: none;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <div class="header">
-                            <h1>Welcome to CSPLMS!</h1>
-                        </div>
-                        <div class="content">
-                            <p class="intro">Dear %s,</p>
-                            <p class="announcement">We are thrilled to welcome you to the CSPLMS team as a librarian!</p>
-                            <p class="announcement">Your account has been successfully created by our system administrator. You can now log in to the system to begin managing library resources.</p>
-                            <div class="credentials">
-                                <h2>Your Login Credentials</h2>
-                                <p><strong>Email:</strong> %s</p>
-                                <p><strong>Password:</strong> %s</p>
-                            </div>
-                            <p class="announcement">Attached are your picture and the two supporting documents provided during registration. Please review them for accuracy.</p>
-                            <a href="http://localhost:5173" class="cta-button">Log In</a>
-                            <p class="closing">We look forward to your contributions at the library. Thank you for joining us!</p>
-                            <p class="closing">Warm Regards,<br>CSPLMS Team<br>Pokhara-29, Bhandardhik</p>
-                        </div>
-                        <div class="footer">
-                            <p>© 2025 CSPLMS. All rights reserved. | <a href="http://localhost:5173">Visit our website</a></p>
-                        </div>
-                    </div>
-                </body>
-                </html>
-                """.formatted(
-                    librarianUser.getName(),
-                    librarianUser.getEmail(),
-                    librarianPassword
-            );
-
-            // Fallback plain text
-            String plainText = """
-                Dear %s,
-                
-                We are thrilled to welcome you as a new librarian to the CSPLMS team!
-                
-                Your account has been successfully created by our system administrator. You can now log in to the system to begin managing library resources.
-                
-                Your Login Credentials:
-                Email: %s
-                Password: %s
-                
-                Attached are your picture and the two supporting documents provided during registration. Please review them for accuracy.
-                
-                Log in here: http://localhost:5173
-                
-                We look forward to your contributions to our library community. Thank you for joining us!
-                
-                Warm Regards,
-                CSPLMS Team
-                Pokhara-29, Bhandardhik
-                © 2025 CSPLMS. All rights reserved.
-                """.formatted(
-                    librarianUser.getName(),
-                    librarianUser.getEmail(),
-                    librarianPassword
-            );
-
-            mimeMessageHelper.setText(plainText, htmlContent);
-            mimeMessageHelper.addAttachment("Profile Image - " + librarianUser.getName(), userImage, "image/png");
-            mimeMessageHelper.addAttachment("Evidence One - " + librarianUser.getName(), evidenceOne, "image/png");
-            mimeMessageHelper.addAttachment("Evidence Two - " + librarianUser.getName(), evidenceTwo, "image/png");
-
-            javaMailSender.send(mimeMessage);
-            logger.info("Librarian added email sent successfully to: {}", librarianUser.getEmail());
-        } catch (MailException | MessagingException ex) {
-            logger.error("Failed to send librarian added email: {}", ex.getMessage());
-            throw new MailFailedException("Failed to send librarian welcome email");
-        } catch (Exception ex) {
-            logger.error("Unexpected error in librarian added email: {} {} {}", ex.getMessage(), ex.getCause(), ex.getLocalizedMessage());
-            throw ex;
-        }
-    }
-
-    public void librarianAddedMailToAdmin(User librarianUser, Evidence evidence) throws MailException, MessagingException, MailFailedException {
-        try {
-            // Validate inputs
-            if (librarianUser == null || librarianUser.getName() == null || librarianUser.getEmail() == null) {
-                throw new MailFailedException("Librarian user information cannot be null.");
-            }
-            if (evidence == null || evidence.getUserImage() == null || evidence.getEvidenceOne() == null || evidence.getEvidenceTwo() == null) {
-                throw new MailFailedException("Evidence images cannot be null.");
-            }
-            if (adminMail == null || adminName == null) {
-                throw new MailFailedException("Admin email or name cannot be null.");
-            }
-
-            // Get absolute file paths
-            String userImagePath = getFilePath(evidence.getUserImage());
-            String evidenceOnePath = getFilePath(evidence.getEvidenceOne());
-            String evidenceTwoPath = getFilePath(evidence.getEvidenceTwo());
-
-            // Load resources
-            Resource userImage = new FileSystemResource(new File(userImagePath));
-            Resource evidenceOne = new FileSystemResource(new File(evidenceOnePath));
-            Resource evidenceTwo = new FileSystemResource(new File(evidenceTwoPath));
-
-            // Validate resources
-            if (!userImage.exists() || !userImage.isReadable() ||
-                    !evidenceOne.exists() || !evidenceOne.isReadable() ||
-                    !evidenceTwo.exists() || !evidenceTwo.isReadable()) {
-                throw new MailFailedException("Images not found or unreadable. Please try again.");
-            }
-
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-            mimeMessageHelper.setFrom(from);
-            mimeMessageHelper.setTo(adminMail);
-            mimeMessageHelper.setSubject("New Librarian Added to CSPLMS!");
+            mimeMessageHelper.setTo(userEmail);
+            mimeMessageHelper.setSubject("CSPLMS OTP Verification");
 
             // HTML email content
             String htmlContent = """
@@ -633,90 +284,56 @@ public class EmailUtil {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <style>
                     body {
-                        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                        font-family: Arial, sans-serif;
                         background-color: #f4f4f4;
                         margin: 0;
                         padding: 0;
-                        font-size: 16px;
-                        line-height: 1.6;
-                        color: #333333;
                     }
                     .container {
-                        max-width: 700px;
+                        max-width: 600px;
                         margin: 20px auto;
                         background-color: #ffffff;
-                        border-radius: 8px !important;
+                        border-radius: 8px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        overflow: hidden;
                     }
                     .header {
                         background-color: #206ea6;
                         color: #ffffff;
                         padding: 20px;
                         text-align: center;
-                        border-top-left-radius: 8px;
-                        border-top-right-radius: 8px;
                     }
                     .header h1 {
-                        margin: 10px 0 0;
-                        font-size: 26px;
-                        font-weight: 600;
+                        margin: 0;
+                        font-size: 24px;
                     }
                     .content {
-                        padding: 25px;
+                        padding: 20px;
+                        line-height: 1.6;
+                        color: #333333;
                     }
-                    .intro {
-                        font-size: 15px;
-                        font-weight: 500;
-                        margin-bottom: 10px;
-                    }
-                    .announcement {
-                        font-size: 14px;
-                        font-weight: 400;
-                        margin-bottom: 10px;
-                        line-height: 1.8;
-                    }
-                    .librarian-details {
+                    .otp {
+                        font-size: 24px;
+                        font-weight: bold;
+                        color: #206ea6;
+                        text-align: center;
                         margin: 20px 0;
                         background-color: #e6f0fa;
-                        padding: 20px;
+                        padding: 10px;
                         border-radius: 5px;
                     }
-                    .librarian-details h2 {
-                        font-family: Georgia, serif;
-                        color: #206ea6;
-                        font-size: 22px;
-                        font-weight: normal;
-                        margin: 0 0 10px;
-                    }
-                    .librarian-details p {
-                        margin: 8px 0;
-                        font-size: 15px;
-                    }
-                    .cta-button {
-                        display: inline-block;
-                        padding: 12px 25px;
-                        margin: 20px 0;
-                        background-color: #206ea6;
-                        color: #ffffff !important;
-                        text-decoration: none;
-                        border-radius: 5px;
-                        font-weight: 600;
+                    .warning {
+                        color: #d32f2f;
+                        font-weight: bold;
                         text-align: center;
-                    }
-                    .closing {
-                        font-size: 14px;
-                        font-weight: 400;
-                        margin-bottom: 10px;
-                        line-height: 1.8;
+                        margin: 15px 0;
                     }
                     .footer {
                         background-color: #f4f4f4;
-                        padding: 15px;
+                        padding: 10px;
                         text-align: center;
-                        font-size: 13px;
+                        font-size: 12px;
                         color: #666666;
-                        border-bottom-left-radius: 8px;
-                        border-bottom-right-radius: 8px;
                     }
                     .footer a {
                         color: #206ea6;
@@ -727,71 +344,44 @@ public class EmailUtil {
             <body>
                 <div class="container">
                     <div class="header">
-                        <h1>New Librarian Added!</h1>
+                        <h1>LMS OTP Verification</h1>
                     </div>
                     <div class="content">
-                        <p class="intro">Dear %s,</p>
-                        <p class="announcement">We are pleased to confirm that a new librarian account has been successfully added to the CSPLMS.</p>
-                        <div class="librarian-details">
-                            <h2>Librarian Details</h2>
-                            <p><strong>Name:</strong> %s</p>
-                            <p><strong>Email:</strong> %s</p>
-                            <p><strong>Contact:</strong> %s</p>
-                        </div>
-                        <p class="announcement">Attached are the librarian's picture and the two supporting documents provided during registration. Please review them for accuracy.</p>
-                        <a href="http://localhost:5173/admin/librarians" class="cta-button">View Librarian</a>
-                        <p class="closing">Thank you for overseeing the CSPLMS.</p>
-                        <p class="closing">Best Regards,<br>CSPLMS Team<br>Pokhara-29, Bhandardhik</p>
+                        <p>Dear User,</p>
+                        <p>Thank you for registering with our Library. To complete your registration, please use the following One-Time Password (OTP):</p>
+                        <div class="otp">%s</div>
+                        <p class="warning">Never share your OTP with anyone. We never call or ask for your OTP.</p>
+                        <p>If you did not initiate this request, please contact our support team immediately.</p>
+                        <p>Best regards,<br>CSPLMS Team</p>
                     </div>
                     <div class="footer">
-                        <p>© 2025 CSPLMS. All rights reserved. | <a href="http://localhost:5173">Visit our website</a></p>
+                        <p>© 2025 LMS. All rights reserved. | <a href="%s">Visit our website</a></p>
                     </div>
                 </div>
             </body>
             </html>
-            """.formatted(
-                    adminName,
-                    librarianUser.getName(),
-                    librarianUser.getEmail(),
-                    librarianUser.getContactNumber() != null ? librarianUser.getContactNumber() : "N/A"
-            );
+            """.formatted(otp, frontendBaseUrl);
 
-            // Fallback plain text
+//            Fallback email with plain text
             String plainText = """
-            Dear %s,
+            Dear User,
             
-            This is to confirm that a new librarian account has been successfully added to the System.
+            Thank you for registering with our Library.
+            Your OTP is: %s
             
-            Librarian Details:
-            Name: %s
-            Email: %s
-            Contact: %s
-            
-            Attached are the librarian's picture and the two supporting documents provided during registration. Please review them for accuracy.
-            
-            View the librarian here: http://localhost:5173/admin/librarians
-            
-            Thank you for overseeing the CSPLMS.
-            
-            Best Regards,
+            Never share your OTP with anyone. We never call or ask for your OTP.
+            If you did not initiate this request, please contact our support team immediately.
+           
+            Best regards,
             CSPLMS Team
-            Pokhara-29, Bhandardhik
-            © 2025 CSPLMS. All rights reserved.
-            """.formatted(
-                    adminName,
-                    librarianUser.getName(),
-                    librarianUser.getEmail(),
-                    librarianUser.getContactNumber() != null ? librarianUser.getContactNumber() : "N/A"
-            );
+            """.formatted(otp);
 
             mimeMessageHelper.setText(plainText, htmlContent);
-            mimeMessageHelper.addAttachment("Profile Image - " + librarianUser.getName(), userImage, "image/png");
-            mimeMessageHelper.addAttachment("Evidence One - " + librarianUser.getName(), evidenceOne, "image/png");
-            mimeMessageHelper.addAttachment("Evidence Two - " + librarianUser.getName(), evidenceTwo, "image/png");
             javaMailSender.send(mimeMessage);
-        } catch (MailException | MessagingException ex) {
-            throw new MailFailedException("Failed to send librarian added notification email");
         } catch (Exception ex) {
+            if (ex instanceof MailException || ex instanceof MessagingException) {
+                throw new MailFailedException("Failed to send OTP. Please try again later.");
+            }
             throw ex;
         }
     }
@@ -946,12 +536,12 @@ public class EmailUtil {
                         </div>
                         <p class="announcement">Attached is the book’s cover image for your reference. Please ensure the book is returned by the due date to avoid any late fees.</p>
                         <p class="closing" style="color: red !important;"><strong>Note:</strong> If this was not you please contact the team as soon as possible.</p>
-                        <a href="http://localhost:5173/books/book/%s" class="cta-button">View Book Details</a>
+                        <a href="%s/books/book/%s" class="cta-button">View Book Details</a>
                         <p class="closing">Enjoy your reading! Thank you for being a valued member of CSPLMS.</p>
                         <p class="closing">Warm Regards,<br>CSPLMS Team<br>Pokhara-29, Bhandardhik</p>
                     </div>
                     <div class="footer">
-                        <p>© 2025 CSPLMS. All rights reserved. | <a href="http://localhost:5173">Visit our website</a></p>
+                        <p>© 2025 CSPLMS. All rights reserved. | <a href="%s">Visit our website</a></p>
                     </div>
                 </div>
             </body>
@@ -963,7 +553,9 @@ public class EmailUtil {
                     book.getCategory() != null ? book.getCategory().getName() : "N/A",
                     borrowDate,
                     dueDate,
-                    book.getBookId()
+                    frontendBaseUrl,
+                    book.getBookId(),
+                    frontendBaseUrl
             );
 
             // Fallback plain text
@@ -981,7 +573,7 @@ public class EmailUtil {
             
             Attached is the book’s cover image for your reference. Please ensure the book is returned by the due date to avoid any late fees.
             
-            View book details here: http://localhost:5173/books/book/%s
+            View book details here: %s/books/book/%s
             
             Enjoy your reading! Thank you for being a valued member of CSPLMS.
             
@@ -996,6 +588,7 @@ public class EmailUtil {
                     book.getCategory() != null ? book.getCategory().getName() : "N/A",
                     borrowDate,
                     dueDate,
+                    frontendBaseUrl,
                     book.getBookId()
             );
 
@@ -1161,12 +754,12 @@ public class EmailUtil {
                             <p><strong>Returned Date:</strong> %s</p>
                         </div>
                         <p class="announcement">Attached is the book’s cover image for your reference. We hope you enjoyed your reading!</p>
-                        <a href="http://localhost:5173" class="cta-button">Explore More Books</a>
+                        <a href="%s" class="cta-button">Explore More Books</a>
                         <p class="closing">Thank you for being a valued member. We look forward to your next visit!</p>
                         <p class="closing">Warm Regards,<br>CSPLMS Team<br>Pokhara-29, Bhandardhik</p>
                     </div>
                     <div class="footer">
-                        <p>© 2025 CSPLMS. All rights reserved. | <a href="http://localhost:5173">Visit our website</a></p>
+                        <p>© 2025 CSPLMS. All rights reserved. | <a href="%s">Visit our website</a></p>
                     </div>
                 </div>
             </body>
@@ -1178,7 +771,9 @@ public class EmailUtil {
                     book.getCategory() != null ? book.getCategory().getName() : "N/A",
                     borrowDate,
                     dueDate,
-                    returnDate
+                    returnDate,
+                    frontendBaseUrl,
+                    frontendBaseUrl
             );
 
             // Fallback plain text
@@ -1197,7 +792,7 @@ public class EmailUtil {
             
             Attached is the book’s cover image for your reference. We hope you enjoyed your reading!
             
-            Explore more books here: http://localhost:5173/books
+            Explore more books here: %s/books
             
             Thank you for being a valued member. We look forward to your next visit!
             
@@ -1212,7 +807,8 @@ public class EmailUtil {
                     book.getCategory() != null ? book.getCategory().getName() : "N/A",
                     borrowDate,
                     dueDate,
-                    returnDate
+                    returnDate,
+                    frontendBaseUrl
             );
 
             mimeMessageHelper.setText(plainText, htmlContent);
@@ -1414,7 +1010,7 @@ public class EmailUtil {
                         <p class="closing">Warm Regards,<br>CSPLMS Team<br>Pokhara-29, Bhandardhik</p>
                     </div>
                     <div class="footer">
-                        <p>© 2025 CSPLMS. All rights reserved. | <a href="http://localhost:5173">Visit our website</a></p>
+                        <p>© 2025 CSPLMS. All rights reserved. | <a href="%s">Visit our website</a></p>
                     </div>
                 </div>
             </body>
@@ -1428,7 +1024,8 @@ public class EmailUtil {
                     dueDate,
                     returnDate,
                     perDayRate,
-                    totalFineAmount
+                    totalFineAmount,
+                    frontendBaseUrl
             );
 
             // Fallback plain text
@@ -1639,12 +1236,12 @@ public class EmailUtil {
                             <p><strong>Note:</strong> Please be aware that due date extensions are allowed only once per borrowing. Ensure the book is returned by the new due date to avoid any fines.</p>
                         </div>
                         <p class="announcement">Attached is the book’s cover image for your reference.</p>
-                        <a href="http://localhost:5173/books/book/%s" class="cta-button">View Book Details</a>
+                        <a href="%s/books/book/%s" class="cta-button">View Book Details</a>
                         <p class="closing">Enjoy your reading! Thank you for being a valued member.</p>
                         <p class="closing">Warm Regards,<br>CSPLMS Team<br>Pokhara-29, Bhandardhik</p>
                     </div>
                     <div class="footer">
-                        <p>© 2025 CSPLMS. All rights reserved. | <a href="http://localhost:5173">Visit our website</a></p>
+                        <p>© 2025 CSPLMS. All rights reserved. | <a href="%s">Visit our website</a></p>
                     </div>
                 </div>
             </body>
@@ -1656,7 +1253,9 @@ public class EmailUtil {
                     book.getCategory() != null ? book.getCategory().getName() : "N/A",
                     borrowDate,
                     dueDate,
-                    book.getBookId()
+                    frontendBaseUrl,
+                    book.getBookId(),
+                    frontendBaseUrl
             );
 
             // Fallback plain text
@@ -1676,7 +1275,7 @@ public class EmailUtil {
             
             Attached is the book’s cover image for your reference.
             
-            View book details here: http://localhost:5173/books/book/%s
+            View book details here: %s/books/book/%s
             
             Enjoy your reading! Thank you for being a valued member of CSPLMS.
             
@@ -1691,6 +1290,7 @@ public class EmailUtil {
                     book.getCategory() != null ? book.getCategory().getName() : "N/A",
                     borrowDate,
                     dueDate,
+                    frontendBaseUrl,
                     book.getBookId()
             );
 
@@ -1862,12 +1462,12 @@ public class EmailUtil {
                             <p><strong>Note:</strong> No action is required from you as the borrowing record has been corrected. Please contact us if you have any questions or need further assistance.</p>
                         </div>
                         <p class="announcement">Attached is the book’s cover image for your reference.</p>
-                        <a href="http://localhost:5173" class="cta-button">Explore More Books</a>
+                        <a href="%s" class="cta-button">Explore More Books</a>
                         <p class="closing">We value your presence and are committed to provide a seamless experience. Thank you for your understanding.</p>
                         <p class="closing">Warm Regards,<br>CSPLMS Team<br>Pokhara-29, Bhandardhik</p>
                     </div>
                     <div class="footer">
-                        <p>© 2025 CSPLMS. All rights reserved. | <a href="http://localhost:5173">Visit our website</a></p>
+                        <p>© 2025 CSPLMS. All rights reserved. | <a href="%s">Visit our website</a></p>
                     </div>
                 </div>
             </body>
@@ -1877,7 +1477,9 @@ public class EmailUtil {
                     book.getTitle(),
                     book.getAuthor() != null ? book.getAuthor() : "N/A",
                     book.getCategory() != null ? book.getCategory().getName() : "N/A",
-                    borrowDate
+                    borrowDate,
+                    frontendBaseUrl,
+                    frontendBaseUrl
             );
 
             // Fallback plain text
@@ -1896,7 +1498,7 @@ public class EmailUtil {
             
             Attached is the book’s cover image for your reference.
             
-            Explore more books here: http://localhost:5173/books
+            Explore more books here: %s/books
             
             We value your membership and are committed to ensuring a seamless experience. Thank you for your understanding.
             
@@ -1909,7 +1511,8 @@ public class EmailUtil {
                     book.getTitle(),
                     book.getAuthor() != null ? book.getAuthor() : "N/A",
                     book.getCategory() != null ? book.getCategory().getName() : "N/A",
-                    borrowDate
+                    borrowDate,
+                    frontendBaseUrl
             );
 
             mimeMessageHelper.setText(plainText, htmlContent);
@@ -2108,12 +1711,12 @@ public class EmailUtil {
                             <p><strong>Payment Date:</strong> %s</p>
                         </div>
                         <p class="announcement">Attached is the book’s cover image for your reference.</p>
-                        <a href="http://localhost:5173" class="cta-button">Explore More Books</a>
+                        <a href="%s" class="cta-button">Explore More Books</a>
                         <p class="closing">We value your presence and look forward to serving you again. Thank you for being a part of CSPLMS!</p>
                         <p class="closing">Warm Regards,<br>CSPLMS Team<br>Pokhara-29, Bhandardhik</p>
                     </div>
                     <div class="footer">
-                        <p>© 2025 CSPLMS. All rights reserved. | <a href="http://localhost:5173">Visit our website</a></p>
+                        <p>© 2025 CSPLMS. All rights reserved. | <a href="%s">Visit our website</a></p>
                     </div>
                 </div>
             </body>
@@ -2127,7 +1730,9 @@ public class EmailUtil {
                     dueDate,
                     returnDate,
                     paymentAmount,
-                    paymentDate
+                    paymentDate,
+                    frontendBaseUrl,
+                    frontendBaseUrl
             );
 
             // Fallback plain text
@@ -2150,7 +1755,7 @@ public class EmailUtil {
             
             Attached is the book’s cover image for your reference.
             
-            Explore more books here: http://localhost:5173/books
+            Explore more books here: %s/books
             
             We value your membership and look forward to serving you again. Thank you for being a part of CSPLMS!
             
@@ -2167,7 +1772,8 @@ public class EmailUtil {
                     dueDate,
                     returnDate,
                     paymentAmount,
-                    paymentDate
+                    paymentDate,
+                    frontendBaseUrl
             );
 
             mimeMessageHelper.setText(plainText, htmlContent);
@@ -2178,6 +1784,428 @@ public class EmailUtil {
             throw new MailFailedException("Failed to send fine paid confirmation email");
         } catch (Exception ex) {
             logger.error("Unexpected Server Error: {}", ex.getMessage());
+            throw ex;
+        }
+    }
+
+    public void librarianAddedMailToLibrarian(User librarianUser, Evidence evidence, String librarianPassword) throws MailException, MessagingException, MailFailedException {
+        try {
+            // Validate inputs
+            if (librarianUser == null || librarianUser.getEmail() == null || librarianUser.getName() == null) {
+                throw new MailFailedException("Librarian information cannot be null.");
+            }
+            if (evidence == null || evidence.getUserImage() == null || evidence.getEvidenceOne() == null || evidence.getEvidenceTwo() == null) {
+                throw new MailFailedException("Evidence images cannot be null.");
+            }
+
+            // Get absolute file paths
+            String userImagePath = getFilePath(evidence.getUserImage());
+            String evidenceOnePath = getFilePath(evidence.getEvidenceOne());
+            String evidenceTwoPath = getFilePath(evidence.getEvidenceTwo());
+
+            // Load resources
+            Resource userImage = new FileSystemResource(new File(userImagePath));
+            Resource evidenceOne = new FileSystemResource(new File(evidenceOnePath));
+            Resource evidenceTwo = new FileSystemResource(new File(evidenceTwoPath));
+
+            // Validate resources
+            if (!userImage.exists() || !userImage.isReadable() ||
+                !evidenceOne.exists() || !evidenceOne.isReadable() ||
+                !evidenceTwo.exists() || !evidenceTwo.isReadable()) {
+                throw new MailFailedException("Images not found or unreadable. Please try again.");
+            }
+
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            mimeMessageHelper.setFrom(from);
+            mimeMessageHelper.setTo(librarianUser.getEmail());
+            mimeMessageHelper.setSubject("Welcome to CSPLMS Teams!");
+
+            // HTML email content
+            String htmlContent = """
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <style>
+                        body {
+                            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                            background-color: #f4f4f4;
+                            margin: 0;
+                            padding: 0;
+                            font-size: 16px;
+                            line-height: 1.6;
+                            color: #333333;
+                        }
+                        .container {
+                            max-width: 700px;
+                            margin: 20px auto;
+                            background-color: #ffffff;
+                            border-radius: 8px !important;
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        }
+                        .header {
+                            background-color: #206ea6;
+                            color: #ffffff;
+                            padding: 20px;
+                            text-align: center;
+                            border-top-left-radius: 8px;
+                            border-top-right-radius: 8px;
+                        }
+                        .header h1 {
+                            margin: 10px 0 0;
+                            font-size: 26px;
+                            font-weight: 600;
+                        }
+                        .content {
+                            padding: 25px;
+                        }
+                        .intro {
+                            font-size: 15px;
+                            font-weight: 500;
+                            margin-bottom: 10px;
+                        }
+                        .announcement {
+                            font-size: 14px;
+                            font-weight: 400;
+                            margin-bottom: 10px;
+                            line-height: 1.8;
+                        }
+                        .credentials {
+                            margin: 20px 0;
+                            background-color: #e6f0fa;
+                            padding: 20px;
+                            border-radius: 5px;
+                        }
+                        .credentials h2 {
+                            font-family: Georgia, serif;
+                            color: #206ea6;
+                            font-size: 22px;
+                            font-weight: normal;
+                            margin: 0 0 10px;
+                        }
+                        .credentials p {
+                            margin: 8px 0;
+                            font-size: 15px;
+                        }
+                        .cta-button {
+                            display: inline-block;
+                            padding: 10px 22px;
+                            margin: 7px 0;
+                            background-color: #206ea6;
+                            color: #ffffff !important;
+                            text-decoration: none;
+                            border-radius: 5px;
+                            font-weight: 600;
+                            text-align: center;
+                        }
+                        .closing {
+                            font-size: 12px;
+                            font-weight: 400;
+                            margin-bottom: 7px;
+                            line-height: 1.8;
+                        }
+                        .footer {
+                            background-color: #f4f4f4;
+                            padding: 15px;
+                            text-align: center;
+                            font-size: 13px;
+                            color: #666666;
+                            border-bottom-left-radius: 8px;
+                            border-bottom-right-radius: 8px;
+                        }
+                        .footer a {
+                            color: #206ea6;
+                            text-decoration: none;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <h1>Welcome to CSPLMS!</h1>
+                        </div>
+                        <div class="content">
+                            <p class="intro">Dear %s,</p>
+                            <p class="announcement">We are thrilled to welcome you to the CSPLMS team as a librarian!</p>
+                            <p class="announcement">Your account has been successfully created by our system administrator. You can now log in to the system to begin managing library resources.</p>
+                            <div class="credentials">
+                                <h2>Your Login Credentials</h2>
+                                <p><strong>Email:</strong> %s</p>
+                                <p><strong>Password:</strong> %s</p>
+                            </div>
+                            <p class="announcement">Attached are your picture and the two supporting documents provided during registration. Please review them for accuracy.</p>
+                            <a href="%s" class="cta-button">Log In</a>
+                            <p class="closing">We look forward to your contributions at the library. Thank you for joining us!</p>
+                            <p class="closing">Warm Regards,<br>CSPLMS Team<br>Pokhara-29, Bhandardhik</p>
+                        </div>
+                        <div class="footer">
+                            <p>© 2025 CSPLMS. All rights reserved. | <a href="%s">Visit our website</a></p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+                """.formatted(
+                    librarianUser.getName(),
+                    librarianUser.getEmail(),
+                    librarianPassword,
+                    frontendBaseUrl,
+                    frontendBaseUrl
+            );
+
+            // Fallback plain text
+            String plainText = """
+                Dear %s,
+                
+                We are thrilled to welcome you as a new librarian to the CSPLMS team!
+                
+                Your account has been successfully created by our system administrator. You can now log in to the system to begin managing library resources.
+                
+                Your Login Credentials:
+                Email: %s
+                Password: %s
+                
+                Attached are your picture and the two supporting documents provided during registration. Please review them for accuracy.
+                
+                Log in here: %s
+                
+                We look forward to your contributions to our library community. Thank you for joining us!
+                
+                Warm Regards,
+                CSPLMS Team
+                Pokhara-29, Bhandardhik
+                © 2025 CSPLMS. All rights reserved.
+                """.formatted(
+                    librarianUser.getName(),
+                    librarianUser.getEmail(),
+                    librarianPassword,
+                    frontendBaseUrl
+            );
+
+            mimeMessageHelper.setText(plainText, htmlContent);
+            mimeMessageHelper.addAttachment("Profile Image - " + librarianUser.getName(), userImage, "image/png");
+            mimeMessageHelper.addAttachment("Evidence One - " + librarianUser.getName(), evidenceOne, "image/png");
+            mimeMessageHelper.addAttachment("Evidence Two - " + librarianUser.getName(), evidenceTwo, "image/png");
+
+            javaMailSender.send(mimeMessage);
+            logger.info("Librarian added email sent successfully to: {}", librarianUser.getEmail());
+        } catch (MailException | MessagingException ex) {
+            logger.error("Failed to send librarian added email: {}", ex.getMessage());
+            throw new MailFailedException("Failed to send librarian welcome email");
+        } catch (Exception ex) {
+            logger.error("Unexpected error in librarian added email: {} {} {}", ex.getMessage(), ex.getCause(), ex.getLocalizedMessage());
+            throw ex;
+        }
+    }
+
+    public void librarianAddedMailToAdmin(User librarianUser, Evidence evidence) throws MailException, MessagingException, MailFailedException {
+        try {
+            // Validate inputs
+            if (librarianUser == null || librarianUser.getName() == null || librarianUser.getEmail() == null) {
+                throw new MailFailedException("Librarian user information cannot be null.");
+            }
+            if (evidence == null || evidence.getUserImage() == null || evidence.getEvidenceOne() == null || evidence.getEvidenceTwo() == null) {
+                throw new MailFailedException("Evidence images cannot be null.");
+            }
+            if (adminMail == null || adminName == null) {
+                throw new MailFailedException("Admin email or name cannot be null.");
+            }
+
+            // Get absolute file paths
+            String userImagePath = getFilePath(evidence.getUserImage());
+            String evidenceOnePath = getFilePath(evidence.getEvidenceOne());
+            String evidenceTwoPath = getFilePath(evidence.getEvidenceTwo());
+
+            // Load resources
+            Resource userImage = new FileSystemResource(new File(userImagePath));
+            Resource evidenceOne = new FileSystemResource(new File(evidenceOnePath));
+            Resource evidenceTwo = new FileSystemResource(new File(evidenceTwoPath));
+
+            // Validate resources
+            if (!userImage.exists() || !userImage.isReadable() ||
+                !evidenceOne.exists() || !evidenceOne.isReadable() ||
+                !evidenceTwo.exists() || !evidenceTwo.isReadable()) {
+                throw new MailFailedException("Images not found or unreadable. Please try again.");
+            }
+
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            mimeMessageHelper.setFrom(from);
+            mimeMessageHelper.setTo(adminMail);
+            mimeMessageHelper.setSubject("New Librarian Added to CSPLMS!");
+
+            // HTML email content
+            String htmlContent = """
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {
+                        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                        background-color: #f4f4f4;
+                        margin: 0;
+                        padding: 0;
+                        font-size: 16px;
+                        line-height: 1.6;
+                        color: #333333;
+                    }
+                    .container {
+                        max-width: 700px;
+                        margin: 20px auto;
+                        background-color: #ffffff;
+                        border-radius: 8px !important;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    }
+                    .header {
+                        background-color: #206ea6;
+                        color: #ffffff;
+                        padding: 20px;
+                        text-align: center;
+                        border-top-left-radius: 8px;
+                        border-top-right-radius: 8px;
+                    }
+                    .header h1 {
+                        margin: 10px 0 0;
+                        font-size: 26px;
+                        font-weight: 600;
+                    }
+                    .content {
+                        padding: 25px;
+                    }
+                    .intro {
+                        font-size: 15px;
+                        font-weight: 500;
+                        margin-bottom: 10px;
+                    }
+                    .announcement {
+                        font-size: 14px;
+                        font-weight: 400;
+                        margin-bottom: 10px;
+                        line-height: 1.8;
+                    }
+                    .librarian-details {
+                        margin: 20px 0;
+                        background-color: #e6f0fa;
+                        padding: 20px;
+                        border-radius: 5px;
+                    }
+                    .librarian-details h2 {
+                        font-family: Georgia, serif;
+                        color: #206ea6;
+                        font-size: 22px;
+                        font-weight: normal;
+                        margin: 0 0 10px;
+                    }
+                    .librarian-details p {
+                        margin: 8px 0;
+                        font-size: 15px;
+                    }
+                    .cta-button {
+                        display: inline-block;
+                        padding: 12px 25px;
+                        margin: 20px 0;
+                        background-color: #206ea6;
+                        color: #ffffff !important;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        font-weight: 600;
+                        text-align: center;
+                    }
+                    .closing {
+                        font-size: 14px;
+                        font-weight: 400;
+                        margin-bottom: 10px;
+                        line-height: 1.8;
+                    }
+                    .footer {
+                        background-color: #f4f4f4;
+                        padding: 15px;
+                        text-align: center;
+                        font-size: 13px;
+                        color: #666666;
+                        border-bottom-left-radius: 8px;
+                        border-bottom-right-radius: 8px;
+                    }
+                    .footer a {
+                        color: #206ea6;
+                        text-decoration: none;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>New Librarian Added!</h1>
+                    </div>
+                    <div class="content">
+                        <p class="intro">Dear %s,</p>
+                        <p class="announcement">We are pleased to confirm that a new librarian account has been successfully added to the CSPLMS.</p>
+                        <div class="librarian-details">
+                            <h2>Librarian Details</h2>
+                            <p><strong>Name:</strong> %s</p>
+                            <p><strong>Email:</strong> %s</p>
+                            <p><strong>Contact:</strong> %s</p>
+                        </div>
+                        <p class="announcement">Attached are the librarian's picture and the two supporting documents provided during registration. Please review them for accuracy.</p>
+                        <a href="%s/admin/librarians" class="cta-button">View Librarian</a>
+                        <p class="closing">Thank you for overseeing the CSPLMS.</p>
+                        <p class="closing">Best Regards,<br>CSPLMS Team<br>Pokhara-29, Bhandardhik</p>
+                    </div>
+                    <div class="footer">
+                        <p>© 2025 CSPLMS. All rights reserved. | <a href="%s">Visit our website</a></p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """.formatted(
+                    adminName,
+                    librarianUser.getName(),
+                    librarianUser.getEmail(),
+                    librarianUser.getContactNumber() != null ? librarianUser.getContactNumber() : "N/A",
+                    frontendBaseUrl,
+                    frontendBaseUrl
+            );
+
+            // Fallback plain text
+            String plainText = """
+            Dear %s,
+            
+            This is to confirm that a new librarian account has been successfully added to the System.
+            
+            Librarian Details:
+            Name: %s
+            Email: %s
+            Contact: %s
+            
+            Attached are the librarian's picture and the two supporting documents provided during registration. Please review them for accuracy.
+            
+            View the librarian here: %s/admin/librarians
+            
+            Thank you for overseeing the CSPLMS.
+            
+            Best Regards,
+            CSPLMS Team
+            Pokhara-29, Bhandardhik
+            © 2025 CSPLMS. All rights reserved.
+            """.formatted(
+                    adminName,
+                    librarianUser.getName(),
+                    librarianUser.getEmail(),
+                    librarianUser.getContactNumber() != null ? librarianUser.getContactNumber() : "N/A",
+                    frontendBaseUrl
+            );
+
+            mimeMessageHelper.setText(plainText, htmlContent);
+            mimeMessageHelper.addAttachment("Profile Image - " + librarianUser.getName(), userImage, "image/png");
+            mimeMessageHelper.addAttachment("Evidence One - " + librarianUser.getName(), evidenceOne, "image/png");
+            mimeMessageHelper.addAttachment("Evidence Two - " + librarianUser.getName(), evidenceTwo, "image/png");
+            javaMailSender.send(mimeMessage);
+        } catch (MailException | MessagingException ex) {
+            throw new MailFailedException("Failed to send librarian added notification email");
+        } catch (Exception ex) {
             throw ex;
         }
     }
