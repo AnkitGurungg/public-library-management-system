@@ -34,16 +34,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.OK);
     }
 
-    @ExceptionHandler(IndexBoundsException.class)
-    public ResponseEntity<ResponseAPI> indexBoundsExceptionHandler(IndexBoundsException ex) {
-        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.PAYLOAD_TOO_LARGE);
-    }
-
-    @ExceptionHandler(ResourceAlreadyExistsException.class)
-    public ResponseEntity<ResponseAPI> resourceAlreadyExistsExceptionHandler(ResourceAlreadyExistsException ex) {
-        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.CONFLICT);
-    }
-
+//    4XX
     @ExceptionHandler(BorrowException.class)
     public ResponseEntity<ResponseAPI> borrowExceptionHandler(BorrowException ex) {
         return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.BAD_REQUEST);
@@ -54,14 +45,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ForeignKeyViolationException.class)
-    public ResponseEntity<ResponseAPI> foreignKeyViolationExceptionHandler(ForeignKeyViolationException ex) {
-        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.CONFLICT);
+    @ExceptionHandler(JsonMappingException.class)
+    public ResponseEntity<ResponseAPI> jsonMappingExceptionHandler(JsonMappingException ex) {
+        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(NotAvailableException.class)
-    public ResponseEntity<ResponseAPI> notAvailableExceptionHandler(NotAvailableException ex) {
-        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.CONFLICT);
+    @ExceptionHandler(MailFailedException.class)
+    public ResponseEntity<ResponseAPI> mailExceptionHandler(MailFailedException ex) {
+        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotPresentException.class)
@@ -69,24 +60,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(JsonMappingException.class)
-    public ResponseEntity<ResponseAPI> jsonMappingExceptionHandler(JsonMappingException ex) {
-        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ResponseAPI> unauthorizedExceptionHandler(UnauthorizedException ex) {
         return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(UniqueKeyViolationException.class)
-    public ResponseEntity<ResponseAPI> uniqueKeyViolationExceptionHandler(UniqueKeyViolationException ex) {
-        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler(MailFailedException.class)
-    public ResponseEntity<ResponseAPI> mailExceptionHandler(MailFailedException ex) {
-        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PasswordNotMatchedException.class)
@@ -109,14 +85,29 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ResponseAPI("Invalid token", false), HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @ExceptionHandler(OTPTimeFailedException.class)
-    public ResponseEntity<ResponseAPI> otpTimeFailedExceptionHandler(OTPTimeFailedException ex) {
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<ResponseAPI> resourceAlreadyExistsExceptionHandler(ResourceAlreadyExistsException ex) {
         return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(MailNotVerifiedException.class)
-    public ResponseEntity<ResponseAPI> otpTimeFailedExceptionHandler(MailNotVerifiedException ex) {
-        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.PRECONDITION_REQUIRED);
+    @ExceptionHandler(NotAvailableException.class)
+    public ResponseEntity<ResponseAPI> notAvailableExceptionHandler(NotAvailableException ex) {
+        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ForeignKeyViolationException.class)
+    public ResponseEntity<ResponseAPI> foreignKeyViolationExceptionHandler(ForeignKeyViolationException ex) {
+        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(UniqueKeyViolationException.class)
+    public ResponseEntity<ResponseAPI> uniqueKeyViolationExceptionHandler(UniqueKeyViolationException ex) {
+        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(OTPTimeFailedException.class)
+    public ResponseEntity<ResponseAPI> otpTimeFailedExceptionHandler(OTPTimeFailedException ex) {
+        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(UpdateBookException.class)
@@ -129,6 +120,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(IndexBoundsException.class)
+    public ResponseEntity<ResponseAPI> indexBoundsExceptionHandler(IndexBoundsException ex) {
+        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.PAYLOAD_TOO_LARGE);
+    }
+
+    @ExceptionHandler(MailNotVerifiedException.class)
+    public ResponseEntity<ResponseAPI> otpTimeFailedExceptionHandler(MailNotVerifiedException ex) {
+        return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.PRECONDITION_REQUIRED);
+    }
+
+//    5XX
     @ExceptionHandler(KhaltiPaymentInitiateFailedException.class)
     public ResponseEntity<ResponseAPI> initiateKhaltiPaymentExceptionHandler(KhaltiPaymentInitiateFailedException ex) {
         return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), ex.isStatus()), HttpStatus.SERVICE_UNAVAILABLE);
