@@ -3,7 +3,6 @@ package com.csplms.service.Auth;
 import com.csplms.dto.requestDto.KYCFillUpDto;
 import com.csplms.dto.responseDto.UserResponseDto;
 import com.csplms.helper.SaveEvidencesHelper;
-import com.csplms.mapper.RegisterUserMapper;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import com.csplms.exception.*;
@@ -41,7 +40,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final EmailUtil emailUtil;
     private final DateTimeUtil dateWithTimeUtil;
     private final PasswordEncoder passwordEncoder;
-    private final RegisterUserMapper registerUserMapper;
     private final SaveEvidencesHelper saveEvidencesHelper;
 
     private static final Logger logger = LoggerFactory.getLogger(RegistrationServiceImpl.class);
@@ -55,7 +53,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             DateTimeUtil dateTimeUtil,
             GetAuthUserUtil getAuthUserUtil,
             PasswordEncoder passwordEncoder,
-            RegisterUserMapper registerUserMapper,
             SaveEvidencesHelper saveEvidencesHelper
     ) {
         this.userRepository = userRepository;
@@ -65,7 +62,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.dateWithTimeUtil = dateTimeUtil;
         this.getAuthUserUtil = getAuthUserUtil;
         this.passwordEncoder = passwordEncoder;
-        this.registerUserMapper = registerUserMapper;
         this.saveEvidencesHelper = saveEvidencesHelper;
     }
 
@@ -123,7 +119,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         String email = getAuthUserUtil.getAuthUser();
         User memberUser = userRepository.findUserByEmail(email).orElseThrow(() -> new UserNotPresentException("user"));
 
-        memberUser = this.registerUserMapper.toMemberUser(memberUser, kycFillUpDto);
+        memberUser = this.registrationMapper.toMemberUser(memberUser, kycFillUpDto);
         memberUser = this.userRepository.save(memberUser);
 
         // Saves the image and returns the path where evidence is saved
@@ -132,7 +128,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         // Save the Evidence on DB
         saveEvidencesHelper.saveUserEvidencesOnDB(memberUser, memberUserImagePath, memberUserEvidencesPath, kycFillUpDto);
-        return registerUserMapper.toUserResponseDto(memberUser);
+        return registrationMapper.toUserResponseDto(memberUser);
     }
 
 }
