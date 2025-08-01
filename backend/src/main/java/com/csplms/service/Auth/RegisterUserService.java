@@ -1,4 +1,4 @@
-package com.csplms.service.Open;
+package com.csplms.service.Auth;
 
 import com.csplms.dto.requestDto.KYCFillUpDto;
 import com.csplms.dto.responseDto.UserResponseDto;

@@ -1,4 +1,4 @@
-package com.csplms.controller.Open;
+package com.csplms.controller.Auth;
 
 import com.csplms.dto.requestDto.KYCFillUpDto;
 import com.csplms.entity.User;
@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
-import com.csplms.service.Open.RegisterUserService;
-import com.csplms.service.Open.RegistrationService;
+import com.csplms.service.Auth.RegisterUserService;
+import com.csplms.service.Auth.RegistrationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.csplms.dto.responseDto.UserResponseDto;
@@ -23,17 +23,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/auth")
-public class RegisterUserController {
+public class RegistrationController {
 
     private final JwtService jwtService;
     private final RegisterUserService registerUserService;
     private final RegistrationService registrationService;
     private final GetAuthUserUtil getAuthUserUtil;
 
-    private static final Logger logger = LoggerFactory.getLogger(RegisterUserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
 
     @Autowired
-    public RegisterUserController(RegisterUserService registerUserService, RegistrationService registrationService, JwtService jwtService, GetAuthUserUtil getAuthUserUtil) {
+    public RegistrationController(RegisterUserService registerUserService, RegistrationService registrationService, JwtService jwtService, GetAuthUserUtil getAuthUserUtil) {
         this.registerUserService = registerUserService;
         this.registrationService = registrationService;
         this.jwtService = jwtService;

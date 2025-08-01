@@ -1,4 +1,4 @@
-package com.csplms.controller.Open;
+package com.csplms.controller.Auth;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,7 @@ import com.csplms.security.JwtService;
 import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
-import com.csplms.service.Open.LoginService;
+import com.csplms.service.Auth.LoginService;
 import org.springframework.http.ResponseEntity;
 import jakarta.servlet.http.HttpServletRequest;
 import com.csplms.dto.requestDto.LoginRequestDto;
@@ -23,14 +23,14 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/auth")
-public class LoginController {
+public class AuthController {
 
     private final LoginService loginService;
     private final JwtService jwtService;
-    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
-    public LoginController(LoginService loginService, JwtService jwtService) {
+    public AuthController(LoginService loginService, JwtService jwtService) {
         this.loginService = loginService;
         this.jwtService = jwtService;
     }

@@ -1,4 +1,4 @@
-package com.csplms.controller.Open;
+package com.csplms.controller;
 
 import com.csplms.dto.responseDto.*;
 import org.springframework.data.domain.Page;
@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.csplms.service.LibrarianAdmin.BookService;
-import com.csplms.service.Open.DisplayResourcesService;
+import com.csplms.service.DisplayResourcesService;
 import com.csplms.service.LibrarianAdmin.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 

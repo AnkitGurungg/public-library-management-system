@@ -1,4 +1,4 @@
-package com.csplms.service.Open;
+package com.csplms.service;
 
 import com.csplms.dto.responseDto.BookResponseDto;
 import com.csplms.dto.responseDto.GlobalBookSearchDto;
