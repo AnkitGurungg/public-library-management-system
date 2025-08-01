@@ -6,7 +6,7 @@ import com.csplms.security.JwtService;
 import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
-import com.csplms.service.Auth.LoginService;
+import com.csplms.service.Auth.AuthService;
 import org.springframework.http.ResponseEntity;
 import jakarta.servlet.http.HttpServletRequest;
 import com.csplms.dto.requestDto.LoginRequestDto;
@@ -25,19 +25,19 @@ import java.util.HashMap;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final LoginService loginService;
+    private final AuthService authService;
     private final JwtService jwtService;
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
-    public AuthController(LoginService loginService, JwtService jwtService) {
-        this.loginService = loginService;
+    public AuthController(AuthService authService, JwtService jwtService) {
+        this.authService = authService;
         this.jwtService = jwtService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> loginUser(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) throws MessagingException, MailFailedException {
-        LoginResponseDto loginResponseDto = loginService.loginUser(loginRequestDto);
+        LoginResponseDto loginResponseDto = authService.loginUser(loginRequestDto);
 
         if (loginResponseDto.present() && !loginResponseDto.active()){
             return new ResponseEntity<>(loginResponseDto, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
@@ -57,7 +57,7 @@ public class AuthController {
             @RequestHeader("Authorization") String rawToken
     ) {
         return new ResponseEntity<>(
-                loginService.getUser(rawToken),
+                authService.getUser(rawToken),
                 HttpStatus.OK
         );
     }

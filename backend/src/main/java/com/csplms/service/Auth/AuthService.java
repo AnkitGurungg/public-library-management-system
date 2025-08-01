@@ -6,7 +6,7 @@ import com.csplms.dto.responseDto.LoginResponseDto;
 import com.csplms.exception.MailFailedException;
 import jakarta.mail.MessagingException;
 
-public interface LoginService {
+public interface AuthService {
     LoginResponseDto loginUser(LoginRequestDto loginRequestDto) throws MessagingException, MailFailedException;
 
     GetUserResponseDto getUser(String rawToken);
