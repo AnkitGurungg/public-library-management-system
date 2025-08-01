@@ -1,5 +1,10 @@
 package com.csplms.service.Auth;
 
+import com.csplms.dto.requestDto.KYCFillUpDto;
+import com.csplms.dto.responseDto.UserResponseDto;
+import com.csplms.helper.SaveEvidencesHelper;
+import com.csplms.mapper.RegisterUserMapper;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import com.csplms.exception.*;
 import com.csplms.entity.User;
@@ -18,7 +23,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -34,11 +41,23 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final EmailUtil emailUtil;
     private final DateTimeUtil dateWithTimeUtil;
     private final PasswordEncoder passwordEncoder;
+    private final RegisterUserMapper registerUserMapper;
+    private final SaveEvidencesHelper saveEvidencesHelper;
 
     private static final Logger logger = LoggerFactory.getLogger(RegistrationServiceImpl.class);
 
     @Autowired
-    public RegistrationServiceImpl(UserRepository userRepository, RegistrationMapper registrationMapper, OtpUtil otpUtil, EmailUtil emailUtil, DateTimeUtil dateTimeUtil, GetAuthUserUtil getAuthUserUtil, PasswordEncoder passwordEncoder) {
+    public RegistrationServiceImpl(
+            UserRepository userRepository,
+            RegistrationMapper registrationMapper,
+            OtpUtil otpUtil,
+            EmailUtil emailUtil,
+            DateTimeUtil dateTimeUtil,
+            GetAuthUserUtil getAuthUserUtil,
+            PasswordEncoder passwordEncoder,
+            RegisterUserMapper registerUserMapper,
+            SaveEvidencesHelper saveEvidencesHelper
+    ) {
         this.userRepository = userRepository;
         this.registrationMapper = registrationMapper;
         this.otpUtil = otpUtil;
@@ -46,6 +65,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.dateWithTimeUtil = dateTimeUtil;
         this.getAuthUserUtil = getAuthUserUtil;
         this.passwordEncoder = passwordEncoder;
+        this.registerUserMapper = registerUserMapper;
+        this.saveEvidencesHelper = saveEvidencesHelper;
     }
 
     @Override
@@ -94,6 +115,24 @@ public class RegistrationServiceImpl implements RegistrationService {
         userRepository.save(user);
         emailUtil.sendOtpEmail(user.getEmail(), otp);
         return "OTP sent again";
+    }
+
+    @Transactional
+    @Override
+    public UserResponseDto submitKycForm(KYCFillUpDto kycFillUpDto, MultipartFile memberUserImage, MultipartFile[] memberUserEvidences) {
+        String email = getAuthUserUtil.getAuthUser();
+        User memberUser = userRepository.findUserByEmail(email).orElseThrow(() -> new UserNotPresentException("user"));
+
+        memberUser = this.registerUserMapper.toMemberUser(memberUser, kycFillUpDto);
+        memberUser = this.userRepository.save(memberUser);
+
+        // Saves the image and returns the path where evidence is saved
+        String memberUserImagePath = this.saveEvidencesHelper.saveUserImageEvidence(memberUserImage);
+        ArrayList<String> memberUserEvidencesPath = this.saveEvidencesHelper.saveUserEvidences(memberUserEvidences);
+
+        // Save the Evidence on DB
+        saveEvidencesHelper.saveUserEvidencesOnDB(memberUser, memberUserImagePath, memberUserEvidencesPath, kycFillUpDto);
+        return registerUserMapper.toUserResponseDto(memberUser);
     }
 
 }
