@@ -41,6 +41,12 @@ GLOBAL_SERVICE.interceptors.response.use(
     const status = error.response?.status;
     const originalRequest = error.config;
 
+    // dont refresh the token on Unauthorized(401) for these apis
+    const skipAuthUrls = ["/auth/login", "/auth/register", "/auth/refresh-token"];
+    if (skipAuthUrls.some(url => originalRequest.url.includes(url))) {
+      return Promise.reject(error);
+    }
+
     if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
