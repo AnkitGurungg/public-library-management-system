@@ -12,7 +12,7 @@ export function UserProvider({ children }) {
   const getUserInfo = async () => {
     if (token) {
       try {
-        const response = await axios.get(`${BACKEND_SERVER_BASE_URL}auth/me`, {
+        const response = await axios.get(`${BACKEND_SERVER_BASE_URL}/auth/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

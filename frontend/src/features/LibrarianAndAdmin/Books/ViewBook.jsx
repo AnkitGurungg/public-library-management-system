@@ -83,7 +83,7 @@ const ViewBook = ({ id }) => {
                   </div>
                   <div className="max-h-96">
                     <img
-                      src={`${BACKEND_SERVER_BASE_URL}${book.imageURL}`}
+                      src={`${BACKEND_SERVER_BASE_URL}/${book.imageURL}`}
                       alt={book.title}
                       className="object-cover w-48 ml-3"
                     />

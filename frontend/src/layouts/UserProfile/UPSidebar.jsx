@@ -38,7 +38,7 @@ const UPSidebar = () => {
             <img
               src={
                 userProfile?.data?.evidence?.userImage
-                  ? `${BACKEND_SERVER_BASE_URL}${userProfile?.data?.evidence?.userImage}`
+                  ? `${BACKEND_SERVER_BASE_URL}/${userProfile?.data?.evidence?.userImage}`
                   : ""
               }
               alt="User"

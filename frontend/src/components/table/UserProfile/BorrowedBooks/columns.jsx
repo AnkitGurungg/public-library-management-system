@@ -8,7 +8,7 @@ export const columns = [
     cell: ({ row }) => {
       const imageUrl = row.getValue("imageURL");
       const fullImageUrl = imageUrl
-        ? `${BACKEND_SERVER_BASE_URL}${imageUrl}`
+        ? `${BACKEND_SERVER_BASE_URL}/${imageUrl}`
         : null;
       return fullImageUrl ? (
         <img

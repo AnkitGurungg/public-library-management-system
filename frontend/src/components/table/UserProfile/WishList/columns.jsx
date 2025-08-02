@@ -11,7 +11,7 @@ export const columns = (refetchMemberWishList) => [
     cell: ({ row }) => {
       const imageUrl = row.original.imageURL;
       const fullImageUrl = imageUrl
-        ? `${BACKEND_SERVER_BASE_URL}${imageUrl}`
+        ? `${BACKEND_SERVER_BASE_URL}/${imageUrl}`
         : null;
       return fullImageUrl ? (
         <img
@@ -30,11 +30,11 @@ export const columns = (refetchMemberWishList) => [
     header: "Title",
     accessorFn: (row) => {
       // console.log(row);
-      return row?.title || "N/A"
+      return row?.title || "N/A";
     },
     cell: ({ row }) => {
       // console.log(row)
-      return row.original?.title || "N/A"
+      return row.original?.title || "N/A";
     },
   },
 
@@ -96,7 +96,7 @@ export const columns = (refetchMemberWishList) => [
       const removeHandler = async () => {
         try {
           const response = await GLOBAL_SERVICE.delete(
-            `/api/v1/m/wishlists/${eachBook.wishListId}`
+            `/api/v1/m/wishlists/${eachBook.wishListId}`,
           );
           if (response.status === 200) {
             refetchMemberWishList();

@@ -42,13 +42,11 @@ const ViewMember = ({ id, type }) => {
                 <Avatar className="h-24 w-24 mt-1">
                   {member?.evidence?.userImage ? (
                     <a
-                      href={
-                        BACKEND_SERVER_BASE_URL + member?.evidence?.userImage
-                      }
+                      href={`${BACKEND_SERVER_BASE_URL}/${member?.evidence?.userImage || ""}`}
                       target="_blank"
                     >
                       <AvatarImage
-                        src={`${BACKEND_SERVER_BASE_URL}${member?.evidence?.userImage}`}
+                        src={`${BACKEND_SERVER_BASE_URL}/${member?.evidence?.userImage}`}
                         alt="Member"
                         className="object-cover"
                       />
@@ -92,9 +90,7 @@ const ViewMember = ({ id, type }) => {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="flex-1 overflow-hidden rounded-lg border">
                     <a
-                      href={
-                        BACKEND_SERVER_BASE_URL + member?.evidence?.evidenceOne
-                      }
+                      href={`${BACKEND_SERVER_BASE_URL}/${member?.evidence?.evidenceOne || ""}`}
                       target="_blank"
                       onClick={(e) => {
                         if (!member?.evidence?.evidenceOne) {
@@ -108,7 +104,7 @@ const ViewMember = ({ id, type }) => {
                       <img
                         src={
                           member?.evidence?.evidenceOne
-                            ? `${BACKEND_SERVER_BASE_URL}${member?.evidence?.evidenceOne}`
+                            ? `${BACKEND_SERVER_BASE_URL}/${member?.evidence?.evidenceOne}`
                             : ""
                         }
                         alt="N/A"
@@ -118,9 +114,7 @@ const ViewMember = ({ id, type }) => {
                   </div>
                   <div className="flex-1 overflow-hidden rounded-lg border">
                     <a
-                      href={
-                        BACKEND_SERVER_BASE_URL + member?.evidence?.evidenceTwo
-                      }
+                      href={`${BACKEND_SERVER_BASE_URL}/${member?.evidence?.evidenceTwo || ""}`}
                       target="_blank"
                       onClick={(e) => {
                         if (!member?.evidence?.evidenceTwo) {
@@ -134,7 +128,7 @@ const ViewMember = ({ id, type }) => {
                       <img
                         src={
                           member?.evidence?.evidenceTwo
-                            ? `${BACKEND_SERVER_BASE_URL}${member?.evidence?.evidenceTwo}`
+                            ? `${BACKEND_SERVER_BASE_URL}/${member?.evidence?.evidenceTwo}`
                             : ""
                         }
                         alt="N/A"

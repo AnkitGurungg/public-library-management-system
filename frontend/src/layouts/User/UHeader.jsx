@@ -93,7 +93,7 @@ const UHeader = () => {
                   >
                     <img
                       src={
-                        `${BACKEND_SERVER_BASE_URL}${book.imageURL}` ||
+                        `${BACKEND_SERVER_BASE_URL}/${book.imageURL}` ||
                         "/placeholder-book.png"
                       }
                       alt={book.title}

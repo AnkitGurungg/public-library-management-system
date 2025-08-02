@@ -50,7 +50,7 @@ const BookCard = ({ curBook }) => {
         onClick={specificBookDetails}
       >
         <img
-          src={`${BACKEND_SERVER_BASE_URL}${imageURL}`}
+          src={`${BACKEND_SERVER_BASE_URL}/${imageURL}`}
           alt="Book img"
           className="aspect-[10/16] object-cover drop-shadow-md group-hover:scale-105 duration-500"
           priority="true"

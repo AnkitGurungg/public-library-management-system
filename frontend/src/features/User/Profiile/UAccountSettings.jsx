@@ -157,7 +157,7 @@ const UAccountSettings = () => {
               {userProfile?.data?.evidence &&
               userProfile?.data?.evidence?.evidenceOne ? (
                 <img
-                  src={`${BACKEND_SERVER_BASE_URL}${userProfile?.data?.evidence?.evidenceOne}`}
+                  src={`${BACKEND_SERVER_BASE_URL}/${userProfile?.data?.evidence?.evidenceOne}`}
                   alt="Evidence One"
                   className="w-full h-auto rounded-md border border-gray-200"
                 />
@@ -172,7 +172,7 @@ const UAccountSettings = () => {
               {userProfile?.data?.evidence &&
               userProfile?.data?.evidence?.evidenceTwo ? (
                 <img
-                  src={`${BACKEND_SERVER_BASE_URL}${userProfile?.data?.evidence?.evidenceTwo}`}
+                  src={`${BACKEND_SERVER_BASE_URL}/${userProfile?.data?.evidence?.evidenceTwo}`}
                   alt="Evidence Two"
                   className="w-full h-auto rounded-md border border-gray-200 object-cover"
                 />

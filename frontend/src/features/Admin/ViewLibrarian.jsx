@@ -42,13 +42,11 @@ const ViewLibrarian = ({ id, type }) => {
                 <Avatar className="h-24 w-24 mt-1">
                   {librarian?.evidence?.userImage ? (
                     <a
-                      href={
-                        BACKEND_SERVER_BASE_URL + librarian?.evidence?.userImage
-                      }
+                      href={`${BACKEND_SERVER_BASE_URL}/${librarian?.evidence?.userImage}`}
                       target="_blank"
                     >
                       <AvatarImage
-                        src={`${BACKEND_SERVER_BASE_URL}${librarian?.evidence?.userImage}`}
+                        src={`${BACKEND_SERVER_BASE_URL}/${librarian?.evidence?.userImage}`}
                         alt="Librarian"
                         className="object-cover"
                       />
@@ -92,18 +90,11 @@ const ViewLibrarian = ({ id, type }) => {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="flex-1 overflow-hidden rounded-lg border">
                     <a
-                      href={
-                        BACKEND_SERVER_BASE_URL +
-                        librarian?.evidence?.evidenceOne
-                      }
+                      href={`${BACKEND_SERVER_BASE_URL}/${librarian?.evidence?.evidenceOne}`}
                       target="_blank"
                     >
                       <img
-                        src={
-                          librarian?.evidence?.evidenceOne
-                            ? `${BACKEND_SERVER_BASE_URL}${librarian?.evidence?.evidenceOne}`
-                            : ""
-                        }
+                        src={`${BACKEND_SERVER_BASE_URL}/${librarian?.evidence?.evidenceOne || ""}`}
                         alt="N/A"
                         className={`h-auto w-full object-cover min-h-20`}
                       />
@@ -111,18 +102,11 @@ const ViewLibrarian = ({ id, type }) => {
                   </div>
                   <div className="flex-1 overflow-hidden rounded-lg border">
                     <a
-                      href={
-                        BACKEND_SERVER_BASE_URL +
-                        librarian?.evidence?.evidenceTwo
-                      }
+                      href={`${BACKEND_SERVER_BASE_URL}/${librarian?.evidence?.evidenceTwo}`}
                       target="_blank"
                     >
                       <img
-                        src={
-                          librarian?.evidence?.evidenceTwo
-                            ? `${BACKEND_SERVER_BASE_URL}${librarian?.evidence?.evidenceTwo}`
-                            : ""
-                        }
+                        src={`${BACKEND_SERVER_BASE_URL}/${librarian?.evidence?.evidenceTwo || ""}`}
                         alt="N/A"
                         className={`h-auto w-full object-cover min-h-20`}
                       />

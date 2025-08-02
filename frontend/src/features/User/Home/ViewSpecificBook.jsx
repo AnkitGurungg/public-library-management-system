@@ -87,7 +87,7 @@ export default function ViewSpecificBook() {
           <div className="md:sticky md:top-20">
             <div className="p-6 rounded-lg flex flex-col space-y-3 justify-center items-center h-auto">
               <img
-                src={`${BACKEND_SERVER_BASE_URL}${book?.imageURL}`}
+                src={`${BACKEND_SERVER_BASE_URL}/${book?.imageURL}`}
                 alt="Nexus: A Brief History of Information Networks from the Stone Age to AI"
                 className="object-cover"
               />

@@ -70,7 +70,7 @@ const Header = ({ sidebarToggle, setSidebarToggle }) => {
               <img
                 src={
                   userInfo?.evidence?.userImage
-                    ? `${BACKEND_SERVER_BASE_URL}${userInfo?.evidence?.userImage}`
+                    ? `${BACKEND_SERVER_BASE_URL}/${userInfo?.evidence?.userImage}`
                     : `/user/default-user.png`
                 }
                 className="w-8 h-8 rounded-full object-cover"
