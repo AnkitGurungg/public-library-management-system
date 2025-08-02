@@ -13,10 +13,14 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "users"
-        , uniqueConstraints ={
-        @UniqueConstraint(columnNames = "email", name = "uk_email"),
-    }
+@Table(
+        name = "users",
+        uniqueConstraints ={
+                @UniqueConstraint(columnNames = "email", name = "uk_email"),
+        },
+        indexes = {
+                @Index(name = "idx_users_email", columnList = "email")
+        }
 )
 @NoArgsConstructor
 @AllArgsConstructor

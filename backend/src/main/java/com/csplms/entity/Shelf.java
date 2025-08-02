@@ -13,10 +13,14 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "shelfs"
-        , uniqueConstraints ={
-        @UniqueConstraint(columnNames = "name", name = "uk_shelf_name")
-    }
+@Table(
+        name = "shelfs",
+        uniqueConstraints ={
+                @UniqueConstraint(columnNames = "name", name = "uk_shelf_name")
+        },
+        indexes = {
+                @Index(name = "idx_shelfs_name", columnList = "name")
+        }
 )
 public class Shelf {
 

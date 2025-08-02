@@ -14,10 +14,14 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "categories"
-        , uniqueConstraints ={
-        @UniqueConstraint(columnNames = "name", name = "uk_cat_name")
-}
+@Table(
+        name = "categories",
+        uniqueConstraints ={
+                @UniqueConstraint(columnNames = "name", name = "uk_cat_name")
+        },
+        indexes = {
+                @Index(name = "idx_categories_name", columnList = "name")
+        }
 )
 public class Category {
 
