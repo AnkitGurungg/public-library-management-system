@@ -17,7 +17,7 @@ import java.sql.Date;
 public class Return {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer returnId;
 
     @Column(nullable = false, updatable = false)

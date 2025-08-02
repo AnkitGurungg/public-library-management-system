@@ -16,7 +16,7 @@ import java.sql.Date;
 public class Borrow {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "borrow_id")
     private Integer borrowId;
 

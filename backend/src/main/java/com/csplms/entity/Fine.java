@@ -16,7 +16,7 @@ import lombok.Setter;
 public class Fine {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer fineId;
 
     private long totalFine;

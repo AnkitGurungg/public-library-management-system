@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 public class Evidence {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer evidenceId;
 
     private String userImage;

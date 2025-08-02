@@ -21,7 +21,7 @@ import java.util.List;
 public class Shelf {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer shelfId;
 
     private String name;
