@@ -1,7 +1,8 @@
 import axios from "axios";
 import toast from "react-hot-toast";
+import { env } from "../config/env";
 
-export const BACKEND_SERVER_BASE_URL = "http://localhost:8080/";
+export const BACKEND_SERVER_BASE_URL = env.API_BASE_URL;
 
 const getAccessToken = () => {
   return localStorage.getItem("Authorization");
