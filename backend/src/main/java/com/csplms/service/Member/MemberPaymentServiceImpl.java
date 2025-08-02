@@ -30,7 +30,7 @@ import java.util.Optional;
 @Service
 public class MemberPaymentServiceImpl implements MemberPaymentService {
 
-    private final RestClient restClient;
+    private final RestClient khaltiRestClient;
     private final MemberPaymentMapper memberPaymentMapper;
     private final FineRepository fineRepository;
     private final GlobalDateUtil globalDateUtil;
@@ -42,7 +42,7 @@ public class MemberPaymentServiceImpl implements MemberPaymentService {
 
     @Autowired
     public MemberPaymentServiceImpl(
-            RestClient restClient,
+            RestClient khaltiRestClient,
             MemberPaymentMapper memberPaymentMapper,
             FineRepository fineRepository,
             GlobalDateUtil globalDateUtil,
@@ -50,7 +50,7 @@ public class MemberPaymentServiceImpl implements MemberPaymentService {
             EmailUtil emailUtil,
             KhaltiAPIProperties khaltiProperties
     ) {
-        this.restClient = restClient;
+        this.khaltiRestClient = khaltiRestClient;
         this.memberPaymentMapper = memberPaymentMapper;
         this.fineRepository = fineRepository;
         this.globalDateUtil = globalDateUtil;
@@ -64,10 +64,9 @@ public class MemberPaymentServiceImpl implements MemberPaymentService {
         try {
             logger.warn("KhaltiPaymentInitiateRequestDto is: {}", khaltiPaymentInitiateRequestDto);
             KhaltiPaymentRequest khaltiPaymentRequest = memberPaymentMapper.prepareKhaltiPayment(khaltiPaymentInitiateRequestDto);
-            KhaltiPaymentInitiateResponseDto khaltiPaymentInitiateResponseDto = restClient
+            KhaltiPaymentInitiateResponseDto khaltiPaymentInitiateResponseDto = khaltiRestClient
                     .post()
                     .uri(khaltiProperties.getInitiateUrl())
-                    .header(khaltiProperties.getAuthHeaderName(), khaltiProperties.getAuthHeaderValue())
                     .body(khaltiPaymentRequest)
                     .retrieve()
                     .body(KhaltiPaymentInitiateResponseDto.class);
@@ -91,10 +90,9 @@ public class MemberPaymentServiceImpl implements MemberPaymentService {
 
         KhaltiPaymentLookupResponseDto lookupResponse;
         try {
-            lookupResponse = restClient
+            lookupResponse = khaltiRestClient
                     .post()
                     .uri(khaltiProperties.getLookupUrl())
-                    .header(khaltiProperties.getAuthHeaderName(), khaltiProperties.getAuthHeaderValue())
                     .body(new KhaltiPaymentLookupRequestDto(pidx))
                     .retrieve()
                     .body(KhaltiPaymentLookupResponseDto.class);
