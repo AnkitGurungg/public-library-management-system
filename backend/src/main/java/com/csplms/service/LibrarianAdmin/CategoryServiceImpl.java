@@ -65,7 +65,7 @@ public class CategoryServiceImpl implements CategoryService {
             return categoryMapper.toCategoryResponseDto(category);
         } catch (Exception ex) {
             if (ex instanceof DataIntegrityViolationException dive
-                    && dive.getCause().toString().contains("uk_cat_name")) {
+                    && dive.getCause().toString().contains("uk_categories_name")) {
                 throw new UniqueKeyViolationException("Name already used: "+ categoryRequestDto.name());
             }
             throw ex;
@@ -105,7 +105,7 @@ public class CategoryServiceImpl implements CategoryService {
             return category;
         } catch (Exception ex) {
             if (ex instanceof DataIntegrityViolationException dive
-                    && dive.getCause().toString().contains("uk_cat_name")) {
+                    && dive.getCause().toString().contains("uk_categories_name")) {
                 throw new UniqueKeyViolationException("Name already used: " + categoryRequestDto.name());
             }
             throw ex;

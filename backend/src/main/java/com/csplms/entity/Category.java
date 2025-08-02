@@ -17,7 +17,7 @@ import java.util.List;
 @Table(
         name = "categories",
         uniqueConstraints ={
-                @UniqueConstraint(columnNames = "name", name = "uk_cat_name")
+                @UniqueConstraint(columnNames = "name", name = "uk_categories_name")
         },
         indexes = {
                 @Index(name = "idx_categories_name", columnList = "name")

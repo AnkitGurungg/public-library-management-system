@@ -154,10 +154,10 @@ public class GlobalExceptionHandler {
         }
 
         if (ex instanceof DataIntegrityViolationException dive){
-            if (dive.getMostSpecificCause().toString().contains("uk_email")){
+            if (dive.getMostSpecificCause().toString().contains("uk_users_email")){
                 return new ResponseEntity<>(new ResponseAPI("Already used email", false), HttpStatus.CONFLICT);
             }
-            if (dive.getMostSpecificCause().toString().contains("uk_shelf_name")){
+            if (dive.getMostSpecificCause().toString().contains("uk_shelfs_name")){
                 return new ResponseEntity<>(new ResponseAPI("Name already used", false), HttpStatus.CONFLICT);
             }
             return new ResponseEntity<>(new ResponseAPI(ex.getMessage(), false), HttpStatus.CONFLICT);

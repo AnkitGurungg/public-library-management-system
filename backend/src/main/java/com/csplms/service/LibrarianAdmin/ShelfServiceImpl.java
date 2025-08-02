@@ -59,7 +59,7 @@ public class ShelfServiceImpl implements ShelfService {
             shelf = shelfRepository.save(shelf);
             return shelfMapper.toShelfResponseDto(shelf);
         } catch (Exception ex) {
-            if (ex instanceof DataIntegrityViolationException dive && dive.getRootCause().toString().contains("uk_shelf_name")) {
+            if (ex instanceof DataIntegrityViolationException dive && dive.getRootCause().toString().contains("uk_shelfs_name")) {
                 throw new UniqueKeyViolationException("Name already used: "+ shelfRequestDTO.name());
             }
             throw ex;
@@ -81,7 +81,7 @@ public class ShelfServiceImpl implements ShelfService {
 
         } catch (Exception ex) {
             if (ex instanceof DataIntegrityViolationException dive
-                    && dive.getCause().toString().contains("uk_shelf_name")) {
+                    && dive.getCause().toString().contains("uk_shelfs_name")) {
                 throw new UniqueKeyViolationException("Name already used");
             }
             throw ex;

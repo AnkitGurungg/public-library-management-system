@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "books"
         , uniqueConstraints ={
-        @UniqueConstraint(columnNames = "title", name = "uk_title")
+        @UniqueConstraint(columnNames = "title", name = "uk_books_title")
     }
 )
 @AllArgsConstructor

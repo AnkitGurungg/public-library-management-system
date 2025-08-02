@@ -77,7 +77,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             return userRepository.save(registrationMapper.toUser(registrationRequestDto, otp));
         } catch (Exception ex) {
             if (ex instanceof DataIntegrityViolationException dive
-                    && dive.getCause().toString().contains("uk_email")) {
+                    && dive.getCause().toString().contains("uk_users_email")) {
                 throw new UniqueKeyViolationException("User already exists: "+ registrationRequestDto.email());
             }
             throw ex;

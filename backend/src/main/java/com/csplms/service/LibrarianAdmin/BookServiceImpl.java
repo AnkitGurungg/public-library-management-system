@@ -130,7 +130,7 @@ public class BookServiceImpl implements BookService {
             return new ResponseEntity<>(bookMapper.toBookResponseDto(savedBook), HttpStatus.CREATED);
         } catch (Exception ex) {
             if (ex instanceof DataIntegrityViolationException dive
-                && dive.getCause().toString().contains("uk_title")) {
+                && dive.getCause().toString().contains("uk_books_title")) {
                 throw new UniqueKeyViolationException("Title already used: " + bookDto.title());
             }
             throw ex;
@@ -349,7 +349,7 @@ public class BookServiceImpl implements BookService {
             return bookMapper.toBookResponseDto(book);
         } catch (Exception ex) {
             if (ex instanceof DataIntegrityViolationException dive
-                && dive.getCause().toString().contains("uk_title")) {
+                && dive.getCause().toString().contains("uk_books_title")) {
                 throw new UniqueKeyViolationException("Title already used: " + bookRequestDto.title());
             }
             throw ex;
