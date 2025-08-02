@@ -53,7 +53,7 @@ GLOBAL_SERVICE.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem("refreshToken");
         const res = await axios.post(
-          `${BACKEND_SERVER_BASE_URL}auth/refresh-token`,
+          `${BACKEND_SERVER_BASE_URL}/auth/refresh-token`,
           { refreshToken },
           {
             skipAuthInterceptor: true,
