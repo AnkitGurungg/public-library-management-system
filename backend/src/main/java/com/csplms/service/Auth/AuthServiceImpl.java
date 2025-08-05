@@ -1,8 +1,10 @@
 package com.csplms.service.Auth;
 
 import com.csplms.dto.requestDto.LogoutRequestDto;
+import com.csplms.dto.requestDto.RefreshTokenRequestDTO;
 import com.csplms.dto.responseDto.GetUserResponseDto;
 import com.csplms.entity.Evidence;
+import com.csplms.entity.RefreshToken;
 import com.csplms.entity.User;
 import com.csplms.dto.requestDto.LoginRequestDto;
 import com.csplms.dto.responseDto.LoginResponseDto;
@@ -11,6 +13,7 @@ import com.csplms.exception.UnauthorizedException;
 import com.csplms.exception.UserNotPresentException;
 import com.csplms.mapper.LoginMapper;
 import com.csplms.repository.EvidenceRepository;
+import com.csplms.repository.RefreshTokenRepository;
 import com.csplms.repository.UserRepository;
 import com.csplms.security.JwtService;
 import com.csplms.security.UserDetailsServiceImpl;
@@ -25,6 +28,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -41,9 +47,10 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final GetAuthUserUtil authUserUtil;
     private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository, EvidenceRepository evidenceRepository, UserDetailsServiceImpl userDetailsService, LoginMapper loginMapper, JwtService jwtService, AuthenticationManager authenticationManager, EmailUtil emailUtil, OtpUtil otpUtil, DateTimeUtil dateTimeUtil, PasswordEncoder passwordEncoder, GetAuthUserUtil authUserUtil, RefreshTokenService refreshTokenService) {
+    public AuthServiceImpl(UserRepository userRepository, EvidenceRepository evidenceRepository, UserDetailsServiceImpl userDetailsService, LoginMapper loginMapper, JwtService jwtService, AuthenticationManager authenticationManager, EmailUtil emailUtil, OtpUtil otpUtil, DateTimeUtil dateTimeUtil, PasswordEncoder passwordEncoder, GetAuthUserUtil authUserUtil, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository) {
         this.userRepository = userRepository;
         this.evidenceRepository = evidenceRepository;
         this.userDetailsService = userDetailsService;
@@ -56,6 +63,7 @@ public class AuthServiceImpl implements AuthService {
         this.passwordEncoder = passwordEncoder;
         this.authUserUtil = authUserUtil;
         this.refreshTokenService = refreshTokenService;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     @Override
@@ -135,6 +143,38 @@ public class AuthServiceImpl implements AuthService {
                     false
             );
         }
+    }
+
+    @Override
+    public Map<String, String> refreshToken(String rawRefreshToken) {
+        // Remove "Bearer " prefix if present
+        String refreshToken = rawRefreshToken;
+        if (rawRefreshToken.startsWith("Bearer ")) {
+            refreshToken = rawRefreshToken.substring(7);
+        }
+
+        // Extract username from token
+        String username = jwtService.extractUsername(refreshToken);
+
+        // Verify refresh token in DB
+        RefreshToken oldRefToken = refreshTokenService.verifyRefreshToken(refreshToken, username);
+
+        // Revoke old token
+        oldRefToken.setRevoked(true);
+        refreshTokenRepository.save(oldRefToken);
+
+        // Generate new token
+        String newAccessToken = jwtService.refreshToken(refreshToken);
+        String newRefreshToken = jwtService.generateRefreshToken(username);
+
+        // Save new refresh token
+        refreshTokenService.create(username, newRefreshToken);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("Authorization", newAccessToken);
+        response.put("refreshToken", newRefreshToken);
+
+        return response;
     }
 
     @Override

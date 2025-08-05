@@ -38,7 +38,10 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         this.authUserUtil = authUserUtil;
     }
 
-    public RefreshToken create(User user, String token) {
+    public RefreshToken create(String email, String token) {
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new UserNotPresentException("User not found"));
+
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUser(user);
         refreshToken.setToken(passwordEncoder.encode(token));

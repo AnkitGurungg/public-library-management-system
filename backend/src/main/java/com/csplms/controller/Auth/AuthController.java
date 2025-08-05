@@ -64,9 +64,7 @@ public class AuthController {
         headers.add("Authorization", loginResponseDto.accessToken());
         headers.add("refreshToken", loginResponseDto.refreshToken());
 
-        User user = userRepository.findById(loginResponseDto.userId()).orElseThrow(()-> new UserNotPresentException("User not found"));
-        refreshTokenService.create(user, loginResponseDto.refreshToken());
-
+        refreshTokenService.create(loginResponseDto.email(), loginResponseDto.refreshToken());
         return new ResponseEntity<>(loginResponseDto, headers, HttpStatus.OK);
     }
 
@@ -81,40 +79,18 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequestDTO refTokenReq) {
+    public ResponseEntity<Map<String, String>> refreshToken(
+            @RequestBody RefreshTokenRequestDTO refTokenReq
+    ) {
         try {
-            // Extract token from request (remove "Bearer " if present)
-            String refreshToken = refTokenReq.refreshToken();
-            if (refreshToken.startsWith("Bearer ")) {
-                refreshToken = refreshToken.substring(7);
-            }
-
-            // Extract username from token
-            String username = jwtService.extractUsername(refreshToken);
-
-            // Generate both new access and refresh token
-            String newAccessToken = jwtService.refreshToken(refreshToken);
-            String newRefreshToken = jwtService.generateRefreshToken(username);
-
-            // Verify with db data
-            RefreshToken oldToken = refreshTokenService.verifyRefreshToken(refreshToken, username);
-
-            // If token is reusable, it is revoked
-            oldToken.setRevoked(true);
-            refreshTokenRepository.save(oldToken);
-
-            // Save new refresh token
-            refreshTokenService.create(oldToken.getUser(), newRefreshToken);
-
-            Map<String, String> response = new HashMap<>();
-            response.put("Authorization", newAccessToken);
-            response.put("refreshToken", newRefreshToken);
-
-            return ResponseEntity.ok(response);
+            return new ResponseEntity<>(
+                    authService.refreshToken(refTokenReq.refreshToken()),
+                    HttpStatus.OK
+            );
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+            return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
         }
     }
 

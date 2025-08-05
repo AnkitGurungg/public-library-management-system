@@ -4,7 +4,7 @@ import com.csplms.entity.RefreshToken;
 import com.csplms.entity.User;
 
 public interface RefreshTokenService {
-    RefreshToken create(User user, String token);
+    RefreshToken create(String email, String token);
 
     RefreshToken verifyRefreshToken(String token, String email);
 
