@@ -1,5 +1,6 @@
 package com.csplms.service.Auth;
 
+import com.csplms.dto.requestDto.LogoutRequestDto;
 import com.csplms.dto.responseDto.GetUserResponseDto;
 import com.csplms.entity.Evidence;
 import com.csplms.entity.User;
@@ -15,6 +16,7 @@ import com.csplms.security.JwtService;
 import com.csplms.security.UserDetailsServiceImpl;
 import com.csplms.util.DateTimeUtil;
 import com.csplms.util.EmailUtil;
+import com.csplms.util.GetAuthUserUtil;
 import com.csplms.util.OtpUtil;
 import jakarta.mail.MessagingException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,9 +39,11 @@ public class AuthServiceImpl implements AuthService {
     private final OtpUtil otpUtil;
     private final DateTimeUtil dateTimeUtil;
     private final PasswordEncoder passwordEncoder;
+    private final GetAuthUserUtil authUserUtil;
+    private final RefreshTokenService refreshTokenService;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository, EvidenceRepository evidenceRepository, UserDetailsServiceImpl userDetailsService, LoginMapper loginMapper, JwtService jwtService, AuthenticationManager authenticationManager, EmailUtil emailUtil, OtpUtil otpUtil, DateTimeUtil dateTimeUtil, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(UserRepository userRepository, EvidenceRepository evidenceRepository, UserDetailsServiceImpl userDetailsService, LoginMapper loginMapper, JwtService jwtService, AuthenticationManager authenticationManager, EmailUtil emailUtil, OtpUtil otpUtil, DateTimeUtil dateTimeUtil, PasswordEncoder passwordEncoder, GetAuthUserUtil authUserUtil, RefreshTokenService refreshTokenService) {
         this.userRepository = userRepository;
         this.evidenceRepository = evidenceRepository;
         this.userDetailsService = userDetailsService;
@@ -50,10 +54,12 @@ public class AuthServiceImpl implements AuthService {
         this.otpUtil = otpUtil;
         this.dateTimeUtil = dateTimeUtil;
         this.passwordEncoder = passwordEncoder;
+        this.authUserUtil = authUserUtil;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @Override
-    public LoginResponseDto loginUser(LoginRequestDto loginRequestDto) throws MessagingException, MailFailedException {
+    public LoginResponseDto login(LoginRequestDto loginRequestDto) throws MessagingException, MailFailedException {
         String otp = otpUtil.generateOTP();
         final String accessToken = jwtService.generateToken(loginRequestDto.email());
         final String refreshToken = jwtService.generateRefreshToken(loginRequestDto.email());
@@ -97,7 +103,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public GetUserResponseDto getUser(String rawToken) {
+    public GetUserResponseDto me(String rawToken) {
         if (rawToken != null){
             final String token = rawToken.substring(7);
             final String username = jwtService.extractUsername(token);
@@ -129,6 +135,20 @@ public class AuthServiceImpl implements AuthService {
                     false
             );
         }
+    }
+
+    @Override
+    public String logout(LogoutRequestDto requestDto) {
+        refreshTokenService.revokeRefreshToken(requestDto.refreshToken());
+        return "Logged out successfully";
+    }
+
+    @Override
+    public String logoutAll() {
+        String email = authUserUtil.getAuthUser();
+        User user = userRepository.findUserByEmail(email).orElseThrow(()-> new UserNotPresentException("User not found"));
+        refreshTokenService.revokeAllUserTokens(user);
+        return "Logged out from all devices";
     }
 
 }

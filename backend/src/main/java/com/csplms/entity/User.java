@@ -89,6 +89,9 @@ public class User {
     @JsonManagedReference
     private List<WishList> userWishLists;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<RefreshToken> refreshTokens;
+
 //    Verify member
     @ManyToOne
     @JoinColumn(name = "verified_by")
