@@ -35,14 +35,11 @@ GLOBAL_SERVICE.interceptors.request.use(
 GLOBAL_SERVICE.interceptors.response.use(
   (response) => response,
   async (error) => {
-    // if (error.config?.skipAuthInterceptor) {
-    //   return Promise.reject(error);
-    // }
-
     const status = error.response?.status;
     const originalRequest = error.config;
 
-    // Dont refresh the token if Unauthorized(401) is returned from these apis
+    // Prevent sending /refresh-token req, even if these apis return Unauthorized(401).
+    // As these apis do not require auth and could cause infinite retry loop if we attempt token refresh on them.
     const skipAuthUrls = [
       "/auth/login",
       "/auth/register",
@@ -52,8 +49,15 @@ GLOBAL_SERVICE.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    // If skipAuthInterceptor flag is set on the request, do not attempt token refresh.(Safe check)
+    // Just reject the error and let the calling function handle it.
+    if (originalRequest?.skipAuthInterceptor) {
+      return Promise.reject(error);
+    }
+
     if (status === 401 && !originalRequest._retryFlag) {
-      // Triggers the /refresh-token only once per req (/auth/refresh-token api could cause infinite retry loop)
+      // Call /refresh-token api only once per req.
+      // (/auth/refresh-token api could cause infinite retry loop, _retry prevents infinite retries on the same request)
       originalRequest._retryFlag = true;
       try {
         const refreshToken = localStorage.getItem("refreshToken");
