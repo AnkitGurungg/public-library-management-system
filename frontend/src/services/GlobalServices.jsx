@@ -16,7 +16,7 @@ const GLOBAL_SERVICE = axios.create({
   // timeout: 100000,
 });
 
-// - REQUEST INTERCEPTOR -
+// REQUEST INTERCEPTOR
 GLOBAL_SERVICE.interceptors.request.use(
   (config) => {
     const accessToken = getAccessToken();
@@ -31,7 +31,7 @@ GLOBAL_SERVICE.interceptors.request.use(
   },
 );
 
-// - RESPONSE INTERCEPTOR -
+// RESPONSE INTERCEPTOR
 GLOBAL_SERVICE.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -42,14 +42,19 @@ GLOBAL_SERVICE.interceptors.response.use(
     const status = error.response?.status;
     const originalRequest = error.config;
 
-    // dont refresh the token on Unauthorized(401) for these apis
-    const skipAuthUrls = ["/auth/login", "/auth/register", "/auth/refresh-token"];
-    if (skipAuthUrls.some(url => originalRequest.url.includes(url))) {
+    // Dont refresh the token if Unauthorized(401) is returned from these apis
+    const skipAuthUrls = [
+      "/auth/login",
+      "/auth/register",
+      "/auth/refresh-token",
+    ];
+    if (skipAuthUrls.some((url) => originalRequest.url.includes(url))) {
       return Promise.reject(error);
     }
 
-    if (status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+    if (status === 401 && !originalRequest._retryFlag) {
+      // Triggers the /refresh-token only once per req (/auth/refresh-token api could cause infinite retry loop)
+      originalRequest._retryFlag = true;
       try {
         const refreshToken = localStorage.getItem("refreshToken");
         const res = await axios.post(
@@ -68,14 +73,13 @@ GLOBAL_SERVICE.interceptors.response.use(
         localStorage.setItem("Authorization", newAccessToken);
         localStorage.setItem("refreshToken", newRefreshToken);
 
-        // Update Authorization header and retry original request
+        // Retry the original request with new updated access token
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return GLOBAL_SERVICE(originalRequest);
       } catch (refreshError) {
-        // Refresh token expired or invalid -> force logout
-        localStorage.removeItem("Authorization");
-        localStorage.removeItem("refreshToken");
-        window.location.href = "/"; // Or your login page
+        // If /refresh-token req failed then, force logout
+        localStorage.clear();
+        window.location.href = "/";
         return Promise.reject(refreshError);
       }
     }
