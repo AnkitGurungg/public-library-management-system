@@ -8,6 +8,14 @@ const getAccessToken = () => {
   return localStorage.getItem("Authorization");
 };
 
+let isRefreshing = false; // Tracks if refresh-token request is in progress
+let failedQueue = []; // Queue for requests that failed with 401
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach((p) => (error ? p.reject(error) : p.resolve(token)));
+  failedQueue = [];
+};
+
 const GLOBAL_SERVICE = axios.create({
   baseURL: BACKEND_SERVER_BASE_URL,
   headers: {
@@ -38,7 +46,7 @@ GLOBAL_SERVICE.interceptors.response.use(
     const status = error.response?.status;
     const originalRequest = error.config;
 
-    // Prevent sending /refresh-token req, even if these apis return Unauthorized(401).
+    // Skip calling /refresh-token, even if these apis return Unauthorized(401).
     // As these apis do not require auth and could cause infinite retry loop if we attempt token refresh on them.
     const skipAuthUrls = [
       "/auth/login",
@@ -55,10 +63,26 @@ GLOBAL_SERVICE.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    // Handle 401 Unauthorized errors
     if (status === 401 && !originalRequest._retryFlag) {
       // Call /refresh-token api only once per req.
       // (/auth/refresh-token api could cause infinite retry loop, _retry prevents infinite retries on the same request)
       originalRequest._retryFlag = true;
+
+      if (isRefreshing) {
+        // If refresh request is already in progress, queue this request
+        return new Promise((resolve, reject) => {
+          failedQueue.push({
+            resolve: (token) => {
+              originalRequest.headers["Authorization"] = `Bearer ${token}`;
+              resolve(GLOBAL_SERVICE(originalRequest));
+            },
+            reject,
+          });
+        });
+      }
+      isRefreshing = true;
+
       try {
         const refreshToken = localStorage.getItem("refreshToken");
         const res = await axios.post(
@@ -77,14 +101,20 @@ GLOBAL_SERVICE.interceptors.response.use(
         localStorage.setItem("Authorization", newAccessToken);
         localStorage.setItem("refreshToken", newRefreshToken);
 
+        // Process all queued requests
+        processQueue(null, newAccessToken);
+
         // Retry the original request with new updated access token
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return GLOBAL_SERVICE(originalRequest);
       } catch (refreshError) {
-        // If /refresh-token req failed then, force logout
+        // If refresh fails, reject all queued requests and force logout
+        processQueue(refreshError, null);
         localStorage.clear();
         window.location.href = "/";
         return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
 
