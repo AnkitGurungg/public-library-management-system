@@ -22,11 +22,12 @@ const Header = ({ sidebarToggle, setSidebarToggle }) => {
 
   const logoutHandler = () => {
     localStorage.removeItem("Authorization");
+    localStorage.removeItem("refreshToken");
     setToken("");
     setUserInfo(null);
     refetchMemberWishList();
-    // localStorage.removeItem("x-refresh-token");
     navigate("/");
+    // window.alert("Logged out successfully!");
   };
 
   useEffect(() => {

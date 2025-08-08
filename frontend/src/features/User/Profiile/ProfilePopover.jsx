@@ -26,11 +26,12 @@ export default function ProfilePopover() {
 
   const logoutHandler = () => {
     localStorage.removeItem("Authorization");
+    localStorage.removeItem("refreshToken");
     setToken("");
     setUserInfo(null);
     refetchMemberWishListIds();
-    // localStorage.removeItem("x-refresh-token");
     navigate("/");
+    // window.alert("Logged out successfully!");
   };
 
   return (
