@@ -5,6 +5,7 @@ import com.csplms.entity.User;
 import com.csplms.exception.UserNotPresentException;
 import com.csplms.repository.RefreshTokenRepository;
 import com.csplms.repository.UserRepository;
+import com.csplms.security.JwtService;
 import com.csplms.util.GetAuthUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,19 +24,19 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final GetAuthUserUtil authUserUtil;
+    private final JwtService jwtService;
 
     @Autowired
     public RefreshTokenServiceImpl(
             RefreshTokenRepository refreshTokenRepository,
             PasswordEncoder passwordEncoder,
             UserRepository userRepository,
-            GetAuthUserUtil authUserUtil
+            JwtService jwtService
     ) {
         this.refreshTokenRepository = refreshTokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
-        this.authUserUtil = authUserUtil;
+        this.jwtService = jwtService;
     }
 
     public RefreshToken create(String email, String token) {
@@ -67,7 +68,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     public void revokeRefreshToken(String token) {
-        User user = userRepository.findUserByEmail(authUserUtil.getAuthUser())
+        String email = jwtService.extractUsername(token);
+        User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UserNotPresentException("User not found"));
 
         RefreshToken matchedToken = getActiveRefreshToken(user, token);

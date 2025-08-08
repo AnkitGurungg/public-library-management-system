@@ -52,6 +52,7 @@ GLOBAL_SERVICE.interceptors.response.use(
       "/auth/login",
       "/auth/register",
       "/auth/refresh-token",
+      "/auth/logout",
     ];
     if (skipAuthUrls.some((url) => originalRequest.url.includes(url))) {
       return Promise.reject(error);

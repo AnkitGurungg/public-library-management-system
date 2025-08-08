@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { NavLink, useNavigate } from "react-router-dom";
-import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
+import GLOBAL_SERVICE, { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
 
 const Header = ({ sidebarToggle, setSidebarToggle }) => {
   const [currentDate, setCurrentDate] = useState("");
@@ -20,14 +20,26 @@ const Header = ({ sidebarToggle, setSidebarToggle }) => {
     useContext(UserContext);
   const navigate = useNavigate();
 
-  const logoutHandler = () => {
-    localStorage.removeItem("Authorization");
-    localStorage.removeItem("refreshToken");
-    setToken("");
-    setUserInfo(null);
-    refetchMemberWishList();
-    navigate("/");
-    // window.alert("Logged out successfully!");
+  const logoutHandler = async () => {
+    try {
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (refreshToken) {
+        const res = await GLOBAL_SERVICE.post(
+          "/auth/logout",
+          { refreshToken },
+          // { skipAuthInterceptor: true },
+        );
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      localStorage.removeItem("Authorization");
+      localStorage.removeItem("refreshToken");
+      setToken("");
+      setUserInfo(null);
+      navigate("/");
+      // window.alert("Logged out successfully!");
+    }
   };
 
   useEffect(() => {

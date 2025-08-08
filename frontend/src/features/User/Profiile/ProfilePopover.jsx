@@ -13,10 +13,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { NavLink, useNavigate } from "react-router-dom";
-
 import { useContext } from "react";
 import { UserContext } from "@/contexts/UserContext";
 import { useFetchMemberWishListIds } from "@/hooks/useFetchMemberWishListIds";
+import GLOBAL_SERVICE from "@/services/GlobalServices";
 
 export default function ProfilePopover() {
   const { setToken, loading, userInfo, getUserInfo, setUserInfo } =
@@ -24,14 +24,27 @@ export default function ProfilePopover() {
   const navigate = useNavigate();
   const { refetch: refetchMemberWishListIds } = useFetchMemberWishListIds();
 
-  const logoutHandler = () => {
-    localStorage.removeItem("Authorization");
-    localStorage.removeItem("refreshToken");
-    setToken("");
-    setUserInfo(null);
-    refetchMemberWishListIds();
-    navigate("/");
-    // window.alert("Logged out successfully!");
+  const logoutHandler = async () => {
+    try {
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (refreshToken) {
+        const res = await GLOBAL_SERVICE.post(
+          "/auth/logout",
+          { refreshToken },
+          // { skipAuthInterceptor: true },
+        );
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      localStorage.removeItem("Authorization");
+      localStorage.removeItem("refreshToken");
+      setToken("");
+      setUserInfo(null);
+      refetchMemberWishListIds();
+      navigate("/");
+      // window.alert("Logged out successfully!");
+    }
   };
 
   return (
