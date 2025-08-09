@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
+import com.csplms.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             logger.warn("Try catch: {}",authHeader);
             String jwtToken = authHeader.substring(7);
             String email = jwtService.extractUsername(jwtToken);
+
+            String tokenType = jwtService.extractClaim(jwtToken, claims ->
+                    claims.get("tokenType", String.class));
+            if ("REFRESH".equals(tokenType)) {
+                throw new UnauthorizedException("Invalid token type");
+            }
 
             if (email !=null && SecurityContextHolder.getContext().getAuthentication() == null ) {
                 UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(email);
