@@ -1,4 +1,4 @@
-package com.csplms.seed.User;
+package com.csplms.data;
 
 import com.csplms.entity.Evidence;
 import com.csplms.entity.User;
@@ -17,10 +17,9 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class Admin implements ApplicationRunner {
+public class AdminSeeder implements ApplicationRunner {
 
-    private final EvidenceRepository evidenceRepository;
-    //    Admin
+//    Admin
     @Value("${admin.name}")
     private String aName;
 
@@ -40,27 +39,35 @@ public class Admin implements ApplicationRunner {
     private final PasswordEncoder passwordEncoder;
     private final GlobalDateUtil globalDateUtil;
     private final DateTimeUtil dateTimeUtil;
-    private final SeedHelper seedHelper;
+    private final EvidenceRepository evidenceRepository;
+    private final AdminInitializationHelper adminInitializationHelper;
 
     @Autowired
-    public Admin(UserRepository userRepository, PasswordEncoder passwordEncoder, GlobalDateUtil globalDateUtil, DateTimeUtil dateTimeUtil, SeedHelper seedHelper, EvidenceRepository evidenceRepository) {
+    public AdminSeeder(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            GlobalDateUtil globalDateUtil,
+            DateTimeUtil dateTimeUtil,
+            EvidenceRepository evidenceRepository,
+            AdminInitializationHelper adminInitializationHelper
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.globalDateUtil = globalDateUtil;
         this.dateTimeUtil = dateTimeUtil;
-        this.seedHelper = seedHelper;
         this.evidenceRepository = evidenceRepository;
+        this.adminInitializationHelper = adminInitializationHelper;
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        Optional<User> optUser = seedHelper.findUser(aEmail);
+        Optional<User> optUser = adminInitializationHelper.findUser(aEmail);
         if(optUser.isEmpty()){
             User admin = new User();
             admin.setName(aName);
             admin.setContactNumber(aContactNumber);
             admin.setEmail(aEmail);
-            admin.setAddress("Pokhara-29");
+            admin.setAddress("Pokhara, Nepal");
             admin.setPassword(passwordEncoder.encode(aPassword));
             admin.setRoles(RolesEnum.ROLE_ADMIN.toString());
             admin.setAppliedDate(globalDateUtil.getCurrentDate());
