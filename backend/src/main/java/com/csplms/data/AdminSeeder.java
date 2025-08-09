@@ -35,6 +35,15 @@ public class AdminSeeder implements ApplicationRunner {
     @Value("${admin.otp}")
     private String aOtp;
 
+    @Value("${admin.user.image}")
+    private String aUserImage;
+
+    @Value("${admin.evidence.one}")
+    private String aEvidenceOne;
+
+    @Value("${admin.evidence.two}")
+    private String aEvidenceTwo;
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final GlobalDateUtil globalDateUtil;
@@ -82,10 +91,10 @@ public class AdminSeeder implements ApplicationRunner {
             userRepository.flush();
 
             Evidence evidence = new Evidence();
-            evidence.setUserImage("uploads/ankitgurung.jpeg");
-            evidence.setEvidenceOne("uploads/citizenship-front.jpg");
-            evidence.setEvidenceTwo("uploads/citizenship-back.jpg");
-            evidence.setDocumentType("citizenship");
+            evidence.setUserImage(aUserImage);
+            evidence.setEvidenceOne(aEvidenceOne);
+            evidence.setEvidenceTwo(aEvidenceTwo);
+            evidence.setDocumentType("Citizenship");
             evidence.setUser(admin);
             evidenceRepository.save(evidence);
             evidenceRepository.flush();
