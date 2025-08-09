@@ -1,7 +1,6 @@
 package com.csplms.service.Auth;
 
 import com.csplms.dto.requestDto.LogoutRequestDto;
-import com.csplms.dto.requestDto.RefreshTokenRequestDTO;
 import com.csplms.dto.responseDto.GetUserResponseDto;
 import com.csplms.entity.Evidence;
 import com.csplms.entity.RefreshToken;
@@ -28,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,12 +67,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public LoginResponseDto login(LoginRequestDto loginRequestDto) throws MessagingException, MailFailedException {
-        String otp = otpUtil.generateOTP();
-        final String accessToken = jwtService.generateToken(loginRequestDto.email());
-        final String refreshToken = jwtService.generateRefreshToken(loginRequestDto.email());
-
-//        check user presence on db
+//        check user exists
         User user = this.userRepository.findUserByEmail(loginRequestDto.email())
                 .orElseThrow(() -> new UserNotPresentException("User not found"));
         if(!user.isPresent()){
@@ -91,23 +88,23 @@ public class AuthServiceImpl implements AuthService {
             throw new UnauthorizedException("Invalid username or password");
         }
 
-//        if user has not verified email, then again send otp and ask to verify email
+//        Generate tokens
+        final String accessToken = jwtService.generateToken(loginRequestDto.email());
+        final String refreshToken = jwtService.generateRefreshToken(loginRequestDto.email());
+
+//        if user has not verified email, send otp and ask to verify email
         if (!user.isActive()) {
+            String otp = otpUtil.generateOTP();
             emailUtil.sendOtpEmail(loginRequestDto.email(), otp);
+
             user.setOtpGeneratedTime(dateTimeUtil.getLocalDateTime());
             user.setOtp(passwordEncoder.encode(otp));
             userRepository.save(user);
-            return new LoginResponseDto(user.getUserId(), user.getEmail(), user.getRoles(), accessToken, refreshToken, user.isVerified(), user.isPresent(), user.isActive());
         }
 
-        if (authentication.isAuthenticated() && user.isActive() && user.isPresent()) {
-//            final String accessToken = jwtService.generateToken(loginRequestDto.email());
-//            final String refreshToken = jwtService.generateRefreshToken(loginRequestDto.email());
-            return this.loginMapper.toLoginResponseDto(user, accessToken, refreshToken);
-        }
-        else {
-            throw new UnauthorizedException("Invalid username or password");
-        }
+//        Save refresh token
+        refreshTokenService.create(user.getEmail(), refreshToken);
+        return new LoginResponseDto(user.getUserId(), user.getEmail(), user.getRoles(), accessToken, refreshToken, user.isVerified(), user.isPresent(), user.isActive());
     }
 
     @Override

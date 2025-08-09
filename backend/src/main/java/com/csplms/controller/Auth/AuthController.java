@@ -1,15 +1,8 @@
 package com.csplms.controller.Auth;
 
 import com.csplms.dto.requestDto.LogoutRequestDto;
-import com.csplms.entity.RefreshToken;
-import com.csplms.entity.User;
-import com.csplms.exception.UserNotPresentException;
-import com.csplms.repository.RefreshTokenRepository;
-import com.csplms.repository.UserRepository;
-import com.csplms.service.Auth.RefreshTokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.csplms.security.JwtService;
 import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
@@ -18,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import jakarta.servlet.http.HttpServletRequest;
 import com.csplms.dto.requestDto.LoginRequestDto;
 import org.springframework.web.bind.annotation.*;
-import com.csplms.exception.UnauthorizedException;
 import com.csplms.dto.responseDto.LoginResponseDto;
 import com.csplms.exception.MailFailedException;
 import com.csplms.dto.responseDto.GetUserResponseDto;
@@ -33,38 +25,27 @@ import java.util.HashMap;
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtService jwtService;
-    private final UserRepository userRepository;
-    private final RefreshTokenService refreshTokenService;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
-    public AuthController(AuthService authService, JwtService jwtService, RefreshTokenService refreshTokenService, UserRepository userRepository, RefreshTokenRepository refreshTokenRepository) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
-        this.jwtService = jwtService;
-        this.refreshTokenService = refreshTokenService;
-        this.userRepository = userRepository;
-        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) throws MessagingException, MailFailedException {
         LoginResponseDto loginResponseDto = authService.login(loginRequestDto);
 
+//        Iif user is not deleted but has not verified email
         if (loginResponseDto.present() && !loginResponseDto.active()){
             return new ResponseEntity<>(loginResponseDto, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
         }
 
-        if (loginResponseDto.accessToken() == null) {
-            throw new UnauthorizedException("Invalid username or password");
-        }
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", loginResponseDto.accessToken());
         headers.add("refreshToken", loginResponseDto.refreshToken());
 
-        refreshTokenService.create(loginResponseDto.email(), loginResponseDto.refreshToken());
         return new ResponseEntity<>(loginResponseDto, headers, HttpStatus.OK);
     }
 
