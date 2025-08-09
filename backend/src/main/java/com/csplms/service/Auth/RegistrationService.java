@@ -4,14 +4,13 @@ import com.csplms.dto.requestDto.KYCFillUpDto;
 import com.csplms.dto.requestDto.RegistrationRequestDto;
 import com.csplms.dto.requestDto.VerifyOtpRequestDto;
 import com.csplms.dto.responseDto.UserResponseDto;
-import com.csplms.entity.User;
 import com.csplms.exception.MailFailedException;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface RegistrationService {
-    User registerMemberUser(RegistrationRequestDto registrationRequestDto) throws MailFailedException, MessagingException;
+    void registerMember(RegistrationRequestDto registrationRequestDto, String token) throws MailFailedException, MessagingException;
 
     String verifyOTP(VerifyOtpRequestDto verifyOtpRequestDto, String email);
 

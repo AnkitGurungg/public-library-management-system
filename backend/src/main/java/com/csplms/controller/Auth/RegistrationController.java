@@ -1,7 +1,6 @@
 package com.csplms.controller.Auth;
 
 import com.csplms.dto.requestDto.KYCFillUpDto;
-import com.csplms.entity.User;
 import com.csplms.security.JwtService;
 import com.csplms.exception.MailFailedException;
 import com.csplms.util.GetAuthUserUtil;
@@ -38,14 +37,17 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerMemberUser(@RequestBody RegistrationRequestDto registrationRequestDto) throws MailFailedException, MessagingException {
+    public ResponseEntity<Void> registerMember(@RequestBody RegistrationRequestDto registrationRequestDto) throws MailFailedException, MessagingException {
         String jwtToken = jwtService.generateToken(registrationRequestDto.email());
         String refreshToken = jwtService.generateRefreshToken(registrationRequestDto.email());
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", jwtToken);
         headers.add("refreshToken", refreshToken);
-        return new ResponseEntity<>(registrationService.registerMemberUser(registrationRequestDto), headers, HttpStatus.CREATED);
+
+        registrationService.registerMember(registrationRequestDto, refreshToken);
+
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_MEMBER', 'ROLE_LIBRARIAN', 'ROLE_ADMIN')")

@@ -41,6 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final DateTimeUtil dateWithTimeUtil;
     private final PasswordEncoder passwordEncoder;
     private final SaveEvidencesHelper saveEvidencesHelper;
+    private final RefreshTokenService refreshTokenService;
 
     private static final Logger logger = LoggerFactory.getLogger(RegistrationServiceImpl.class);
 
@@ -53,7 +54,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             DateTimeUtil dateTimeUtil,
             GetAuthUserUtil getAuthUserUtil,
             PasswordEncoder passwordEncoder,
-            SaveEvidencesHelper saveEvidencesHelper
+            SaveEvidencesHelper saveEvidencesHelper,
+            RefreshTokenService refreshTokenService
     ) {
         this.userRepository = userRepository;
         this.registrationMapper = registrationMapper;
@@ -63,10 +65,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.getAuthUserUtil = getAuthUserUtil;
         this.passwordEncoder = passwordEncoder;
         this.saveEvidencesHelper = saveEvidencesHelper;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @Override
-    public User registerMemberUser(RegistrationRequestDto registrationRequestDto) throws MailFailedException, MessagingException {
+    public void registerMember(RegistrationRequestDto registrationRequestDto, String refToken) throws MailFailedException, MessagingException {
         try {
             String otp = otpUtil.generateOTP();
             Optional<User> dbUser =  userRepository.findUserByEmail(registrationRequestDto.email());
@@ -74,7 +77,13 @@ public class RegistrationServiceImpl implements RegistrationService {
                 throw new ResourceAlreadyExistsException("User already exists: "+ registrationRequestDto.email());
             }
             emailUtil.sendOtpEmail(registrationRequestDto.email(), otp);
-            return userRepository.save(registrationMapper.toUser(registrationRequestDto, otp));
+
+//            Save user
+            User user = registrationMapper.toUser(registrationRequestDto, otp);
+            user = userRepository.saveAndFlush(user);
+
+//            Save token
+            refreshTokenService.create(user.getEmail(), refToken);
         } catch (Exception ex) {
             if (ex instanceof DataIntegrityViolationException dive
                     && dive.getCause().toString().contains("uk_users_email")) {
