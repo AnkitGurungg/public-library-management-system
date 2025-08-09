@@ -74,7 +74,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto getCategory(int categoryId) {
-        Category category = this.categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceEntityNotFoundException("SeedBook", "Id", categoryId));
+        Category category = this.categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceEntityNotFoundException("Book", "Id", categoryId));
 
         if (category != null){
             return new CategoryDto(
@@ -96,9 +96,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category updateCategory(int categoryId, CategoryRequestDto categoryRequestDto) {
         try {
-            Category category = this.categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceEntityNotFoundException("SeedBook", "Id", categoryId));
+            Category category = this.categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceEntityNotFoundException("Book", "Id", categoryId));
             if (!category.isPresent()){
-                throw new ResourceEntityNotFoundException("SeedBook", "Id", categoryId);
+                throw new ResourceEntityNotFoundException("Book", "Id", categoryId);
             }
             category = categoryRepository.save(categoryMapper.toUpdateCategory(categoryRequestDto, category));
             categoryRepository.flush();
@@ -194,7 +194,7 @@ public List<CategoryResponseDto> getCategories() {
     @Transactional
     @Override
     public Integer deleteCategory(int categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceEntityNotFoundException("SeedBook", "id", categoryId));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceEntityNotFoundException("Book", "id", categoryId));
         if(!category.isPresent()){
             throw new ResourceEntityNotFoundException("Category", "id", categoryId);
         }
@@ -235,7 +235,7 @@ public List<CategoryResponseDto> getCategories() {
     @Transactional
     @Override
     public Integer restoreCategory(int categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceEntityNotFoundException("SeedBook", "id", categoryId));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceEntityNotFoundException("Book", "id", categoryId));
         List<Book> books = bookRepository.selectAllRestoreBooksByCategoryId(categoryId);
 
         if(!books.isEmpty()){
