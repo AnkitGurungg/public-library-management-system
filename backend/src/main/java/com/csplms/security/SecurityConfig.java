@@ -91,7 +91,6 @@ public class SecurityConfig {
                         .requestMatchers("/","/images/**", "/static/**", "/*.png", "/*.jpg", "/*.jpeg", "/*.gif", "/*.webp", "/*.svg").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/p/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/auth/me").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register","/auth/login", "/auth/refresh-token").permitAll()
 
 //                        Permit all requests
@@ -99,7 +98,6 @@ public class SecurityConfig {
 //                        .anyRequest().permitAll()
 
 //                        Role-based authorization
-                        .requestMatchers("/get/fines/response").permitAll()
                         .requestMatchers("/auth/v1/**").hasAnyAuthority("ROLE_MEMBER", "ROLE_LIBRARIAN", "ROLE_ADMIN")
                         .requestMatchers("/api/v1/l/**").hasAuthority("ROLE_LIBRARIAN")
                         .requestMatchers("/api/v1/a/**").hasAuthority("ROLE_ADMIN")
