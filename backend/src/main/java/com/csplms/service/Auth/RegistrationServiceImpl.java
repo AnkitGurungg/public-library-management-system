@@ -30,7 +30,6 @@ import java.util.Optional;
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
 
-    private final GetAuthUserUtil getAuthUserUtil;
     @Value("${mail.otp.valid-time}")
     private String otpValidTime;
 
@@ -39,6 +38,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final OtpUtil otpUtil;
     private final EmailUtil emailUtil;
     private final DateTimeUtil dateWithTimeUtil;
+    private final GetAuthUserUtil getAuthUserUtil;
     private final PasswordEncoder passwordEncoder;
     private final SaveEvidencesHelper saveEvidencesHelper;
     private final RefreshTokenService refreshTokenService;
@@ -132,8 +132,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         memberUser = this.userRepository.save(memberUser);
 
         // Saves the image and returns the path where evidence is saved
-        String memberUserImagePath = this.saveEvidencesHelper.saveUserImageEvidence(memberUserImage);
-        ArrayList<String> memberUserEvidencesPath = this.saveEvidencesHelper.saveUserEvidences(memberUserEvidences);
+        String memberUserImagePath = this.saveEvidencesHelper.saveUserImageEvidence(memberUser, memberUserImage);
+        ArrayList<String> memberUserEvidencesPath = this.saveEvidencesHelper.saveUserEvidences(memberUser, memberUserEvidences);
 
         // Save the Evidence on DB
         saveEvidencesHelper.saveUserEvidencesOnDB(memberUser, memberUserImagePath, memberUserEvidencesPath, kycFillUpDto);

@@ -61,8 +61,8 @@ public class LibrarianServiceImpl implements LibrarianService {
         userRepository.flush();
 
 //        Saves the image and returns the path where evidence is saved
-        String librarianUserImagePath = this.saveEvidences.saveUserImageEvidence(librarianUserImage);
-        ArrayList<String> librarianUserEvidencesPath = this.saveEvidences.saveUserEvidences(evidenceImages);
+        String librarianUserImagePath = this.saveEvidences.saveUserImageEvidence(librarianUser, librarianUserImage);
+        ArrayList<String> librarianUserEvidencesPath = this.saveEvidences.saveUserEvidences(librarianUser, evidenceImages);
 
         // Save the Evidence on DB
         Evidence evidence = this.saveEvidences.saveUserEvidencesOnDB(librarianUser, librarianUserImagePath, librarianUserEvidencesPath, kycFillUpDto);

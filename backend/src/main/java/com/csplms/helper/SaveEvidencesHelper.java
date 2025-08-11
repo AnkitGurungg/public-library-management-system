@@ -1,5 +1,7 @@
 package com.csplms.helper;
 
+import com.csplms.config.AwsProperties;
+import com.csplms.constant.S3Constants;
 import org.slf4j.Logger;
 import com.csplms.entity.User;
 import org.slf4j.LoggerFactory;
@@ -11,10 +13,10 @@ import com.csplms.exception.IndexBoundsException;
 import org.springframework.web.multipart.MultipartFile;
 import com.csplms.exception.ResourceListNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,97 +25,93 @@ public class SaveEvidencesHelper {
 
     // Both of the register user and add Librarian use services of this class to save user image, user evidences on file system and database
 
-    private final String ROOT_DIR_STRING = System.getProperty("user.dir");
-
     private final EvidenceRepository evidenceRepository;
+    private final AwsProperties awsProperties;
+    private final S3Client s3Client;
+
     private static final Logger logger = LoggerFactory.getLogger(SaveEvidencesHelper.class);
 
     @Autowired
-    public SaveEvidencesHelper(EvidenceRepository evidenceRepository) {
+    public SaveEvidencesHelper(
+            EvidenceRepository evidenceRepository,
+            AwsProperties awsProperties,
+            S3Client s3Client
+    ) {
         this.evidenceRepository = evidenceRepository;
+        this.awsProperties = awsProperties;
+        this.s3Client = s3Client;
     }
 
     public String checkOriginImageName(String originalImageName) {
-        if (originalImageName==null || originalImageName.trim().isEmpty()) {
+        if (originalImageName == null || originalImageName.trim().isEmpty()) {
             throw new ResourceListNotFoundException("User image name");
         }
         return originalImageName;
     }
 
-    public String saveUserImageEvidence(MultipartFile userImage) {
+//    save user image
+    public String saveUserImageEvidence(User user, MultipartFile userImage) {
         try {
-//            Get the original image name
-            String originalUserImageName = userImage.getOriginalFilename();
+            // check the img type like (.jpg .png)
+            // S3 Key: images/users/{userId}/profile.jpg
+            String key = S3Constants.USERS_IMAGE_FOLDER + user.getUserId() + S3Constants.FORWARD_SLASH + userImage.getOriginalFilename();
 
-//            Check if the image name is empty
-            String checkedOriginImageName = checkOriginImageName(originalUserImageName);
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(awsProperties.getS3BucketName())
+                    .key(key)
+                    .contentType(userImage.getContentType())
+                    .build();
 
-//            Combine uploads directory and image name with project root directory
-            Path userImagePath = Path.of(ROOT_DIR_STRING, "uploads", checkedOriginImageName);
-            logger.error("userImagePath: " + userImagePath.toString());
+            s3Client.putObject(
+                    putObjectRequest,
+                    RequestBody.fromBytes(userImage.getBytes())
+            );
 
-//            Save the image
-            Files.write(userImagePath, userImage.getBytes());
-
-//            Image path to be saved on db
-            Path pathToImage = Path.of("uploads", checkedOriginImageName);
-            logger.error("pathToImage: " + pathToImage);
-
-            return pathToImage.toString();
-        }
-        catch (Exception e) {
-            return e.getMessage();
+            return key;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to upload user image to S3", e);
         }
     }
 
-    public ArrayList<String> saveUserEvidences(
-            MultipartFile[] userEvidences
-    ) {
+//    save evidences
+    public ArrayList<String> saveUserEvidences(User user, MultipartFile[] userEvidences) {
+        ArrayList<String> keys = new ArrayList<>();
         try {
-            ArrayList<String> userEvidencesPaths = new ArrayList<>();
-            for(MultipartFile evidence : userEvidences) {
+            for (MultipartFile evidence : userEvidences) {
+                String originalFileName = checkOriginImageName(evidence.getOriginalFilename());
 
-//                Get the original image name
-                String originalEvidenceName = evidence.getOriginalFilename();
+                // S3 Key: images/users/{userId}/evidences/evidence1.png
+                String key = S3Constants.USERS_IMAGE_FOLDER + user.getUserId() + S3Constants.FORWARD_SLASH + S3Constants.EVIDENCES_FOLDER + originalFileName;
 
-//                Check if the image name is empty
-                String checkedOriginImageName = checkOriginImageName(originalEvidenceName);
+                s3Client.putObject(
+                        PutObjectRequest.builder()
+                                .bucket(awsProperties.getS3BucketName())
+                                .key(key)
+                                .contentType(evidence.getContentType())
+                                .build(),
+                        RequestBody.fromBytes(evidence.getBytes())
+                );
 
-//                Combine uploads directory and image name with project root directory
-                Path evidenceImagePath = Path.of(ROOT_DIR_STRING, "uploads", checkedOriginImageName);
-                logger.error("evidenceImagePath: " + evidenceImagePath.toString());
-
-//                Save the image
-                Files.write(evidenceImagePath, evidence.getBytes());
-
-//                Image path to be saved on db
-                Path pathToImage = Path.of("uploads", checkedOriginImageName);
-                logger.error("ev pathToImage: " + pathToImage);
-
-//                Add on arraylist
-                userEvidencesPaths.add(pathToImage.toString());
+                keys.add(key);
             }
-            return userEvidencesPaths;
-        }
-        catch (Exception e) {
-            ArrayList<String> error = new ArrayList<>();
-            error.add(e.getMessage());
-            return error;
+            return keys;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to upload user evidences to S3", e);
         }
     }
 
     public Evidence saveUserEvidencesOnDB(User user, String userImagePath, List<String> evidencesPaths, KYCFillUpDto kycFillUpDto) {
-        if(userImagePath==null || evidencesPaths==null || userImagePath.trim().isEmpty() || evidencesPaths.isEmpty() ) {
+        if (userImagePath == null || evidencesPaths == null || userImagePath.trim().isEmpty() || evidencesPaths.isEmpty()) {
             throw new ResourceListNotFoundException("User evidences");
         }
-        if (evidencesPaths.size()>2) {
+        if (evidencesPaths.size() > 2) {
             logger.warn(evidencesPaths.toString());
             logger.warn("Evidences paths are not supported with size: {}", evidencesPaths.size());
             throw new IndexBoundsException("Image", evidencesPaths.size());
         }
 
         Evidence checkEvidence = evidenceRepository.findByUserId(user.getUserId());
-        if (checkEvidence==null) {
+        if (checkEvidence == null) {
             logger.warn("User evidence not found");
             Evidence evidence = new Evidence();
             evidence.setUserImage(userImagePath);

@@ -1,5 +1,4 @@
 import { useFetchUserProfile } from "@/hooks/useFetchUserProfile";
-import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
 import {
   Book,
   BookOpen,
@@ -10,6 +9,7 @@ import {
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { env } from "@/config/env";
 
 const UPSidebar = () => {
   const {
@@ -38,7 +38,7 @@ const UPSidebar = () => {
             <img
               src={
                 userProfile?.data?.evidence?.userImage
-                  ? `${BACKEND_SERVER_BASE_URL}/${userProfile?.data?.evidence?.userImage}`
+                  ? `${env.VITE_LMS_S3_BASE_URL}/${userProfile?.data?.evidence?.userImage}`
                   : ""
               }
               alt="User"
