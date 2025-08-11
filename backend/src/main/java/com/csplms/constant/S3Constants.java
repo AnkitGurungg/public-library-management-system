@@ -1,6 +1,7 @@
 package com.csplms.constant;
 
 public class S3Constants {
+    public static final String DOT = ".";
     public static final String FORWARD_SLASH = "/";
 
     // Base folders inside the bucket

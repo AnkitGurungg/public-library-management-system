@@ -5,6 +5,7 @@ import com.csplms.dto.responseDto.AdminBooksDto;
 import com.csplms.dto.responseDto.BookDto;
 import com.csplms.dto.responseDto.BookResponseDto;
 import com.csplms.dto.responseDto.CategoryCountDTO;
+import com.csplms.entity.Book;
 import com.csplms.exception.MailFailedException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public interface BookService {
             MultipartFile bookImage
     ) throws IOException, MessagingException, MailFailedException;
 
-    String saveImage(MultipartFile bookImage) throws IOException;
+    String saveImageInS3(Book book, MultipartFile bookImage) throws IOException;
 
     BookDto getBook(int bookId);
 

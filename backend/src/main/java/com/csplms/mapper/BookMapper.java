@@ -32,7 +32,7 @@ public class BookMapper {
     }
 
 //    For add book
-    public Book toBook(BookRequestDto bookRequestDto, String imagePath, User user) {
+    public Book toBook(BookRequestDto bookRequestDto, User user) {
             Category category = categoryRepository.findById(bookRequestDto.categoryId()).orElseThrow(() -> new ResourceEntityNotFoundException("Shelf ", "Id", bookRequestDto.categoryId()));
             Shelf shelf = shelfRepository.findById(bookRequestDto.shelfId()).orElseThrow(() -> new ResourceEntityNotFoundException("Shelf", "Id", bookRequestDto.shelfId()));
             if(!category.isPresent()){
@@ -62,7 +62,7 @@ public class BookMapper {
                     bookRequestDto.quantity(),
                     bookRequestDto.publishedDate(),
                     bookRequestDto.price(),
-                    imagePath,
+                    null,
                     bookRequestDto.description(),
                     globalDateUtil.getCurrentDate(),
                     true,

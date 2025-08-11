@@ -1,7 +1,10 @@
 package com.csplms.service.LibrarianAdmin;
 
+import com.csplms.config.AwsProperties;
+import com.csplms.constant.S3Constants;
 import com.csplms.dto.responseDto.AdminBooksDto;
 import com.csplms.dto.responseDto.BookDto;
+import com.csplms.util.FileUtils;
 import org.slf4j.Logger;
 import com.csplms.entity.Book;
 import com.csplms.exception.*;
@@ -27,12 +30,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.nio.file.Path;
-import java.nio.file.Files;
 import java.io.IOException;
+import java.util.UUID;
 
 @Transactional
 @Service
@@ -46,14 +51,15 @@ public class BookServiceImpl implements BookService {
     private final EmailUtil emailUtil;
     private final GetAuthUserUtil getAuthUserUtil;
     private final GlobalDateUtil globalDateUtil;
-    private static final Logger logger = LoggerFactory.getLogger(BookServiceImpl.class);
-
-    private final String ROOT_DIR_STRING = System.getProperty("user.dir");
     private final ShelfRepository shelfRepository;
     private final BorrowRepository borrowRepository;
+    private final S3Client s3Client;
+    private final AwsProperties awsProperties;
+
+    private static final Logger logger = LoggerFactory.getLogger(BookServiceImpl.class);
 
     @Autowired
-    public BookServiceImpl(BookRepository bookRepository, BookMapper bookMapper, BookHelper bookHelper, CategoryRepository categoryRepository, EmailUtil emailUtil, UserRepository userRepository, ShelfRepository shelfRepository, BorrowRepository borrowRepository, GetAuthUserUtil getAuthUserUtil, GlobalDateUtil globalDateUtil) {
+    public BookServiceImpl(BookRepository bookRepository, BookMapper bookMapper, BookHelper bookHelper, CategoryRepository categoryRepository, EmailUtil emailUtil, UserRepository userRepository, ShelfRepository shelfRepository, BorrowRepository borrowRepository, GetAuthUserUtil getAuthUserUtil, GlobalDateUtil globalDateUtil, S3Client s3Client, AwsProperties awsProperties) {
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
         this.bookHelper = bookHelper;
@@ -64,6 +70,8 @@ public class BookServiceImpl implements BookService {
         this.borrowRepository = borrowRepository;
         this.getAuthUserUtil = getAuthUserUtil;
         this.globalDateUtil = globalDateUtil;
+        this.s3Client = s3Client;
+        this.awsProperties = awsProperties;
     }
 
     @Override
@@ -109,13 +117,16 @@ public class BookServiceImpl implements BookService {
 //            Get the staff full object
             User user = userRepository.findUserByEmail(currentUser).orElseThrow(() -> new ResourceEntityNotFoundException("User", "Id", 0));
 
-            // Save image
-            String imagePath = saveImage(bookImage);
-
             // Save the Book to database
-            Book book = bookMapper.toBook(bookDto, imagePath, user);
-            Book savedBook = bookRepository.save(book);
-            bookRepository.flush();
+            Book book = bookMapper.toBook(bookDto, user);
+            Book savedBook = bookRepository.saveAndFlush(book);
+
+            // Save book image in s3
+            String imagePath = saveImageInS3(book, bookImage);
+
+            // Save image url in db
+            savedBook.setImageURL(imagePath);
+            savedBook = bookRepository.saveAndFlush(savedBook);
 
             List<User> users = userRepository.userToNotify();
             if (!users.isEmpty()) {
@@ -138,18 +149,25 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public String saveImage(
-            MultipartFile bookImage
-    ) throws IOException {
-        try {
-            Path imagePath = Path.of(ROOT_DIR_STRING, "uploads", bookImage.getOriginalFilename());
-            Files.write(imagePath, bookImage.getBytes());
-            Path path = Path.of("uploads", bookImage.getOriginalFilename());
+    public String saveImageInS3(Book book, MultipartFile bookImage) throws IOException {
+        String fileExtension = FileUtils.getExtension(bookImage);
+        String fileName = UUID.randomUUID() + S3Constants.DOT + fileExtension;
 
-            return path.toString();
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        String objectKey = S3Constants.BOOKS_IMAGE_FOLDER
+                           + book.getBookId()
+                           + S3Constants.FORWARD_SLASH
+                           + fileName;
+
+        s3Client.putObject(
+                PutObjectRequest.builder()
+                        .bucket(awsProperties.getS3BucketName())
+                        .key(objectKey)
+                        .contentType(bookImage.getContentType())
+                        .build(),
+                RequestBody.fromBytes(bookImage.getBytes())
+        );
+
+        return objectKey;
     }
 
     @Override

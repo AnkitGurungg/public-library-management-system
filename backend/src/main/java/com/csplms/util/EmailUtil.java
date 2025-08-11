@@ -1,20 +1,26 @@
 package com.csplms.util;
 
+import com.csplms.config.AwsProperties;
 import lombok.Data;
 import org.slf4j.Logger;
 import com.csplms.entity.*;
 import org.slf4j.LoggerFactory;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.*;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Component;
 import com.csplms.exception.MailFailedException;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import software.amazon.awssdk.core.ResponseInputStream;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -41,14 +47,19 @@ public class EmailUtil {
     @Value("${frontend.base-url}")
     private String frontendBaseUrl;
 
+    private final S3Client s3Client;
+    private final AwsProperties awsProperties;
     private final JavaMailSender javaMailSender;
+
     private final String ROOT_DIR_STRING = System.getProperty("user.dir");
 
     private static final Logger logger = LoggerFactory.getLogger(EmailUtil.class);
 
     @Autowired
-    public EmailUtil(JavaMailSender javaMailSender) {
+    public EmailUtil(JavaMailSender javaMailSender, S3Client s3Client, AwsProperties awsProperties) {
         this.javaMailSender = javaMailSender;
+        this.s3Client = s3Client;
+        this.awsProperties = awsProperties;
     }
 
     public String getFilePath(String fileNameOnDB) {
@@ -56,6 +67,24 @@ public class EmailUtil {
         Path getImagePath = Path.of(ROOT_DIR_STRING, fileNameOnDB);
         logger.debug("getImagePath: {}", getImagePath);
         return getImagePath.toString();
+    }
+
+//    Get image from s3
+    public InputStreamSource getImageAsInputStream(String objectKey) throws MailFailedException {
+        try (ResponseInputStream<GetObjectResponse> s3Object =
+                     s3Client.getObject(GetObjectRequest.builder()
+                             .bucket(awsProperties.getS3BucketName())
+                             .key(objectKey)
+                             .build())) {
+
+            byte[] bytes = s3Object.readAllBytes();
+            return new ByteArrayResource(bytes);
+
+        } catch (NoSuchKeyException e) {
+            throw new MailFailedException("Book image not found in S3");
+        } catch (IOException | S3Exception e) {
+            throw new MailFailedException("Unable to read book image from S3");
+        }
     }
 
     public void newBookMail(Book book, String[] mails) throws MailException, MessagingException, MailFailedException, IOException {
@@ -67,13 +96,8 @@ public class EmailUtil {
                 throw new MailFailedException("Recipient list cannot be empty.");
             }
 
-            // Get absolute file path
-            String imagePath = getFilePath(book.getImageURL());
-            Resource image = new FileSystemResource(imagePath);
-
-            if (!image.exists() || !image.isReadable()) {
-                throw new MailFailedException("Book image not found. Please try again.");
-            }
+//            Use the url stored in db to get image from s3
+            InputStreamSource image = getImageAsInputStream(book.getImageURL());
 
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
