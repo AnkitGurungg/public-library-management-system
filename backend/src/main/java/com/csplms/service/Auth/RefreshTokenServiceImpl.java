@@ -7,7 +7,6 @@ import com.csplms.exception.UserNotPresentException;
 import com.csplms.repository.RefreshTokenRepository;
 import com.csplms.repository.UserRepository;
 import com.csplms.security.JwtService;
-import com.csplms.util.GetAuthUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,11 +58,17 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 .orElseThrow(() -> new UserNotPresentException("User not found"));
 
         List<RefreshToken> tokenList = refreshTokenRepository.findAllByUserAndRevokedFalse(user);
-        RefreshToken token = tokenList
-                .stream()
-                .filter(item -> passwordEncoder.matches(rawToken, item.getToken()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Refresh token not found or revoked"));
+
+        RefreshToken token = null;
+        for (RefreshToken item : tokenList){
+            if (passwordEncoder.matches(rawToken, item.getToken())) {
+                token = item;
+            }
+        }
+
+        if (token == null) {
+            throw new UnauthorizedException("Token does not exist");
+        }
 
         if (token.isRevoked()) {
             throw new UnauthorizedException("Refresh token revoked");
