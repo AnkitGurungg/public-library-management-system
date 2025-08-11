@@ -154,7 +154,7 @@ public class AuthServiceImpl implements AuthService {
         String username = jwtService.extractUsername(refreshToken);
 
         // Verify refresh token in DB
-        RefreshToken oldRefToken = refreshTokenService.verifyRefreshToken(refreshToken, username);
+        RefreshToken oldRefToken = refreshTokenService.verifyAndGet(refreshToken);
 
         // Revoke old token
         oldRefToken.setRevoked(true);
@@ -176,15 +176,21 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String logout(LogoutRequestDto requestDto) {
-        refreshTokenService.revokeRefreshToken(requestDto.refreshToken());
+        String rawToken = requestDto.refreshToken();
+        RefreshToken token = refreshTokenService.verifyAndGet(rawToken);
+        refreshTokenService.revoke(token);
+
         return "Logged out successfully";
     }
 
     @Override
     public String logoutAll() {
         String email = authUserUtil.getAuthUser();
-        User user = userRepository.findUserByEmail(email).orElseThrow(()-> new UserNotPresentException("User not found"));
-        refreshTokenService.revokeAllUserTokens(user);
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(()-> new UserNotPresentException("User not found"));
+
+        refreshTokenService.revokeAll(user);
+
         return "Logged out from all devices";
     }
 

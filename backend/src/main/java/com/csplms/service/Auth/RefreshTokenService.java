@@ -6,9 +6,9 @@ import com.csplms.entity.User;
 public interface RefreshTokenService {
     RefreshToken create(String email, String token);
 
-    RefreshToken verifyRefreshToken(String token, String email);
+    RefreshToken verifyAndGet(String rawToken);
 
-    void revokeRefreshToken(String token);
+    void revoke(RefreshToken token);
 
-    void revokeAllUserTokens(User user);
+    void revokeAll(User user);
 }

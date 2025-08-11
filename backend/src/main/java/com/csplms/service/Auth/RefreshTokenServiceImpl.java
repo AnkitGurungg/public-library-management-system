@@ -2,6 +2,7 @@ package com.csplms.service.Auth;
 
 import com.csplms.entity.RefreshToken;
 import com.csplms.entity.User;
+import com.csplms.exception.UnauthorizedException;
 import com.csplms.exception.UserNotPresentException;
 import com.csplms.repository.RefreshTokenRepository;
 import com.csplms.repository.UserRepository;
@@ -52,41 +53,38 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return refreshTokenRepository.save(refreshToken);
     }
 
-    public RefreshToken verifyRefreshToken(String token, String email) {
-        User user = userRepository.findUserByEmail(email)
+    @Override
+    public RefreshToken verifyAndGet(String rawToken) {
+        User user = userRepository.findUserByEmail(jwtService.extractUsername(rawToken))
                 .orElseThrow(() -> new UserNotPresentException("User not found"));
 
-        RefreshToken matchedToken = getActiveRefreshToken(user, token);
-        if (matchedToken.isRevoked()) {
-            throw new RuntimeException("Refresh token revoked");
-        }
-        if (matchedToken.getExpiresAt().isBefore(Instant.now())) {
-            throw new RuntimeException("Refresh token expired");
-        }
-
-        return matchedToken;
-    }
-
-    public void revokeRefreshToken(String token) {
-        String email = jwtService.extractUsername(token);
-        User user = userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new UserNotPresentException("User not found"));
-
-        RefreshToken matchedToken = getActiveRefreshToken(user, token);
-        matchedToken.setRevoked(true);
-        refreshTokenRepository.save(matchedToken);
-    }
-
-    public void revokeAllUserTokens(User user) {
-        refreshTokenRepository.deleteByUser(user);
-    }
-
-    private RefreshToken getActiveRefreshToken(User user, String rawToken) {
         List<RefreshToken> tokenList = refreshTokenRepository.findAllByUserAndRevokedFalse(user);
-        return tokenList.stream()
+        RefreshToken token = tokenList
+                .stream()
                 .filter(item -> passwordEncoder.matches(rawToken, item.getToken()))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Refresh token not found or revoked"));
+
+        if (token.isRevoked()) {
+            throw new UnauthorizedException("Refresh token revoked");
+        }
+
+        if (token.getExpiresAt().isBefore(Instant.now())) {
+            throw new UnauthorizedException("Refresh token expired");
+        }
+
+        return token;
     }
 
+    @Override
+    public void revoke(RefreshToken token) {
+        token.setRevoked(true);
+        refreshTokenRepository.save(token);
+    }
+
+    @Override
+    public void revokeAll(User user) {
+        refreshTokenRepository.findAllByUserAndRevokedFalse(user)
+                .forEach(item -> item.setRevoked(true));
+    }
 }
