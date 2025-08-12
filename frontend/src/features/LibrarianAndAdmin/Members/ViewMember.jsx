@@ -12,7 +12,7 @@ import {
 import { Eye, Users } from "lucide-react";
 import { useState } from "react";
 import { useFetchUserById } from "@/hooks/useFetchUserById";
-import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
+import { S3_BASE_URL } from "@/services/GlobalServices";
 
 const ViewMember = ({ id, type }) => {
   const [open, setOpen] = useState(false);
@@ -42,11 +42,11 @@ const ViewMember = ({ id, type }) => {
                 <Avatar className="h-24 w-24 mt-1">
                   {member?.evidence?.userImage ? (
                     <a
-                      href={`${BACKEND_SERVER_BASE_URL}/${member?.evidence?.userImage || ""}`}
+                      href={`${S3_BASE_URL}/${member?.evidence?.userImage || ""}`}
                       target="_blank"
                     >
                       <AvatarImage
-                        src={`${BACKEND_SERVER_BASE_URL}/${member?.evidence?.userImage}`}
+                        src={`${S3_BASE_URL}/${member?.evidence?.userImage}`}
                         alt="Member"
                         className="object-cover"
                       />
@@ -90,7 +90,7 @@ const ViewMember = ({ id, type }) => {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="flex-1 overflow-hidden rounded-lg border">
                     <a
-                      href={`${BACKEND_SERVER_BASE_URL}/${member?.evidence?.evidenceOne || ""}`}
+                      href={`${S3_BASE_URL}/${member?.evidence?.evidenceOne || ""}`}
                       target="_blank"
                       onClick={(e) => {
                         if (!member?.evidence?.evidenceOne) {
@@ -104,7 +104,7 @@ const ViewMember = ({ id, type }) => {
                       <img
                         src={
                           member?.evidence?.evidenceOne
-                            ? `${BACKEND_SERVER_BASE_URL}/${member?.evidence?.evidenceOne}`
+                            ? `${S3_BASE_URL}/${member?.evidence?.evidenceOne}`
                             : ""
                         }
                         alt="N/A"
@@ -114,7 +114,7 @@ const ViewMember = ({ id, type }) => {
                   </div>
                   <div className="flex-1 overflow-hidden rounded-lg border">
                     <a
-                      href={`${BACKEND_SERVER_BASE_URL}/${member?.evidence?.evidenceTwo || ""}`}
+                      href={`${S3_BASE_URL}/${member?.evidence?.evidenceTwo || ""}`}
                       target="_blank"
                       onClick={(e) => {
                         if (!member?.evidence?.evidenceTwo) {
@@ -128,7 +128,7 @@ const ViewMember = ({ id, type }) => {
                       <img
                         src={
                           member?.evidence?.evidenceTwo
-                            ? `${BACKEND_SERVER_BASE_URL}/${member?.evidence?.evidenceTwo}`
+                            ? `${S3_BASE_URL}/${member?.evidence?.evidenceTwo}`
                             : ""
                         }
                         alt="N/A"

@@ -1,6 +1,4 @@
-import GLOBAL_SERVICE, {
-  BACKEND_SERVER_BASE_URL,
-} from "@/services/GlobalServices";
+import GLOBAL_SERVICE, { S3_BASE_URL } from "@/services/GlobalServices";
 import { CheckCircle, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -10,9 +8,7 @@ export const columns = (refetchMemberWishList) => [
     header: "Book",
     cell: ({ row }) => {
       const imageUrl = row.original.imageURL;
-      const fullImageUrl = imageUrl
-        ? `${BACKEND_SERVER_BASE_URL}/${imageUrl}`
-        : null;
+      const fullImageUrl = imageUrl ? `${S3_BASE_URL}/${imageUrl}` : null;
       return fullImageUrl ? (
         <img
           src={fullImageUrl}

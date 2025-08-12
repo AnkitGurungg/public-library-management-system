@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { UserContext } from "@/contexts/UserContext";
 import { useEffect } from "react";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
-import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
+import { S3_BASE_URL } from "@/services/GlobalServices";
 import toast from "react-hot-toast";
 import { useFetchMemberWishListIds } from "@/hooks/useFetchMemberWishListIds";
 
@@ -50,7 +50,7 @@ const BookCard = ({ curBook }) => {
         onClick={specificBookDetails}
       >
         <img
-          src={`${BACKEND_SERVER_BASE_URL}/${imageURL}`}
+          src={`${S3_BASE_URL}/${imageURL}`}
           alt="Book img"
           className="aspect-[10/16] object-cover drop-shadow-md group-hover:scale-105 duration-500"
           priority="true"

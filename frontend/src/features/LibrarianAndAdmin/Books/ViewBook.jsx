@@ -10,7 +10,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { BookOpenText, Eye } from "lucide-react";
 import { useState } from "react";
-import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
+import { S3_BASE_URL } from "@/services/GlobalServices";
 import { Button } from "@/components/ui/button";
 import { useFetchBookById } from "@/hooks/useFetchBookById";
 
@@ -83,7 +83,7 @@ const ViewBook = ({ id }) => {
                   </div>
                   <div className="max-h-96">
                     <img
-                      src={`${BACKEND_SERVER_BASE_URL}/${book.imageURL}`}
+                      src={`${S3_BASE_URL}/${book.imageURL}`}
                       alt={book.title}
                       className="object-cover w-48 ml-3"
                     />

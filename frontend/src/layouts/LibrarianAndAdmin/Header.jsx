@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { NavLink, useNavigate } from "react-router-dom";
-import GLOBAL_SERVICE, { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
+import GLOBAL_SERVICE, { S3_BASE_URL } from "@/services/GlobalServices";
 
 const Header = ({ sidebarToggle, setSidebarToggle }) => {
   const [currentDate, setCurrentDate] = useState("");
@@ -83,7 +83,7 @@ const Header = ({ sidebarToggle, setSidebarToggle }) => {
               <img
                 src={
                   userInfo?.evidence?.userImage
-                    ? `${BACKEND_SERVER_BASE_URL}/${userInfo?.evidence?.userImage}`
+                    ? `${S3_BASE_URL}/${userInfo?.evidence?.userImage}`
                     : `/user/default-user.png`
                 }
                 className="w-8 h-8 rounded-full object-cover"

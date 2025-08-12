@@ -1,4 +1,4 @@
-import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
+import { S3_BASE_URL } from "@/services/GlobalServices";
 import { CheckCircle, ChevronsUpDown, XCircle } from "lucide-react";
 
 export const columns = [
@@ -8,7 +8,7 @@ export const columns = [
     cell: ({ row }) => {
       const imageUrl = row.getValue("imageURL");
       const fullImageUrl = imageUrl
-        ? `${BACKEND_SERVER_BASE_URL}/${imageUrl}`
+        ? `${S3_BASE_URL}/${imageUrl}`
         : null;
       return fullImageUrl ? (
         <img

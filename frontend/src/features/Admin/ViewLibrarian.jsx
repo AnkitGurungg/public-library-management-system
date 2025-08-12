@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 import { Eye, Users } from "lucide-react";
 import { useFetchUserById } from "@/hooks/useFetchUserById";
-import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
+import { S3_BASE_URL } from "@/services/GlobalServices";
 
 const ViewLibrarian = ({ id, type }) => {
   const [open, setOpen] = useState(false);
@@ -42,11 +42,11 @@ const ViewLibrarian = ({ id, type }) => {
                 <Avatar className="h-24 w-24 mt-1">
                   {librarian?.evidence?.userImage ? (
                     <a
-                      href={`${BACKEND_SERVER_BASE_URL}/${librarian?.evidence?.userImage}`}
+                      href={`${S3_BASE_URL}/${librarian?.evidence?.userImage}`}
                       target="_blank"
                     >
                       <AvatarImage
-                        src={`${BACKEND_SERVER_BASE_URL}/${librarian?.evidence?.userImage}`}
+                        src={`${S3_BASE_URL}/${librarian?.evidence?.userImage}`}
                         alt="Librarian"
                         className="object-cover"
                       />
@@ -90,11 +90,11 @@ const ViewLibrarian = ({ id, type }) => {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="flex-1 overflow-hidden rounded-lg border">
                     <a
-                      href={`${BACKEND_SERVER_BASE_URL}/${librarian?.evidence?.evidenceOne}`}
+                      href={`${S3_BASE_URL}/${librarian?.evidence?.evidenceOne}`}
                       target="_blank"
                     >
                       <img
-                        src={`${BACKEND_SERVER_BASE_URL}/${librarian?.evidence?.evidenceOne || ""}`}
+                        src={`${S3_BASE_URL}/${librarian?.evidence?.evidenceOne || ""}`}
                         alt="N/A"
                         className={`h-auto w-full object-cover min-h-20`}
                       />
@@ -102,11 +102,11 @@ const ViewLibrarian = ({ id, type }) => {
                   </div>
                   <div className="flex-1 overflow-hidden rounded-lg border">
                     <a
-                      href={`${BACKEND_SERVER_BASE_URL}/${librarian?.evidence?.evidenceTwo}`}
+                      href={`${S3_BASE_URL}/${librarian?.evidence?.evidenceTwo}`}
                       target="_blank"
                     >
                       <img
-                        src={`${BACKEND_SERVER_BASE_URL}/${librarian?.evidence?.evidenceTwo || ""}`}
+                        src={`${S3_BASE_URL}/${librarian?.evidence?.evidenceTwo || ""}`}
                         alt="N/A"
                         className={`h-auto w-full object-cover min-h-20`}
                       />

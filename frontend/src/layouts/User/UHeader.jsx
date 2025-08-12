@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import HoverCategories from "@/features/User/Home/HoverCategories";
 import ProfilePopover from "@/features/User/Profiile/ProfilePopover";
 import { UserContext } from "@/contexts/UserContext";
-import { BACKEND_SERVER_BASE_URL } from "@/services/GlobalServices";
+import { S3_BASE_URL } from "@/services/GlobalServices";
 import { Button } from "@/components/ui/button";
 import { useFetchAllAvailableBooks } from "@/hooks/useFetchAllAvailableBooks";
 import toast from "react-hot-toast";
@@ -93,7 +93,7 @@ const UHeader = () => {
                   >
                     <img
                       src={
-                        `${BACKEND_SERVER_BASE_URL}/${book.imageURL}` ||
+                        `${S3_BASE_URL}/${book.imageURL}` ||
                         "/placeholder-book.png"
                       }
                       alt={book.title}
