@@ -10,6 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { env } from "@/config/env";
+import { S3_BASE_URL } from "@/services/GlobalServices";
 
 const UPSidebar = () => {
   const {
@@ -38,7 +39,7 @@ const UPSidebar = () => {
             <img
               src={
                 userProfile?.data?.evidence?.userImage
-                  ? `${env.VITE_LMS_S3_BASE_URL}/${userProfile?.data?.evidence?.userImage}`
+                  ? `${S3_BASE_URL}/${userProfile?.data?.evidence?.userImage}`
                   : ""
               }
               alt="User"

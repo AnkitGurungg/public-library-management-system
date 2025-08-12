@@ -1,5 +1,5 @@
 import { useFetchUserProfile } from "@/hooks/useFetchUserProfile";
-import GLOBAL_SERVICE from "@/services/GlobalServices";
+import GLOBAL_SERVICE, { S3_BASE_URL } from "@/services/GlobalServices";
 import { useEffect, useState } from "react";
 import KYC from "../Register/KYC";
 import { Card } from "@/components/ui/card";
@@ -156,7 +156,7 @@ const UAccountSettings = () => {
               {userProfile?.data?.evidence &&
               userProfile?.data?.evidence?.evidenceOne ? (
                 <img
-                  src={`${env.VITE_LMS_S3_BASE_URL}/${userProfile?.data?.evidence?.evidenceOne}`}
+                  src={`${S3_BASE_URL}/${userProfile?.data?.evidence?.evidenceOne}`}
                   alt="Evidence One"
                   className="w-full h-auto rounded-md border border-gray-200"
                 />
@@ -171,7 +171,7 @@ const UAccountSettings = () => {
               {userProfile?.data?.evidence &&
               userProfile?.data?.evidence?.evidenceTwo ? (
                 <img
-                  src={`${env.VITE_LMS_S3_BASE_URL}/${userProfile?.data?.evidence?.evidenceTwo}`}
+                  src={`${S3_BASE_URL}/${userProfile?.data?.evidence?.evidenceTwo}`}
                   alt="Evidence Two"
                   className="w-full h-auto rounded-md border border-gray-200 object-cover"
                 />

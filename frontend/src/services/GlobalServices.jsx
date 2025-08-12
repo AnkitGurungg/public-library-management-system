@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { env } from "../config/env";
 
 export const BACKEND_SERVER_BASE_URL = env.API_BASE_URL;
+export const S3_BASE_URL = env.S3_BASE_URL;
 
 const getAccessToken = () => {
   return localStorage.getItem("Authorization");
