@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import com.csplms.util.EmailUtil;
 import com.csplms.entity.Category;
 import com.csplms.mapper.BookMapper;
-import com.csplms.helper.BookHelper;
 import com.csplms.util.GlobalDateUtil;
 import com.csplms.util.GetAuthUserUtil;
 import jakarta.mail.MessagingException;
@@ -45,7 +44,6 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
-    private final BookHelper bookHelper;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final EmailUtil emailUtil;
@@ -59,10 +57,9 @@ public class BookServiceImpl implements BookService {
     private static final Logger logger = LoggerFactory.getLogger(BookServiceImpl.class);
 
     @Autowired
-    public BookServiceImpl(BookRepository bookRepository, BookMapper bookMapper, BookHelper bookHelper, CategoryRepository categoryRepository, EmailUtil emailUtil, UserRepository userRepository, ShelfRepository shelfRepository, BorrowRepository borrowRepository, GetAuthUserUtil getAuthUserUtil, GlobalDateUtil globalDateUtil, S3Client s3Client, AwsProperties awsProperties) {
+    public BookServiceImpl(BookRepository bookRepository, BookMapper bookMapper, CategoryRepository categoryRepository, EmailUtil emailUtil, UserRepository userRepository, ShelfRepository shelfRepository, BorrowRepository borrowRepository, GetAuthUserUtil getAuthUserUtil, GlobalDateUtil globalDateUtil, S3Client s3Client, AwsProperties awsProperties) {
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
-        this.bookHelper = bookHelper;
         this.categoryRepository = categoryRepository;
         this.emailUtil = emailUtil;
         this.userRepository = userRepository;
