@@ -22,7 +22,7 @@ const HoverCategories = () => {
   const [hover, setHover] = useState(false);
 
   return (
-    <HoverCard onOpenChange={setHover}>
+    <HoverCard openDelay={0} closeDelay={100} onOpenChange={setHover}>
       <HoverCardTrigger asChild>
         <Button
           variant="link"

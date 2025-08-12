@@ -84,7 +84,7 @@ const UHeader = () => {
             />
 
             {showDropdown && filteredBooks.length > 0 && (
-              <div className="absolute topтє12 left-0 w-full max-h-72 overflow-y-auto bg-white border border-gray-200 shadow-lg rounded-md z-50">
+              <div className="absolute top-12 left-0 w-full max-h-72 overflow-y-auto bg-white border border-gray-200 shadow-lg rounded-md z-50">
                 {filteredBooks.map((book) => (
                   <NavLink
                     to={`/books/book/${book.bookId}`}

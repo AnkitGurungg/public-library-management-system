@@ -35,7 +35,7 @@ public class DisplayResourcesServiceImpl implements DisplayResourcesService {
     public List<BookResponseDto> getFilteredBooksByCategory(Integer categoryId) {
         List<Book> filteredBooks = bookRepository.getFilteredBooksByCategory(categoryId);
         if (filteredBooks.isEmpty()){
-            throw new ResourceListNotFoundException("Books");
+            throw new ResourceListNotFoundException("Books in this category");
         }
 
         List<BookResponseDto> dtoList = new ArrayList<>();

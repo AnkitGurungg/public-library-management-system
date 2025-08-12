@@ -10,7 +10,7 @@ const GenreFilteredBooks = () => {
   const navigate = useNavigate();
   const { categoryId } = useParams();
   const [books, setBooks] = useState([]);
-  const [showGenre, setShowGenre] = useState(false);
+  const [showGenre, setShowGenre] = useState(true);
 
   const {
     data: displayCategory,
