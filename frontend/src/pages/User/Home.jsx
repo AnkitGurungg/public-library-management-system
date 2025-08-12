@@ -11,24 +11,19 @@ import BookCard from "@/features/User/Home/BookCard";
 import { useFetchNewArrivalBooks } from "@/hooks/useFetchNewArrivalBooks";
 import { useFetchTopBorrowedBooks } from "@/hooks/useFetchTopBorrowedBooks";
 import { useFetchRecentlyPublished } from "@/hooks/useFetchRecentlyPublished";
+import { BookLoader } from "@/components/Loading/BookLoader";
 
 const Home = () => {
   const pageNumber = 0;
   const pageSize = 5;
   const navigate = useNavigate();
 
-  const { data: topBorrowedBooks } = useFetchTopBorrowedBooks(
-    pageNumber,
-    pageSize,
-  );
-  const { data: newArrivalBooks } = useFetchNewArrivalBooks(
-    pageNumber,
-    pageSize,
-  );
-  const { data: recentlyPublished } = useFetchRecentlyPublished(
-    pageNumber,
-    pageSize,
-  );
+  const { data: topBorrowedBooks, isLoading: loadingTopBorrowed } =
+    useFetchTopBorrowedBooks(pageNumber, pageSize);
+  const { data: newArrivalBooks, isLoading: loadingNewArrivals } =
+    useFetchNewArrivalBooks(pageNumber, pageSize);
+  const { data: recentlyPublished, isLoading: loadingRecentlyPublished } =
+    useFetchRecentlyPublished(pageNumber, pageSize);
 
   useEffect(() => {
     // console.log(topBorrowedBooks)
@@ -122,10 +117,17 @@ const Home = () => {
             </p>
           </div>
           <ul className="grid grid-cols-5 justify-center items-center gap-5">
-            {topBorrowedBooks?.content?.length > 0 &&
-              topBorrowedBooks?.content?.map((item) => (
+            {loadingTopBorrowed ? (
+              <BookLoader />
+            ) : topBorrowedBooks?.content?.length > 0 ? (
+              topBorrowedBooks.content.map((item) => (
                 <BookCard key={item.bookId} curBook={item} />
-              ))}
+              ))
+            ) : (
+              <p className="col-span-5 text-center text-gray-500 py-10">
+                Popular books are currently unavailable!
+              </p>
+            )}
           </ul>
         </div>
 
@@ -145,10 +147,17 @@ const Home = () => {
             </p>
           </div>
           <ul className="grid grid-cols-5 justify-center items-center gap-5">
-            {newArrivalBooks?.content?.length > 0 &&
-              newArrivalBooks?.content?.map((item) => (
-                <BookCard key={item?.bookId} curBook={item} />
-              ))}
+            {loadingNewArrivals ? (
+              <BookLoader />
+            ) : newArrivalBooks?.content?.length > 0 ? (
+              newArrivalBooks.content.map((item) => (
+                <BookCard key={item.bookId} curBook={item} />
+              ))
+            ) : (
+              <p className="col-span-5 text-center text-gray-500 py-10">
+                New arrivals are currently unavailable!
+              </p>
+            )}
           </ul>
         </div>
 
@@ -170,10 +179,17 @@ const Home = () => {
             </p>
           </div>
           <ul className="grid grid-cols-5 justify-center items-center gap-5">
-            {recentlyPublished?.content?.length > 0 &&
-              recentlyPublished?.content?.map((curBook) => (
-                <BookCard key={curBook?.bookId} curBook={curBook} />
-              ))}
+            {loadingRecentlyPublished ? (
+              <BookLoader />
+            ) : recentlyPublished?.content?.length > 0 ? (
+              recentlyPublished.content.map((item) => (
+                <BookCard key={item.bookId} curBook={item} />
+              ))
+            ) : (
+              <p className="col-span-5 text-center text-gray-500 py-10">
+                Recently published books are currently unavailable!
+              </p>
+            )}
           </ul>
         </div>
       </div>
