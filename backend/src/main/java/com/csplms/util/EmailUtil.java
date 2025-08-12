@@ -22,8 +22,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 
-import java.io.File;
-import java.nio.file.Path;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -51,8 +49,6 @@ public class EmailUtil {
     private final AwsProperties awsProperties;
     private final JavaMailSender javaMailSender;
 
-    private final String ROOT_DIR_STRING = System.getProperty("user.dir");
-
     private static final Logger logger = LoggerFactory.getLogger(EmailUtil.class);
 
     @Autowired
@@ -62,28 +58,23 @@ public class EmailUtil {
         this.awsProperties = awsProperties;
     }
 
-    public String getFilePath(String fileNameOnDB) {
-        // Get absolute path of the saved image (uploads/img.png)
-        Path getImagePath = Path.of(ROOT_DIR_STRING, fileNameOnDB);
-        logger.debug("getImagePath: {}", getImagePath);
-        return getImagePath.toString();
-    }
-
-//    Get image from s3
+    // Retrieve image from s3 as an InputStreamSource
     public InputStreamSource getImageAsInputStream(String objectKey) throws MailFailedException {
-        try (ResponseInputStream<GetObjectResponse> s3Object =
-                     s3Client.getObject(GetObjectRequest.builder()
-                             .bucket(awsProperties.getS3BucketName())
-                             .key(objectKey)
-                             .build())) {
-
+        try (
+                ResponseInputStream<GetObjectResponse> s3Object =
+                        s3Client.getObject(GetObjectRequest.builder().bucket(awsProperties.getS3BucketName())
+                                .key(objectKey)
+                                .build());
+        ) {
+            // Read all bytes from the S3 object
             byte[] bytes = s3Object.readAllBytes();
             return new ByteArrayResource(bytes);
-
         } catch (NoSuchKeyException e) {
-            throw new MailFailedException("Book image not found in S3");
+            // Object does not exist in the bucket
+            throw new MailFailedException("Image not found in S3");
         } catch (IOException | S3Exception e) {
-            throw new MailFailedException("Unable to read book image from S3");
+            // Failed to read object or any other S3-related exception
+            throw new MailFailedException("Unable to read image from S3. Please try again");
         }
     }
 
@@ -423,14 +414,7 @@ public class EmailUtil {
                 throw new MailFailedException("Borrow information cannot be null.");
             }
 
-            // Get absolute file path
-            String bookImagePath = getFilePath(book.getImageURL());
-            Resource bookImage = new FileSystemResource(new File(bookImagePath));
-
-            // Validate resource
-            if (!bookImage.exists() || !bookImage.isReadable()) {
-                throw new MailFailedException("Book image not found or unreadable. Please try again.");
-            }
+            InputStreamSource bookImage = getImageAsInputStream(book.getImageURL());
 
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -640,14 +624,7 @@ public class EmailUtil {
                 throw new MailFailedException("Return or borrow information cannot be null.");
             }
 
-            // Get absolute file path
-            String bookImagePath = getFilePath(book.getImageURL());
-            Resource bookImage = new FileSystemResource(new File(bookImagePath));
-
-            // Validate resource
-            if (!bookImage.exists() || !bookImage.isReadable()) {
-                throw new MailFailedException("Book image not found or unreadable. Please try again.");
-            }
+            InputStreamSource bookImage = getImageAsInputStream(book.getImageURL());
 
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -864,14 +841,7 @@ public class EmailUtil {
                 throw new MailFailedException("Fine information cannot be null.");
             }
 
-            // Get absolute file path
-            String bookImagePath = getFilePath(book.getImageURL());
-            Resource bookImage = new FileSystemResource(new File(bookImagePath));
-
-            // Validate resource
-            if (!bookImage.exists() || !bookImage.isReadable()) {
-                throw new MailFailedException("Book image not found or unreadable. Please try again.");
-            }
+            InputStreamSource bookImage = getImageAsInputStream(book.getImageURL());
 
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -1117,14 +1087,7 @@ public class EmailUtil {
                 throw new MailFailedException("Borrow information cannot be null.");
             }
 
-            // Get absolute file path
-            String bookImagePath = getFilePath(book.getImageURL());
-            Resource bookImage = new FileSystemResource(new File(bookImagePath));
-
-            // Validate resource
-            if (!bookImage.exists() || !bookImage.isReadable()) {
-                throw new MailFailedException("Book image not found or unreadable. Please try again.");
-            }
+            InputStreamSource bookImage = getImageAsInputStream(book.getImageURL());
 
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -1345,14 +1308,7 @@ public class EmailUtil {
                 throw new MailFailedException("Borrow information cannot be null.");
             }
 
-            // Get absolute file path
-            String bookImagePath = getFilePath(book.getImageURL());
-            Resource bookImage = new FileSystemResource(new File(bookImagePath));
-
-            // Validate resource
-            if (!bookImage.exists() || !bookImage.isReadable()) {
-                throw new MailFailedException("Book image not found or unreadable. Please try again.");
-            }
+            InputStreamSource bookImage = getImageAsInputStream(book.getImageURL());
 
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -1574,14 +1530,7 @@ public class EmailUtil {
                 throw new MailFailedException("Payment information cannot be null.");
             }
 
-            // Get absolute file path
-            String bookImagePath = getFilePath(book.getImageURL());
-            Resource bookImage = new FileSystemResource(new File(bookImagePath));
-
-            // Validate resource
-            if (!bookImage.exists() || !bookImage.isReadable()) {
-                throw new MailFailedException("Book image not found or unreadable. Please try again.");
-            }
+            InputStreamSource bookImage = getImageAsInputStream(book.getImageURL());
 
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -1826,22 +1775,9 @@ public class EmailUtil {
                 throw new MailFailedException("Evidence images cannot be null.");
             }
 
-            // Get absolute file paths
-            String userImagePath = getFilePath(evidence.getUserImage());
-            String evidenceOnePath = getFilePath(evidence.getEvidenceOne());
-            String evidenceTwoPath = getFilePath(evidence.getEvidenceTwo());
-
-            // Load resources
-            Resource userImage = new FileSystemResource(new File(userImagePath));
-            Resource evidenceOne = new FileSystemResource(new File(evidenceOnePath));
-            Resource evidenceTwo = new FileSystemResource(new File(evidenceTwoPath));
-
-            // Validate resources
-            if (!userImage.exists() || !userImage.isReadable() ||
-                !evidenceOne.exists() || !evidenceOne.isReadable() ||
-                !evidenceTwo.exists() || !evidenceTwo.isReadable()) {
-                throw new MailFailedException("Images not found or unreadable. Please try again.");
-            }
+            InputStreamSource userImage = getImageAsInputStream(evidence.getUserImage());
+            InputStreamSource evidenceOne = getImageAsInputStream(evidence.getEvidenceOne());
+            InputStreamSource evidenceTwo = getImageAsInputStream(evidence.getEvidenceTwo());
 
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -2040,22 +1976,9 @@ public class EmailUtil {
                 throw new MailFailedException("Admin email or name cannot be null.");
             }
 
-            // Get absolute file paths
-            String userImagePath = getFilePath(evidence.getUserImage());
-            String evidenceOnePath = getFilePath(evidence.getEvidenceOne());
-            String evidenceTwoPath = getFilePath(evidence.getEvidenceTwo());
-
-            // Load resources
-            Resource userImage = new FileSystemResource(new File(userImagePath));
-            Resource evidenceOne = new FileSystemResource(new File(evidenceOnePath));
-            Resource evidenceTwo = new FileSystemResource(new File(evidenceTwoPath));
-
-            // Validate resources
-            if (!userImage.exists() || !userImage.isReadable() ||
-                !evidenceOne.exists() || !evidenceOne.isReadable() ||
-                !evidenceTwo.exists() || !evidenceTwo.isReadable()) {
-                throw new MailFailedException("Images not found or unreadable. Please try again.");
-            }
+            InputStreamSource userImage = getImageAsInputStream(evidence.getUserImage());
+            InputStreamSource evidenceOne = getImageAsInputStream(evidence.getEvidenceOne());
+            InputStreamSource evidenceTwo = getImageAsInputStream(evidence.getEvidenceTwo());
 
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
