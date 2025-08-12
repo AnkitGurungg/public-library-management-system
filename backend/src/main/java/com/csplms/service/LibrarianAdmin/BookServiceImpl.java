@@ -149,25 +149,34 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public String saveImageInS3(Book book, MultipartFile bookImage) throws IOException {
-        String fileExtension = FileUtils.getExtension(bookImage);
-        String fileName = UUID.randomUUID() + S3Constants.DOT + fileExtension;
+    public String saveImageInS3(Book book, MultipartFile bookImage) {
+        try {
+            // Check if file is not empty
+            if (bookImage == null || bookImage.isEmpty()) {
+                return null;
+            }
 
-        String objectKey = S3Constants.BOOKS_IMAGE_FOLDER
-                           + book.getBookId()
-                           + S3Constants.FORWARD_SLASH
-                           + fileName;
+            String fileExtension = FileUtils.getExtension(bookImage);
+            String fileName = UUID.randomUUID() + S3Constants.DOT + fileExtension;
 
-        s3Client.putObject(
-                PutObjectRequest.builder()
-                        .bucket(awsProperties.getS3BucketName())
-                        .key(objectKey)
-                        .contentType(bookImage.getContentType())
-                        .build(),
-                RequestBody.fromBytes(bookImage.getBytes())
-        );
+            String objectKey = S3Constants.BOOKS_IMAGE_FOLDER
+                               + book.getBookId()
+                               + S3Constants.FORWARD_SLASH
+                               + fileName;
 
-        return objectKey;
+            s3Client.putObject(
+                    PutObjectRequest.builder()
+                            .bucket(awsProperties.getS3BucketName())
+                            .key(objectKey)
+                            .contentType(bookImage.getContentType())
+                            .build(),
+                    RequestBody.fromBytes(bookImage.getBytes())
+            );
+
+            return objectKey;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to upload book image in s3");
+        }
     }
 
     @Override
@@ -341,7 +350,8 @@ public class BookServiceImpl implements BookService {
             }
 
 //            Get updated image path
-            String updatedBookImageURL = bookHelper.updateBookImage(bookImage);
+            String updatedBookImageURL = saveImageInS3(book, bookImage);
+            System.err.println(updatedBookImageURL);
 
             if (updatedBookImageURL != null) {
                 book.setImageURL(updatedBookImageURL);
