@@ -2,7 +2,7 @@ package com.csplms.job;
 
 import com.csplms.repository.RefreshTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,10 +11,10 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 @Component
-@EnableScheduling
 public class RefreshTokenCleanupJob {
 
-
+    @Value("${jwt.refresh.token.exp.time}")
+    private Long revokedTokenRetentionSeconds;
 
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -31,13 +31,12 @@ public class RefreshTokenCleanupJob {
         // delete expired tokens
         refreshTokenRepository.deleteByExpiresAtBefore(now);
 
-        // delete revoked tokens older than 7 days
+        // delete revoked tokens older than 7 days / (revokedTokenRetentionSeconds)
         refreshTokenRepository.deleteByRevokedTrueAndExpiresAtBefore(
                 now.minus(
-                        7,
-                        ChronoUnit.DAYS
+                        revokedTokenRetentionSeconds,
+                        ChronoUnit.SECONDS
                 )
         );
     }
 }
-

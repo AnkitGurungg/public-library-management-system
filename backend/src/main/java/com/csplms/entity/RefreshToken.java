@@ -13,7 +13,13 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "refresh_tokens")
+@Table(
+        name = "refresh_tokens",
+        indexes = {
+                @Index(name = "idx_refresh_tokens_expires_at", columnList = "expiresAt"),
+                @Index(name = "idx_refresh_tokens_revoked_expires", columnList = "revoked, expiresAt")
+        }
+)
 public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
