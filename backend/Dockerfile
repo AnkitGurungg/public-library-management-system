@@ -1,5 +1,5 @@
 # === Stage 1: Build Stage ===
-FROM maven:3.9.0-eclipse-temurin-17-slim AS build
+FROM maven:3.9.0-eclipse-temurin-17 AS build
 
 # Set working directory
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY src ./src
 RUN mvn clean package
 
 # === Stage 2: Runtime Stage ===
-FROM eclipse-temurin:17-jdk-slim
+FROM eclipse-temurin:17-jdk
 
 # Set working directory
 WORKDIR /app
