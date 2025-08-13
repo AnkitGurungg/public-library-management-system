@@ -87,11 +87,11 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/","/images/**", "/static/**", "/*.png", "/*.jpg", "/*.jpeg", "/*.gif", "/*.webp", "/*.svg").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/p/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register","/auth/login", "/auth/refresh-token").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/actuator/health/**").permitAll()
 
 //                        Permit all requests
 //                        .requestMatchers("/**").permitAll()
