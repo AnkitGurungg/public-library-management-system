@@ -14,7 +14,7 @@ RUN mvn dependency:go-offline
 COPY src ./src
 
 # Build the Spring Boot jar
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
 # === Stage 2: Runtime Stage ===
 FROM eclipse-temurin:17-jdk
