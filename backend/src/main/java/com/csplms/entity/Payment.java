@@ -12,7 +12,10 @@ import java.sql.Date;
 @Getter
 @Setter
 @Entity
-@Table(name = "payments")
+@Table(
+        name = "payments",
+        uniqueConstraints = @UniqueConstraint(name = "uk_payments_pidx", columnNames = "pidx")
+)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Payment {
@@ -25,7 +28,6 @@ public class Payment {
 
     private Date date;
 
-    @Column(unique = true, columnDefinition = "uk_pidx")
     private String pidx;
 
     private String txnId;
