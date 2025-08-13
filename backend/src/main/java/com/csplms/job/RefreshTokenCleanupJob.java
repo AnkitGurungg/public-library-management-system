@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit;
 public class RefreshTokenCleanupJob {
 
     @Value("${jwt.refresh.token.exp.time}")
-    private Long revokedTokenRetentionSeconds;
+    private Long revokedTokenRetentionMillis;
 
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -31,11 +31,11 @@ public class RefreshTokenCleanupJob {
         // delete expired tokens
         refreshTokenRepository.deleteByExpiresAtBefore(now);
 
-        // delete revoked tokens older than 7 days / (revokedTokenRetentionSeconds)
+        // delete revoked tokens older than 7 days / (revokedTokenRetentionMillis)
         refreshTokenRepository.deleteByRevokedTrueAndExpiresAtBefore(
                 now.minus(
-                        revokedTokenRetentionSeconds,
-                        ChronoUnit.SECONDS
+                        revokedTokenRetentionMillis,
+                        ChronoUnit.MILLIS
                 )
         );
     }
