@@ -23,7 +23,7 @@ public class RefreshTokenCleanupJob {
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
-    @Scheduled(cron = "${refresh.token.cleanup.cron}")
+    @Scheduled(cron = "${refresh.token.cleanup.cron}", zone = "Asia/Kathmandu")
     @Transactional
     public void cleanup() {
         Instant now = Instant.now();
