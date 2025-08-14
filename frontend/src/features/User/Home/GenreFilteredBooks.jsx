@@ -5,6 +5,7 @@ import { ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useFetchDisplayCategory from "@/hooks/useFetchDisplayCategory";
 import useFetchGenreFilteredBooks from "@/hooks/useFetchGenreFilteredBooks";
+import { BookLoader } from "@/components/Loading/BookLoader";
 
 const GenreFilteredBooks = () => {
   const navigate = useNavigate();
@@ -18,8 +19,11 @@ const GenreFilteredBooks = () => {
     isLoading: isDisplayCategoryLoading,
   } = useFetchDisplayCategory();
 
-  const { data: genreFilteredBooks, refetch: refetchGenreFilteredBooks } =
-    useFetchGenreFilteredBooks({ categoryId });
+  const {
+    data: genreFilteredBooks,
+    refetch: refetchGenreFilteredBooks,
+    isLoading: isGenreFilteredBooksLoading,
+  } = useFetchGenreFilteredBooks({ categoryId });
 
   const handleShowGenre = () => {
     setShowGenre(!showGenre);
@@ -81,16 +85,25 @@ const GenreFilteredBooks = () => {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex flex-grow">
           <div className="grid grid-cols-5 md:grid-cols-2 lg:grid-cols-5 gap-3">
-            {books?.status === 200 &&
-            Array.isArray(books?.data) &&
-            books?.data?.length !== 0 ? (
+            {isGenreFilteredBooksLoading ? (
+              <BookLoader />
+            ) : books?.status === 200 &&
+              Array.isArray(books?.data) &&
+              books?.data?.length !== 0 ? (
               books?.data?.map((item) => (
                 <div key={item.bookId}>
                   <BookCard key={item.bookId} curBook={item} />
                 </div>
               ))
             ) : (
-              <p className="col-span-2">{books?.data?.message}</p>
+              <p className="col-span-2">
+                {books?.data?.message || (
+                  <span>
+                    No books available in this category at the moment. Try
+                    exploring other categories.
+                  </span>
+                )}
+              </p>
             )}
           </div>
         </div>
