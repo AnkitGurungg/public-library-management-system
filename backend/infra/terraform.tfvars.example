@@ -1,0 +1,4 @@
+db_name       = "csplms"
+db_username   = "admin"
+db_password   = "StrongPassword123"
+s3_bucket_name = "csplms-prod-bucket"

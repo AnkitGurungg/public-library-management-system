@@ -35,5 +35,13 @@ build/
 ### VS Code ###
 .vscode/
 
+### Terraform ###
+.terraform/
+*.tfstate
+*.tfstate.*
+tfplan
+*.tfplan
+*.tfvars
+
 ### macOS system files ###
 .DS_Store
