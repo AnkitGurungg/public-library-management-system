@@ -47,6 +47,10 @@ jobs:
         working-directory: infra
         run: terraform show -no-color tfplan
 
+      - name: List infra directory
+        working-directory: infra
+        run: ls -la
+
       #  Apply Terraform (only on main branch)
       - name: Apply Terraform
         if: github.ref == 'refs/heads/main'
