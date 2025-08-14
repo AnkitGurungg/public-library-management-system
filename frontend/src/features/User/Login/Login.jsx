@@ -50,7 +50,7 @@ const Login = ({ isOpenLogin, setIsOpenLogin }) => {
         toast.success("Login success");
         const token = response.headers.get("Authorization");
         localStorage.setItem("Authorization", token);
-        setToken(token);
+        await setToken(token);
         const refreshToken = response.headers.get("refreshToken");
         localStorage.setItem("refreshToken", refreshToken);
         // getUserInfo();
