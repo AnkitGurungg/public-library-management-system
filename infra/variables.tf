@@ -10,7 +10,7 @@ variable "aws_region" {
 # S3 bucket
 variable "s3_bucket_name" {
   description = "Name of the S3 bucket"
-  default     = "testing-csplms-app-bucket"
+  default     = "testing-csplms-app-buckett"
 }
 
 # RDS database
@@ -42,5 +42,5 @@ variable "db_backup_window" {
 
 variable "db_backup_retention_period" {
   description = "RDS backup retention in days"
-  default     = 7
+  default     = 0
 }
