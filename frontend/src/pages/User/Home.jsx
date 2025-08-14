@@ -100,8 +100,8 @@ const Home = () => {
         </CarouselContent>
       </Carousel>
 
-      <div className="max-w-7xl xl:max-w-screen-2xl mt-9">
-        <div className="max-w-7xl xl:max-w-screen-2xl mx-auto px-16 py-4">
+      <div className="max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1920px] mt-9">
+        <div className="max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1920px] 2xl:px-16 mx-auto px-16 py-4">
           <div className="mb-5 flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
               <h2 className="font-bold text-2xl opacity-80">Popular Choices</h2>
@@ -131,7 +131,7 @@ const Home = () => {
           </ul>
         </div>
 
-        <div className="max-w-7xl xl:max-w-screen-2xl mx-auto px-16 py-4">
+        <div className="max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1920px] 2xl:px-16 mx-auto px-16 py-4">
           <div className="mb-6 flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
               <h2 className="font-bold text-2xl opacity-80">New Arrivals</h2>
@@ -161,7 +161,7 @@ const Home = () => {
           </ul>
         </div>
 
-        <div className="max-w-7xl xl:max-w-screen-2xl mx-auto px-16 py-4 mb-10">
+        <div className="max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1920px] 2xl:px-16 mx-auto px-16 py-4 mb-10">
           <div className="mb-6 flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
               <h2 className="font-bold text-2xl opacity-80">

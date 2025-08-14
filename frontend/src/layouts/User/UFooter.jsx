@@ -10,7 +10,7 @@ import {
 const UFooter = () => {
   return (
     <footer className="bg-white text-black drop-shadow-2xl shadow-2xl mt-3">
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1920px] mx-auto px-16 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
             <h3 className="text-lg font-medium mb-4 uppercase">Quick Links</h3>
