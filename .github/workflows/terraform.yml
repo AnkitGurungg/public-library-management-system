@@ -8,6 +8,8 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    env:
+      TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
 
     # Clone the repo into the runner VM
     steps:
