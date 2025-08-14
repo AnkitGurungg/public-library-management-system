@@ -5,15 +5,7 @@ variable "aws_region" {
 }
 
 # AWS credentials
-variable "aws_access_key" {
-  description = "AWS Access Key"
-  type        = string
-}
-
-variable "aws_secret_key" {
-  description = "AWS Secret Key"
-  type        = string
-}
+# access key and secret key are passed through github secrets
 
 # S3 bucket
 variable "s3_bucket_name" {
