@@ -1,0 +1,11 @@
+# Terraform
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/tfplan
+**/*.tfplan
+**/*.tfvars
+*.tfcrash
+
+# macOS
+*.DS_Store
