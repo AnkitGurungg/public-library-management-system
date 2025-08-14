@@ -31,12 +31,6 @@ resource "aws_s3_bucket" "app_bucket" {
   }
 }
 
-# Acl
-resource "aws_s3_bucket_acl" "app_bucket_acl" {
-  bucket = aws_s3_bucket.app_bucket.id
-  acl    = "private"
-}
-
 # Object Ownership
 resource "aws_s3_bucket_ownership_controls" "app_bucket_ownership" {
   bucket = aws_s3_bucket.app_bucket.id
