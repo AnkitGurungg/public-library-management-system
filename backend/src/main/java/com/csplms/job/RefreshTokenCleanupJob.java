@@ -38,5 +38,10 @@ public class RefreshTokenCleanupJob {
                         ChronoUnit.MILLIS
                 )
         );
+
+        // reset auto-increment if table is empty
+        if (refreshTokenRepository.count() == 0) {
+            refreshTokenRepository.resetAutoIncrement();
+        }
     }
 }
