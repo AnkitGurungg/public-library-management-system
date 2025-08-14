@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { NavLink, useNavigate } from "react-router-dom";
 import GLOBAL_SERVICE, { S3_BASE_URL } from "@/services/GlobalServices";
+import { CgSpinner } from "react-icons/cg";
 
 const Header = ({ sidebarToggle, setSidebarToggle }) => {
   const [loggingOut, setLoggingOut] = useState(false);
@@ -72,8 +73,9 @@ const Header = ({ sidebarToggle, setSidebarToggle }) => {
 
   if (loggingOut) {
     return (
-      <div className="flex justify-center items-center h-16 drop-shadow-sm">
-        <p className="text-gray-500">Logging out...</p>
+      <div className="flex flex-col justify-center items-center drop-shadow-sm">
+        <CgSpinner className="animate-spin text-2xl" />
+        <p className="text-gray-600">Logging out...</p>
       </div>
     );
   }

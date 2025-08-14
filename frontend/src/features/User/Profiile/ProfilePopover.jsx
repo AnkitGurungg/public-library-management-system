@@ -17,6 +17,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "@/contexts/UserContext";
 import { useFetchMemberWishListIds } from "@/hooks/useFetchMemberWishListIds";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
+import { CgSpinner } from "react-icons/cg";
 
 export default function ProfilePopover() {
   const[loggingOut, setLoggingOut] = useState(false);
@@ -52,8 +53,9 @@ export default function ProfilePopover() {
 
   if (loggingOut) {
     return (
-      <div className="flex justify-center items-center h-16 drop-shadow-sm">
-        <p className="text-gray-500">Logging out...</p>
+      <div className="flex flex-col justify-center items-center drop-shadow-sm">
+        <CgSpinner className="animate-spin text-2xl" />
+        <p className="text-gray-600">Logging out...</p>
       </div>
     );
   }
