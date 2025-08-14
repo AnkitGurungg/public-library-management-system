@@ -33,9 +33,11 @@ const HoverCategories = () => {
       </HoverCardTrigger>
       <HoverCardContent className="w-auto max-h-80 overflow-y-auto">
         <div className="flex flex-col gap-1">
-          {displayCategory?.status === 200 &&
-          Array.isArray(displayCategory?.data) &&
-          displayCategory?.data?.length !== 0 ? (
+          {isLoading ? (
+            <p>Loading categories...</p>
+          ) : displayCategory?.status === 200 &&
+            Array.isArray(displayCategory?.data) &&
+            displayCategory?.data?.length !== 0 ? (
             displayCategory?.data?.map((element) => (
               <div
                 key={element.categoryId}
@@ -44,7 +46,7 @@ const HoverCategories = () => {
                 role="button"
                 tabIndex={0}
               >
-                  <ChevronRight />
+                <ChevronRight />
                 <h4 className="text-[18px] font-bold py-0.5 my-0">
                   {element.name}
                 </h4>

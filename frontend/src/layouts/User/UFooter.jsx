@@ -8,15 +8,6 @@ import {
 } from "react-icons/sl";
 
 const UFooter = () => {
-  const downloadUserManual = () => {
-    const link = document.createElement("a");
-    link.href = "/files/Transcript  Form of Anusha.pdf";
-    link.download = "CSPLMS_User_Manual.pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   return (
     <footer className="bg-white text-black drop-shadow-2xl shadow-2xl mt-3">
       <div className="max-w-7xl mx-auto px-4 py-12">
@@ -62,13 +53,6 @@ const UFooter = () => {
                 className="text-gray-800 hover:text-[#206ea6]"
               >
                 Contact Us
-              </Link>
-
-              <Link
-                onClick={downloadUserManual}
-                className="block text-gray-800 hover:text-[#206ea6] relative text-left"
-              >
-                User Manual (PDF)
               </Link>
             </nav>
           </div>
