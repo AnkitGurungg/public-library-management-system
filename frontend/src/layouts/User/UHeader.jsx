@@ -35,6 +35,22 @@ const UHeader = () => {
     }
   }, [userInfo]);
 
+  // useEffect(() => {
+  //   if (!loading && userInfo) {
+  //     switch (userInfo.role) {
+  //       case "ROLE_MEMBER":
+  //         navigate("/");
+  //         break;
+  //       case "ROLE_LIBRARIAN":
+  //         navigate("/librarian");
+  //         break;
+  //       case "ROLE_ADMIN":
+  //         navigate("/admin");
+  //         break;
+  //     }
+  //   }
+  // }, [loading, userInfo]);
+
   const handleSearch = (value) => {
     if (!value.trim()) {
       setFilteredBooks([]);
@@ -45,7 +61,7 @@ const UHeader = () => {
     const lowerValue = value.toLowerCase();
     const result = Array.isArray(books?.data)
       ? books?.data?.filter((book) =>
-          book.title.toLowerCase().includes(lowerValue)
+          book.title.toLowerCase().includes(lowerValue),
         )
       : [];
     setFilteredBooks(result);

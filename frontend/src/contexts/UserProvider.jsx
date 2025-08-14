@@ -32,6 +32,7 @@ export function UserProvider({ children }) {
 
   useEffect(() => {
     if (token) {
+      setLoading(true);
       getUserInfo();
     } else {
       setLoading(false);
