@@ -10,6 +10,7 @@ import { S3_BASE_URL } from "@/services/GlobalServices";
 import { Button } from "@/components/ui/button";
 import { useFetchAllAvailableBooks } from "@/hooks/useFetchAllAvailableBooks";
 import toast from "react-hot-toast";
+import { CgSpinner } from "react-icons/cg";
 
 const UHeader = () => {
   const { token, setToken, loading, userInfo, getUserInfo } =
@@ -114,7 +115,7 @@ const UHeader = () => {
               <Heart />
             </div>
 
-            {(!userInfo ||
+            {/* {(!userInfo ||
               Object.keys(userInfo).length === 0 ||
               !userInfo?.present ||
               !userInfo?.active) && (
@@ -128,18 +129,25 @@ const UHeader = () => {
                 </Button>
               </div>
             )}
-
-            {/* {userInfo?.active && userInfo?.present && (
-              <NavLink to="/member/profile/wish-list">
-                <Heart />
-              </NavLink>
-            )} */}
-
             {userInfo?.active && userInfo?.present && (
               <>
                 <ProfilePopover />
               </>
+            )} */}
+            {loading ? (
+              <CgSpinner className="animate-spin text-2xl text-gray-600" />
+            ) : userInfo?.active && userInfo?.present ? (
+              <ProfilePopover />
+            ) : (
+              <Button
+                variant="none"
+                onClick={() => setIsOpenLogin(true)}
+                className="text-[17px] cursor-pointer"
+              >
+                Login
+              </Button>
             )}
+
             {(userInfo?.role === "ROLE_ADMIN" ||
               userInfo?.role === "ROLE_LIBRARIAN") && (
               <button
