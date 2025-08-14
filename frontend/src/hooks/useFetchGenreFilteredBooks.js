@@ -2,27 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 
 const useFetchGenreFilteredBooks = ({ categoryId }) => {
-  console.log("categoryId: ", categoryId);
   return useQuery({
-    queryKey: ["genreFilteredBooks"],
+    queryKey: ["genreFilteredBooks", categoryId],
     queryFn: async () => {
-      try {
-        const res = await GLOBAL_SERVICE.get(
-          `/api/v1/p/resource/categories/${categoryId}/books`
-        );
-        // console.log("Genre Filtered Books: ", res);
-
-        return { status: res.status, data: res.data };
-      } catch (error) {
-        if (error && error.response.status === 404) {
-          return {
-            status: error.response.status,
-            data: error.response.message,
-          };
-        }
-        return { status: 500, data: "Internal Server Error!!!" };
-      }
+      const res = await GLOBAL_SERVICE.get(
+        `/api/v1/p/resource/categories/${categoryId}/books`,
+      );
+      return { status: res.status, data: res.data };
     },
+    enabled: !!categoryId,
   });
 };
 

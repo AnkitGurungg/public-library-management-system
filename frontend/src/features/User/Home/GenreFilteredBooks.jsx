@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import BookCard from "./BookCard";
 import { ChevronRight } from "lucide-react";
@@ -10,33 +10,17 @@ import { BookLoader } from "@/components/Loading/BookLoader";
 const GenreFilteredBooks = () => {
   const navigate = useNavigate();
   const { categoryId } = useParams();
-  const [books, setBooks] = useState([]);
   const [showGenre, setShowGenre] = useState(true);
 
-  const {
-    data: displayCategory,
-    refetch: refetchDisplayCategory,
-    isLoading: isDisplayCategoryLoading,
-  } = useFetchDisplayCategory();
+  const { data: displayCategory, isLoading: isDisplayCategoryLoading } =
+    useFetchDisplayCategory();
 
-  const {
-    data: genreFilteredBooks,
-    refetch: refetchGenreFilteredBooks,
-    isLoading: isGenreFilteredBooksLoading,
-  } = useFetchGenreFilteredBooks({ categoryId });
+  const { data: genreFilteredBooks, isLoading: isGenreFilteredBooksLoading } =
+    useFetchGenreFilteredBooks({ categoryId });
 
   const handleShowGenre = () => {
     setShowGenre(!showGenre);
   };
-
-  useEffect(() => {
-    refetchGenreFilteredBooks();
-    refetchDisplayCategory();
-  }, [categoryId]);
-
-  useEffect(() => {
-    setBooks(genreFilteredBooks);
-  }, [genreFilteredBooks]);
 
   if (isDisplayCategoryLoading) return <p>Loading genres...</p>;
 
@@ -87,17 +71,17 @@ const GenreFilteredBooks = () => {
           <div className="grid grid-cols-5 md:grid-cols-2 lg:grid-cols-5 gap-3">
             {isGenreFilteredBooksLoading ? (
               <BookLoader />
-            ) : books?.status === 200 &&
-              Array.isArray(books?.data) &&
-              books?.data?.length !== 0 ? (
-              books?.data?.map((item) => (
+            ) : genreFilteredBooks?.status === 200 &&
+              Array.isArray(genreFilteredBooks?.data) &&
+              genreFilteredBooks?.data?.length !== 0 ? (
+              genreFilteredBooks?.data?.map((item) => (
                 <div key={item.bookId}>
                   <BookCard key={item.bookId} curBook={item} />
                 </div>
               ))
             ) : (
               <p className="col-span-2">
-                {books?.data?.message || (
+                {genreFilteredBooks?.data?.message || (
                   <span>
                     No books available in this category at the moment. Try
                     exploring other categories.
