@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'infra/**'
+  workflow_dispatch:  # Allow manual trigger
 
 jobs:
   terraform:
