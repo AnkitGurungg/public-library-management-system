@@ -13,12 +13,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "@/contexts/UserContext";
 import { useFetchMemberWishListIds } from "@/hooks/useFetchMemberWishListIds";
 import GLOBAL_SERVICE from "@/services/GlobalServices";
 
 export default function ProfilePopover() {
+  const[loggingOut, setLoggingOut] = useState(false);
   const { setToken, loading, userInfo, getUserInfo, setUserInfo } =
     useContext(UserContext);
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ export default function ProfilePopover() {
 
   const logoutHandler = async () => {
     try {
+      setLoggingOut(true);
       const refreshToken = localStorage.getItem("refreshToken");
       if (refreshToken) {
         const res = await GLOBAL_SERVICE.post(
@@ -43,9 +45,18 @@ export default function ProfilePopover() {
       setUserInfo(null);
       refetchMemberWishListIds();
       navigate("/");
+      setLoggingOut(false);
       // window.alert("Logged out successfully!");
     }
   };
+
+  if (loggingOut) {
+    return (
+      <div className="flex justify-center items-center h-16 drop-shadow-sm">
+        <p className="text-gray-500">Logging out...</p>
+      </div>
+    );
+  }
 
   return (
     <Popover>

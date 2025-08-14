@@ -13,6 +13,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import GLOBAL_SERVICE, { S3_BASE_URL } from "@/services/GlobalServices";
 
 const Header = ({ sidebarToggle, setSidebarToggle }) => {
+  const [loggingOut, setLoggingOut] = useState(false);
   const [currentDate, setCurrentDate] = useState("");
   const [currentTime, setCurrentTime] = useState("");
 
@@ -22,6 +23,7 @@ const Header = ({ sidebarToggle, setSidebarToggle }) => {
 
   const logoutHandler = async () => {
     try {
+      setLoggingOut(true);
       const refreshToken = localStorage.getItem("refreshToken");
       if (refreshToken) {
         const res = await GLOBAL_SERVICE.post(
@@ -38,6 +40,7 @@ const Header = ({ sidebarToggle, setSidebarToggle }) => {
       setToken("");
       setUserInfo(null);
       navigate("/");
+      setLoggingOut(false);
       // window.alert("Logged out successfully!");
     }
   };
@@ -66,6 +69,14 @@ const Header = ({ sidebarToggle, setSidebarToggle }) => {
 
     return () => clearInterval(interval);
   }, []);
+
+  if (loggingOut) {
+    return (
+      <div className="flex justify-center items-center h-16 drop-shadow-sm">
+        <p className="text-gray-500">Logging out...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-between border-l-1 border-grey-900 items-center bg-white drop-shadow-sm h-16">
