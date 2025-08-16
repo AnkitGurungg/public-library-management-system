@@ -7,10 +7,13 @@ import com.csplms.entity.RefreshToken;
 import com.csplms.entity.User;
 import com.csplms.dto.requestDto.LoginRequestDto;
 import com.csplms.dto.responseDto.LoginResponseDto;
+import com.csplms.enums.NotificationEventType;
+import com.csplms.event.OtpGeneratedEvent;
 import com.csplms.exception.MailFailedException;
 import com.csplms.exception.UnauthorizedException;
 import com.csplms.exception.UserNotPresentException;
 import com.csplms.mapper.LoginMapper;
+import com.csplms.publisher.NotificationEventPublisher;
 import com.csplms.repository.EvidenceRepository;
 import com.csplms.repository.RefreshTokenRepository;
 import com.csplms.repository.UserRepository;
@@ -48,9 +51,10 @@ public class AuthServiceImpl implements AuthService {
     private final GetAuthUserUtil authUserUtil;
     private final RefreshTokenService refreshTokenService;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final NotificationEventPublisher notificationEventPublisher;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository, EvidenceRepository evidenceRepository, UserDetailsServiceImpl userDetailsService, LoginMapper loginMapper, JwtService jwtService, AuthenticationManager authenticationManager, EmailService emailService, OtpUtil otpUtil, DateTimeUtil dateTimeUtil, PasswordEncoder passwordEncoder, GetAuthUserUtil authUserUtil, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository) {
+    public AuthServiceImpl(UserRepository userRepository, EvidenceRepository evidenceRepository, UserDetailsServiceImpl userDetailsService, LoginMapper loginMapper, JwtService jwtService, AuthenticationManager authenticationManager, EmailService emailService, OtpUtil otpUtil, DateTimeUtil dateTimeUtil, PasswordEncoder passwordEncoder, GetAuthUserUtil authUserUtil, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository, NotificationEventPublisher notificationEventPublisher) {
         this.userRepository = userRepository;
         this.evidenceRepository = evidenceRepository;
         this.userDetailsService = userDetailsService;
@@ -64,6 +68,7 @@ public class AuthServiceImpl implements AuthService {
         this.authUserUtil = authUserUtil;
         this.refreshTokenService = refreshTokenService;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.notificationEventPublisher = notificationEventPublisher;
     }
 
     @Override
@@ -95,11 +100,19 @@ public class AuthServiceImpl implements AuthService {
 //        if user has not verified email, send otp and ask to verify email
         if (!user.isActive()) {
             String otp = otpUtil.generateOTP();
-            emailService.sendOtpEmail(loginRequestDto.email(), otp);
 
             user.setOtpGeneratedTime(dateTimeUtil.getLocalDateTime());
             user.setOtp(passwordEncoder.encode(otp));
-            userRepository.save(user);
+            userRepository.saveAndFlush(user);
+
+//            Publish otp generated event
+            notificationEventPublisher.publish(
+                    NotificationEventType.OTP_GENERATED.getRoutingKey(),
+                    OtpGeneratedEvent.builder()
+                            .email(loginRequestDto.email())
+                            .otp(otp)
+                            .build()
+            );
         }
 
 //        Save refresh token

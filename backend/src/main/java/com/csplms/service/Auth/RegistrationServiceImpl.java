@@ -2,7 +2,10 @@ package com.csplms.service.Auth;
 
 import com.csplms.dto.requestDto.KYCFillUpDto;
 import com.csplms.dto.responseDto.UserResponseDto;
+import com.csplms.enums.NotificationEventType;
 import com.csplms.helper.SaveEvidencesHelper;
+import com.csplms.event.OtpGeneratedEvent;
+import com.csplms.publisher.NotificationEventPublisher;
 import com.csplms.service.Member.EmailService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -42,6 +45,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final PasswordEncoder passwordEncoder;
     private final SaveEvidencesHelper saveEvidencesHelper;
     private final RefreshTokenService refreshTokenService;
+    private final NotificationEventPublisher notificationEventPublisher;
 
     private static final Logger logger = LoggerFactory.getLogger(RegistrationServiceImpl.class);
 
@@ -55,7 +59,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             GetAuthUserUtil getAuthUserUtil,
             PasswordEncoder passwordEncoder,
             SaveEvidencesHelper saveEvidencesHelper,
-            RefreshTokenService refreshTokenService
+            RefreshTokenService refreshTokenService,
+            NotificationEventPublisher notificationEventPublisher
     ) {
         this.userRepository = userRepository;
         this.registrationMapper = registrationMapper;
@@ -66,6 +71,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.passwordEncoder = passwordEncoder;
         this.saveEvidencesHelper = saveEvidencesHelper;
         this.refreshTokenService = refreshTokenService;
+        this.notificationEventPublisher = notificationEventPublisher;
     }
 
     @Override
@@ -76,7 +82,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             if (dbUser.isPresent()) {
                 throw new ResourceAlreadyExistsException("User already exists: "+ registrationRequestDto.email());
             }
-            emailService.sendOtpEmail(registrationRequestDto.email(), otp);
 
 //            Save user
             User user = registrationMapper.toUser(registrationRequestDto, otp);
@@ -84,6 +89,16 @@ public class RegistrationServiceImpl implements RegistrationService {
 
 //            Save token
             refreshTokenService.create(user.getEmail(), refToken);
+
+//            Publish otp generated event
+            notificationEventPublisher.publish(
+                    NotificationEventType.OTP_GENERATED.getRoutingKey(),
+                    OtpGeneratedEvent.builder()
+                            .email(user.getEmail())
+                            .otp(otp)
+                            .build()
+            );
+
         } catch (Exception ex) {
             if (ex instanceof DataIntegrityViolationException dive
                     && dive.getCause().toString().contains("uk_users_email")) {
