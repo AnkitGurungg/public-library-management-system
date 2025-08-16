@@ -7,7 +7,7 @@ import com.csplms.exception.ResourceEntityNotFoundException;
 import com.csplms.helper.ReturnHelper;
 import com.csplms.mapper.FineMapper;
 import com.csplms.repository.*;
-import com.csplms.util.EmailUtil;
+import com.csplms.util.EmailService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,11 +25,11 @@ public class ReturnServiceImpl implements ReturnService {
     private final FineService fineService;
     private final FineMapper fineMapper;
     private final FineRepository fineRepository;
-    private final EmailUtil emailUtil;
+    private final EmailService emailService;
     private final UserRepository userRepository;
 
     @Autowired
-    public ReturnServiceImpl(BorrowRepository borrowRepository, ReturnRepository returnRepository, ReturnHelper returnHelper, BookRepository bookRepository, FineService fineService, FineMapper fineMapper, FineRepository fineRepository, EmailUtil emailUtil, UserRepository userRepository) {
+    public ReturnServiceImpl(BorrowRepository borrowRepository, ReturnRepository returnRepository, ReturnHelper returnHelper, BookRepository bookRepository, FineService fineService, FineMapper fineMapper, FineRepository fineRepository, EmailService emailService, UserRepository userRepository) {
         this.borrowRepository = borrowRepository;
         this.returnRepository = returnRepository;
         this.returnHelper = returnHelper;
@@ -37,7 +37,7 @@ public class ReturnServiceImpl implements ReturnService {
         this.fineService = fineService;
         this.fineMapper = fineMapper;
         this.fineRepository = fineRepository;
-        this.emailUtil = emailUtil;
+        this.emailService = emailService;
         this.userRepository = userRepository;
     }
 
@@ -70,9 +70,9 @@ public class ReturnServiceImpl implements ReturnService {
             long totalAmount = fineService.generateFine(borrow, returns);
             Fine fine = fineRepository.save(fineMapper.toFine(returns, totalAmount));
             fineRepository.flush();
-            emailUtil.bookLateReturnedMailToMember(user, book, returns, fine);
+            emailService.bookLateReturnedMailToMember(user, book, returns, fine);
         } else {
-            emailUtil.bookEarlyReturnedMailToMember(user, book, returns);
+            emailService.bookEarlyReturnedMailToMember(user, book, returns);
         }
         return returns;
     }

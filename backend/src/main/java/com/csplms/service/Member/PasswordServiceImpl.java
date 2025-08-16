@@ -8,7 +8,7 @@ import com.csplms.exception.PasswordNotMatchedException;
 import com.csplms.exception.UserNotPresentException;
 import com.csplms.repository.UserRepository;
 import com.csplms.util.DateTimeUtil;
-import com.csplms.util.EmailUtil;
+import com.csplms.util.EmailService;
 import com.csplms.util.GetAuthUserUtil;
 import com.csplms.util.OtpUtil;
 import jakarta.mail.MessagingException;
@@ -24,16 +24,16 @@ public class PasswordServiceImpl implements PasswordService {
     private final GetAuthUserUtil getAuthUserUtil;
     private final OtpUtil otpUtil;
     private final DateTimeUtil dateTimeUtil;
-    private final EmailUtil emailUtil;
+    private final EmailService emailService;
 
     @Autowired
-    public PasswordServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, GetAuthUserUtil getAuthUserUtil, OtpUtil otpUtil, DateTimeUtil dateTimeUtil, EmailUtil emailUtil) {
+    public PasswordServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, GetAuthUserUtil getAuthUserUtil, OtpUtil otpUtil, DateTimeUtil dateTimeUtil, EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.getAuthUserUtil = getAuthUserUtil;
         this.otpUtil = otpUtil;
         this.dateTimeUtil = dateTimeUtil;
-        this.emailUtil = emailUtil;
+        this.emailService = emailService;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class PasswordServiceImpl implements PasswordService {
         user.setOtp(otp);
         user.setOtpGeneratedTime(dateTimeUtil.getLocalDateTime());
         userRepository.save(user);
-        emailUtil.sendOtpEmail(forgotPasswordRequestDto.email(), otp);
+        emailService.sendOtpEmail(forgotPasswordRequestDto.email(), otp);
         return "OTP sent to your mail!";
     }
 

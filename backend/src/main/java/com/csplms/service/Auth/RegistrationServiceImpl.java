@@ -3,13 +3,13 @@ package com.csplms.service.Auth;
 import com.csplms.dto.requestDto.KYCFillUpDto;
 import com.csplms.dto.responseDto.UserResponseDto;
 import com.csplms.helper.SaveEvidencesHelper;
+import com.csplms.util.EmailService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import com.csplms.exception.*;
 import com.csplms.entity.User;
 import org.slf4j.LoggerFactory;
 import com.csplms.util.OtpUtil;
-import com.csplms.util.EmailUtil;
 import com.csplms.util.DateTimeUtil;
 import com.csplms.util.GetAuthUserUtil;
 import jakarta.mail.MessagingException;
@@ -36,7 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final UserRepository userRepository;
     private final RegistrationMapper registrationMapper;
     private final OtpUtil otpUtil;
-    private final EmailUtil emailUtil;
+    private final EmailService emailService;
     private final DateTimeUtil dateWithTimeUtil;
     private final GetAuthUserUtil getAuthUserUtil;
     private final PasswordEncoder passwordEncoder;
@@ -50,7 +50,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             UserRepository userRepository,
             RegistrationMapper registrationMapper,
             OtpUtil otpUtil,
-            EmailUtil emailUtil,
+            EmailService emailService,
             DateTimeUtil dateTimeUtil,
             GetAuthUserUtil getAuthUserUtil,
             PasswordEncoder passwordEncoder,
@@ -60,7 +60,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         this.userRepository = userRepository;
         this.registrationMapper = registrationMapper;
         this.otpUtil = otpUtil;
-        this.emailUtil = emailUtil;
+        this.emailService = emailService;
         this.dateWithTimeUtil = dateTimeUtil;
         this.getAuthUserUtil = getAuthUserUtil;
         this.passwordEncoder = passwordEncoder;
@@ -76,7 +76,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             if (dbUser.isPresent()) {
                 throw new ResourceAlreadyExistsException("User already exists: "+ registrationRequestDto.email());
             }
-            emailUtil.sendOtpEmail(registrationRequestDto.email(), otp);
+            emailService.sendOtpEmail(registrationRequestDto.email(), otp);
 
 //            Save user
             User user = registrationMapper.toUser(registrationRequestDto, otp);
@@ -118,7 +118,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         user.setOtp(passwordEncoder.encode(otp));
         user.setOtpGeneratedTime(dateWithTimeUtil.getLocalDateTime());
         userRepository.save(user);
-        emailUtil.sendOtpEmail(user.getEmail(), otp);
+        emailService.sendOtpEmail(user.getEmail(), otp);
         return "OTP sent again";
     }
 

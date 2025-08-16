@@ -3,12 +3,12 @@ package com.csplms.service.LibrarianAdmin;
 import com.csplms.dto.responseDto.*;
 import com.csplms.dto.responseDto.reports.OverdueStatsDTO;
 import com.csplms.repository.FineRepository;
+import com.csplms.util.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.csplms.entity.Book;
 import com.csplms.entity.User;
 import com.csplms.entity.Borrow;
-import com.csplms.util.EmailUtil;
 import com.csplms.mapper.BorrowMapper;
 import com.csplms.util.GlobalDateUtil;
 import com.csplms.helper.BorrowHelper;
@@ -35,7 +35,7 @@ import java.util.List;
 @Service
 public class BorrowServiceImpl implements BorrowService {
 
-    private final EmailUtil emailUtil;
+    private final EmailService emailService;
     private final FineRepository fineRepository;
 
     @Value("${extend.due.date}")
@@ -51,14 +51,14 @@ public class BorrowServiceImpl implements BorrowService {
     private static final Logger logger = LoggerFactory.getLogger(BorrowServiceImpl.class);
 
     @Autowired
-    public BorrowServiceImpl(BorrowMapper borrowMapper, BorrowRepository borrowRepository, BookRepository bookRepository, UserRepository userRepository, BorrowHelper borrowHelper, GlobalDateUtil globalDateUtil, EmailUtil emailUtil, FineRepository fineRepository) {
+    public BorrowServiceImpl(BorrowMapper borrowMapper, BorrowRepository borrowRepository, BookRepository bookRepository, UserRepository userRepository, BorrowHelper borrowHelper, GlobalDateUtil globalDateUtil, EmailService emailService, FineRepository fineRepository) {
         this.borrowMapper = borrowMapper;
         this.borrowRepository = borrowRepository;
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;
         this.borrowHelper = borrowHelper;
         this.globalDateUtil = globalDateUtil;
-        this.emailUtil = emailUtil;
+        this.emailService = emailService;
         this.fineRepository = fineRepository;
     }
 
@@ -96,7 +96,7 @@ public class BorrowServiceImpl implements BorrowService {
         bookRepository.save(book);
         bookRepository.flush();
 
-        emailUtil.bookBorrowedMailToMember(user, book, borrow);
+        emailService.bookBorrowedMailToMember(user, book, borrow);
 
         return this.borrowMapper.toBorrowResponseDto(borrow);
     }
@@ -125,7 +125,7 @@ public class BorrowServiceImpl implements BorrowService {
         borrow.setDueDate(extendDueDateDto.dueDate());
         borrow.setExtended(true);
         borrow = this.borrowRepository.save(borrow);
-        emailUtil.dueDateExtendedMailToMember(user, book, borrow);
+        emailService.dueDateExtendedMailToMember(user, book, borrow);
         return borrow;
     }
 
@@ -207,7 +207,7 @@ public class BorrowServiceImpl implements BorrowService {
 
         User user = userRepository.findById(borrow.getBorrowUsers().getUserId())
                 .orElseThrow(() -> new ResourceEntityNotFoundException("User", "Id", borrow.getBorrowUsers().getUserId()));
-        emailUtil.borrowDeletedMailToMember(user, book, borrow);
+        emailService.borrowDeletedMailToMember(user, book, borrow);
 
         return 1;
     }

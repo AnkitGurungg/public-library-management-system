@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat;
 
 @Data
 @Component
-public class EmailUtil {
+public class EmailService {
 
     @Value("${spring.mail.username}")
     private String from;
@@ -49,10 +49,10 @@ public class EmailUtil {
     private final AwsProperties awsProperties;
     private final JavaMailSender javaMailSender;
 
-    private static final Logger logger = LoggerFactory.getLogger(EmailUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
     @Autowired
-    public EmailUtil(JavaMailSender javaMailSender, S3Client s3Client, AwsProperties awsProperties) {
+    public EmailService(JavaMailSender javaMailSender, S3Client s3Client, AwsProperties awsProperties) {
         this.javaMailSender = javaMailSender;
         this.s3Client = s3Client;
         this.awsProperties = awsProperties;

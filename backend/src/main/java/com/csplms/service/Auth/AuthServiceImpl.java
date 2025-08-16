@@ -17,7 +17,7 @@ import com.csplms.repository.UserRepository;
 import com.csplms.security.JwtService;
 import com.csplms.security.UserDetailsServiceImpl;
 import com.csplms.util.DateTimeUtil;
-import com.csplms.util.EmailUtil;
+import com.csplms.util.EmailService;
 import com.csplms.util.GetAuthUserUtil;
 import com.csplms.util.OtpUtil;
 import jakarta.mail.MessagingException;
@@ -41,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserDetailsServiceImpl userDetailsService;
     private final LoginMapper loginMapper;
     private final AuthenticationManager authenticationManager;
-    private final EmailUtil emailUtil;
+    private final EmailService emailService;
     private final OtpUtil otpUtil;
     private final DateTimeUtil dateTimeUtil;
     private final PasswordEncoder passwordEncoder;
@@ -50,14 +50,14 @@ public class AuthServiceImpl implements AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository, EvidenceRepository evidenceRepository, UserDetailsServiceImpl userDetailsService, LoginMapper loginMapper, JwtService jwtService, AuthenticationManager authenticationManager, EmailUtil emailUtil, OtpUtil otpUtil, DateTimeUtil dateTimeUtil, PasswordEncoder passwordEncoder, GetAuthUserUtil authUserUtil, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository) {
+    public AuthServiceImpl(UserRepository userRepository, EvidenceRepository evidenceRepository, UserDetailsServiceImpl userDetailsService, LoginMapper loginMapper, JwtService jwtService, AuthenticationManager authenticationManager, EmailService emailService, OtpUtil otpUtil, DateTimeUtil dateTimeUtil, PasswordEncoder passwordEncoder, GetAuthUserUtil authUserUtil, RefreshTokenService refreshTokenService, RefreshTokenRepository refreshTokenRepository) {
         this.userRepository = userRepository;
         this.evidenceRepository = evidenceRepository;
         this.userDetailsService = userDetailsService;
         this.loginMapper = loginMapper;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
-        this.emailUtil = emailUtil;
+        this.emailService = emailService;
         this.otpUtil = otpUtil;
         this.dateTimeUtil = dateTimeUtil;
         this.passwordEncoder = passwordEncoder;
@@ -95,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
 //        if user has not verified email, send otp and ask to verify email
         if (!user.isActive()) {
             String otp = otpUtil.generateOTP();
-            emailUtil.sendOtpEmail(loginRequestDto.email(), otp);
+            emailService.sendOtpEmail(loginRequestDto.email(), otp);
 
             user.setOtpGeneratedTime(dateTimeUtil.getLocalDateTime());
             user.setOtp(passwordEncoder.encode(otp));

@@ -12,7 +12,7 @@ import com.csplms.exception.ResourceListNotFoundException;
 import com.csplms.helper.SaveEvidencesHelper;
 import com.csplms.mapper.LibrarianMapper;
 import com.csplms.repository.UserRepository;
-import com.csplms.util.EmailUtil;
+import com.csplms.util.EmailService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,19 +29,19 @@ public class LibrarianServiceImpl implements LibrarianService {
     private final UserRepository userRepository;
     private final LibrarianMapper librarianMapper;
     private final SaveEvidencesHelper saveEvidences;
-    private final EmailUtil emailUtil;
+    private final EmailService emailService;
 
     @Autowired
     public LibrarianServiceImpl(
             UserRepository userRepository,
             LibrarianMapper librarianMapper,
             SaveEvidencesHelper saveEvidences,
-            EmailUtil emailUtil
+            EmailService emailService
     ) {
         this.userRepository = userRepository;
         this.librarianMapper = librarianMapper;
         this.saveEvidences = saveEvidences;
-        this.emailUtil = emailUtil;
+        this.emailService = emailService;
     }
 
     @Transactional(rollbackFor = {MessagingException.class, MailFailedException.class, Exception.class})
@@ -66,8 +66,8 @@ public class LibrarianServiceImpl implements LibrarianService {
 
         // Save the Evidence on DB
         Evidence evidence = this.saveEvidences.saveUserEvidencesOnDB(librarianUser, librarianUserImagePath, librarianUserEvidencesPath, kycFillUpDto);
-        emailUtil.librarianAddedMailToLibrarian(librarianUser, evidence, librarianPassword);
-        emailUtil.librarianAddedMailToAdmin(librarianUser, evidence);
+        emailService.librarianAddedMailToLibrarian(librarianUser, evidence, librarianPassword);
+        emailService.librarianAddedMailToAdmin(librarianUser, evidence);
 
         return librarianUser;
     }

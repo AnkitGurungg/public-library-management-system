@@ -6,7 +6,7 @@ import com.csplms.exception.MailFailedException;
 import com.csplms.exception.ResourceEntityNotFoundException;
 import com.csplms.mapper.MemberPaymentMapper;
 import com.csplms.repository.*;
-import com.csplms.util.EmailUtil;
+import com.csplms.util.EmailService;
 import com.csplms.util.GlobalDateUtil;
 import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
@@ -35,7 +35,7 @@ public class MemberPaymentServiceImpl implements MemberPaymentService {
     private final FineRepository fineRepository;
     private final GlobalDateUtil globalDateUtil;
     private final PaymentRepository paymentRepository;
-    private final EmailUtil emailUtil;
+    private final EmailService emailService;
     private final KhaltiAPIProperties khaltiProperties;
 
     private static final Logger logger = LoggerFactory.getLogger(MemberPaymentServiceImpl.class);
@@ -47,7 +47,7 @@ public class MemberPaymentServiceImpl implements MemberPaymentService {
             FineRepository fineRepository,
             GlobalDateUtil globalDateUtil,
             PaymentRepository paymentRepository,
-            EmailUtil emailUtil,
+            EmailService emailService,
             KhaltiAPIProperties khaltiProperties
     ) {
         this.khaltiRestClient = khaltiRestClient;
@@ -55,7 +55,7 @@ public class MemberPaymentServiceImpl implements MemberPaymentService {
         this.fineRepository = fineRepository;
         this.globalDateUtil = globalDateUtil;
         this.paymentRepository = paymentRepository;
-        this.emailUtil = emailUtil;
+        this.emailService = emailService;
         this.khaltiProperties = khaltiProperties;
     }
 
@@ -168,7 +168,7 @@ public class MemberPaymentServiceImpl implements MemberPaymentService {
             Book book = fine.getReturns().getBorrows().getBorrowBooks();
             Borrow borrow = fine.getReturns().getBorrows();
             Return bookReturn = fine.getReturns();
-            emailUtil.finePaidMail(user, book, borrow, bookReturn, payment);
+            emailService.finePaidMail(user, book, borrow, bookReturn, payment);
 
             return new KhaltiPaymentVerificationResponseDto(true, status, message, data);
         }
