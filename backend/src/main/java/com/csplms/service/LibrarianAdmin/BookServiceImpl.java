@@ -4,7 +4,7 @@ import com.csplms.config.AwsProperties;
 import com.csplms.constant.S3Constants;
 import com.csplms.dto.responseDto.AdminBooksDto;
 import com.csplms.dto.responseDto.BookDto;
-import com.csplms.util.EmailService;
+import com.csplms.service.Member.EmailService;
 import com.csplms.util.FileUtils;
 import org.slf4j.Logger;
 import com.csplms.entity.Book;

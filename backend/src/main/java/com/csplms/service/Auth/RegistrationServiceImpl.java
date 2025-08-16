@@ -3,7 +3,7 @@ package com.csplms.service.Auth;
 import com.csplms.dto.requestDto.KYCFillUpDto;
 import com.csplms.dto.responseDto.UserResponseDto;
 import com.csplms.helper.SaveEvidencesHelper;
-import com.csplms.util.EmailService;
+import com.csplms.service.Member.EmailService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import com.csplms.exception.*;

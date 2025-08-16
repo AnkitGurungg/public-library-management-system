@@ -7,7 +7,7 @@ import com.csplms.exception.ResourceEntityNotFoundException;
 import com.csplms.helper.ReturnHelper;
 import com.csplms.mapper.FineMapper;
 import com.csplms.repository.*;
-import com.csplms.util.EmailService;
+import com.csplms.service.Member.EmailService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.csplms.util;
+package com.csplms.service.Member;
 
 import com.csplms.entity.*;
 import com.csplms.exception.MailFailedException;

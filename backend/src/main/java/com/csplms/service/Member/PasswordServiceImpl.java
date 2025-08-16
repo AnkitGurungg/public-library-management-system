@@ -8,7 +8,6 @@ import com.csplms.exception.PasswordNotMatchedException;
 import com.csplms.exception.UserNotPresentException;
 import com.csplms.repository.UserRepository;
 import com.csplms.util.DateTimeUtil;
-import com.csplms.util.EmailService;
 import com.csplms.util.GetAuthUserUtil;
 import com.csplms.util.OtpUtil;
 import jakarta.mail.MessagingException;

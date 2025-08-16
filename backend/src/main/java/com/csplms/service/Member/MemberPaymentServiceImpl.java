@@ -6,7 +6,6 @@ import com.csplms.exception.MailFailedException;
 import com.csplms.exception.ResourceEntityNotFoundException;
 import com.csplms.mapper.MemberPaymentMapper;
 import com.csplms.repository.*;
-import com.csplms.util.EmailService;
 import com.csplms.util.GlobalDateUtil;
 import jakarta.mail.MessagingException;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package com.csplms.util;
+package com.csplms.service.Member;
 
 import com.csplms.config.AwsProperties;
 import org.slf4j.Logger;
@@ -58,7 +58,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public InputStreamSource getImageAsInputStream(String objectKey) throws MailFailedException {
-        // Retrieve image from s3 and response as an InputStreamSource
+        // Fetch image from S3 and return it as InputStreamSource for email attachment
         try (
                 ResponseInputStream<GetObjectResponse> s3Object =
                         s3Client.getObject(GetObjectRequest.builder().bucket(awsProperties.getS3BucketName())

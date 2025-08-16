@@ -12,7 +12,7 @@ import com.csplms.exception.ResourceListNotFoundException;
 import com.csplms.helper.SaveEvidencesHelper;
 import com.csplms.mapper.LibrarianMapper;
 import com.csplms.repository.UserRepository;
-import com.csplms.util.EmailService;
+import com.csplms.service.Member.EmailService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

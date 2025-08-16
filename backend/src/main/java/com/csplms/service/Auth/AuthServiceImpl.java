@@ -17,7 +17,7 @@ import com.csplms.repository.UserRepository;
 import com.csplms.security.JwtService;
 import com.csplms.security.UserDetailsServiceImpl;
 import com.csplms.util.DateTimeUtil;
-import com.csplms.util.EmailService;
+import com.csplms.service.Member.EmailService;
 import com.csplms.util.GetAuthUserUtil;
 import com.csplms.util.OtpUtil;
 import jakarta.mail.MessagingException;
