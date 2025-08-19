@@ -1,5 +1,6 @@
 package com.csplms.mapper;
 
+import com.csplms.dto.responseDto.BookDto;
 import com.csplms.entity.Book;
 import com.csplms.dto.requestDto.BookRequestDto;
 import com.csplms.dto.responseDto.BookResponseDto;
@@ -19,10 +20,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class BookMapper {
 
-    private static final Logger logger = LoggerFactory.getLogger(BookMapper.class);
     private final CategoryRepository categoryRepository;
     private final GlobalDateUtil globalDateUtil;
     private final ShelfRepository shelfRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(BookMapper.class);
 
     @Autowired
     public BookMapper(CategoryRepository categoryRepository, GlobalDateUtil globalDateUtil, ShelfRepository shelfRepository) {
@@ -70,6 +72,31 @@ public class BookMapper {
                     shelf,
                     user
             );
+    }
+
+    public BookDto toBookDto(Book book) {
+        return new BookDto(
+                book.getBookId(),
+                book.getIsbn(),
+                book.getTitle(),
+                book.getAuthor(),
+                book.getLanguage(),
+                book.getEdition(),
+                book.getPageCount(),
+                book.getAvailableQuantity(),
+                book.getPublishedDate(),
+                book.getPrice(),
+                book.getImageURL(),
+                book.getDescription(),
+                book.getAddedDate(),
+                book.isAvailable(),
+
+                book.getCategory() != null ? book.getCategory().getCategoryId() : null,
+                book.getCategory() != null ? book.getCategory().getName() : null,
+
+                book.getShelf() != null ? book.getShelf().getShelfId() : null,
+                book.getShelf() != null ? book.getShelf().getName() : null
+        );
     }
 
 //    For add, update, restore book

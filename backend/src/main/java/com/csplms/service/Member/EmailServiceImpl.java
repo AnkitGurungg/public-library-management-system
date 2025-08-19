@@ -1,6 +1,7 @@
 package com.csplms.service.Member;
 
 import com.csplms.config.AwsProperties;
+import com.csplms.dto.responseDto.BookDto;
 import org.slf4j.Logger;
 import com.csplms.entity.*;
 import org.slf4j.LoggerFactory;
@@ -78,9 +79,9 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void newBookMail(Book book, String[] mails) throws MailException, MessagingException, MailFailedException, IOException {
+    public void newBookMail(BookDto book, String[] mails) throws MailException, MessagingException, MailFailedException, IOException {
         try {
-            if (book == null || book.getTitle() == null) {
+            if (book == null || book.title() == null) {
                 throw new MailFailedException("Book title cannot be null.");
             }
             if (mails == null || mails.length == 0) {
@@ -88,18 +89,18 @@ public class EmailServiceImpl implements EmailService {
             }
 
 //            Use the url stored in db to get image from s3
-            InputStreamSource image = getImageAsInputStream(book.getImageURL());
+            InputStreamSource image = getImageAsInputStream(book.imageURL());
 
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             mimeMessageHelper.setFrom(from);
             mimeMessageHelper.setTo(mails);
-            mimeMessageHelper.setSubject("Discover Our Latest Addition: " + book.getTitle());
+            mimeMessageHelper.setSubject("Discover Our Latest Addition: " + book.title());
 
             // Format dates
             SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
-            String publishedDate = book.getPublishedDate() != null ? dateFormat.format(book.getPublishedDate()) : "N/A";
-            String addedDate = book.getAddedDate() != null ? dateFormat.format(book.getAddedDate()) : "N/A";
+            String publishedDate = book.publishedDate() != null ? dateFormat.format(book.publishedDate()) : "N/A";
+            String addedDate = book.addedDate() != null ? dateFormat.format(book.addedDate()) : "N/A";
 
             // HTML email content
             String htmlContent = """
@@ -233,14 +234,14 @@ public class EmailServiceImpl implements EmailService {
                 </body>
                 </html>
                 """.formatted(
-                    book.getTitle(),
-                    book.getAuthor() != null ? book.getAuthor() : "N/A",
-                    book.getCategory() != null ? book.getCategory().getName() : "N/A",
+                    book.title(),
+                    book.author() != null ? book.author() : "N/A",
+                    book.categoryName() != null ? book.categoryName() : "N/A",
                     publishedDate,
                     addedDate,
-                    book.getDescription() != null ? book.getDescription().substring(0, Math.min(book.getDescription().length(), 200)) + "..." : "No description available",
+                    book.description() != null ? book.description().substring(0, Math.min(book.description().length(), 200)) + "..." : "No description available",
                     frontendBaseUrl,
-                    book.getBookId(),
+                    book.bookId(),
                     frontendBaseUrl
             );
 
@@ -264,12 +265,12 @@ public class EmailServiceImpl implements EmailService {
                 CSPLMS Team
                 Pokhara-29, Bhandardhik
                 """.formatted(
-                    book.getTitle(),
-                    book.getAuthor() != null ? book.getAuthor() : "N/A",
-                    book.getCategory() != null ? book.getCategory().getName() : "N/A",
+                    book.title(),
+                    book.author() != null ? book.author() : "N/A",
+                    book.categoryName() != null ? book.categoryName() : "N/A",
                     publishedDate,
                     addedDate,
-                    book.getDescription() != null ? book.getDescription().substring(0, Math.min(book.getDescription().length(), 200)) + "..." : "No description available"
+                    book.description() != null ? book.description().substring(0, Math.min(book.description().length(), 200)) + "..." : "No description available"
             );
 
             mimeMessageHelper.setText(plainText, htmlContent);
@@ -281,6 +282,211 @@ public class EmailServiceImpl implements EmailService {
             throw ex;
         }
     }
+
+//    @Override
+//    public void newBookMail(Book book, String[] mails) throws MailException, MessagingException, MailFailedException, IOException {
+//        try {
+//            if (book == null || book.getTitle() == null) {
+//                throw new MailFailedException("Book title cannot be null.");
+//            }
+//            if (mails == null || mails.length == 0) {
+//                throw new MailFailedException("Recipient list cannot be empty.");
+//            }
+//
+////            Use the url stored in db to get image from s3
+//            InputStreamSource image = getImageAsInputStream(book.getImageURL());
+//
+//            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+//            mimeMessageHelper.setFrom(from);
+//            mimeMessageHelper.setTo(mails);
+//            mimeMessageHelper.setSubject("Discover Our Latest Addition: " + book.getTitle());
+//
+//            // Format dates
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
+//            String publishedDate = book.getPublishedDate() != null ? dateFormat.format(book.getPublishedDate()) : "N/A";
+//            String addedDate = book.getAddedDate() != null ? dateFormat.format(book.getAddedDate()) : "N/A";
+//
+//            // HTML email content
+//            String htmlContent = """
+//                <!DOCTYPE html>
+//                <html>
+//                <head>
+//                    <meta charset="UTF-8">
+//                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//                    <style>
+//                        body {
+//                            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+//                            background-color: #f4f4f4;
+//                            margin: 0;
+//                            padding: 0;
+//                            font-size: 16px;
+//                            line-height: 1.6;
+//                            color: #333333;
+//                        }
+//                        .container {
+//                            max-width: 700px;
+//                            margin: 20px auto;
+//                            background-color: #ffffff;
+//                            border-radius: 8px !important;
+//                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+//                        }
+//                        .header {
+//                            background-color: #206ea6;
+//                            color: #ffffff;
+//                            padding: 20px;
+//                            text-align: center;
+//                            border-top-left-radius: 8px;
+//                            border-top-right-radius: 8px;
+//                        }
+//                        .header img {
+//                            max-width: 150px;
+//                            height: auto;
+//                            border-radius: 5px;
+//                        }
+//                        .header h1 {
+//                            margin: 10px 0 0;
+//                            font-size: 26px;
+//                            font-weight: 500;
+//                        }
+//                        .content {
+//                            padding: 25px;
+//                        }
+//                        .intro {
+//                            font-size: 15px;
+//                            font-weight: 500;
+//                            margin-bottom: 10px;
+//                        }
+//                        .announcement {
+//                            font-size: 14px;
+//                            font-weight: 400;
+//                            margin-bottom: 10px;
+//                            line-height: 1.8;
+//                        }
+//                        .closing {
+//                            font-size: 14px;
+//                            font-weight: 400;
+//                            margin-bottom: 10px;
+//                            line-height: 1.8;
+//                        }
+//                        .book-details {
+//                            margin: 20px 0;
+//                            background-color: #e6f0fa;
+//                            padding: 20px;
+//                            border-radius: 5px;
+//                        }
+//                        .book-details h2 {
+//                            font-family: Georgia, serif;
+//                            color: #206ea6;
+//                            font-size: 22px;
+//                            font-weight: normal;
+//                            margin: 0 0 10px;
+//                        }
+//                        .book-details p {
+//                            margin: 8px 0;
+//                            font-size: 15px;
+//                        }
+//                        .cta-button {
+//                            display: inline-block;
+//                            padding: 12px 25px;
+//                            margin: 20px 0;
+//                            background-color: #206ea6;
+//                            color: #ffffff !important;
+//                            text-decoration: none;
+//                            border-radius: 5px;
+//                            font-weight: 500;
+//                            text-align: center;
+//                        }
+//                        .footer {
+//                            background-color: #f4f4f4;
+//                            padding: 15px;
+//                            text-align: center;
+//                            font-size: 13px;
+//                            color: #666666;
+//                            border-bottom-left-radius: 8px;
+//                            border-bottom-right-radius: 8px;
+//                        }
+//                        .footer a {
+//                            color: #206ea6;
+//                            text-decoration: none;
+//                        }
+//                    </style>
+//                </head>
+//                <body>
+//                    <div class="container">
+//                        <div class="header">
+//                            <h1>New Book Arrival!</h1>
+//                        </div>
+//                        <div class="content">
+//                            <p class="intro">Dear Member,</p>
+//                            <p class="announcement">We are delighted to announce a new addition to the CSPLMS collection!</p>
+//                            <div class="book-details">
+//                                <h2>%s</h2>
+//                                <p><strong>Author:</strong> %s</p>
+//                                <p><strong>Genre:</strong> %s</p>
+//                                <p><strong>Published Date:</strong> %s</p>
+//                                <p><strong>Added On:</strong> %s</p>
+//                                <p><strong>Description:</strong> %s</p>
+//                            </div>
+//                            <p class="closing">Explore this exciting book at our library! Thank you for being with us.</p>
+//                            <a href="%s/books/book/%s" class="cta-button">View Book Details</a>
+//                            <p>Warm Regards,<br>CSPLMS Team<br>Pokhara-29, Bhandardhik</p>
+//                        </div>
+//                        <div class="footer">
+//                            <p>© 2025 CSPLMS. All rights reserved. | <a href="%s">Visit our website</a></p>
+//                        </div>
+//                    </div>
+//                </body>
+//                </html>
+//                """.formatted(
+//                    book.getTitle(),
+//                    book.getAuthor() != null ? book.getAuthor() : "N/A",
+//                    book.getCategory() != null ? book.getCategory().getName() : "N/A",
+//                    publishedDate,
+//                    addedDate,
+//                    book.getDescription() != null ? book.getDescription().substring(0, Math.min(book.getDescription().length(), 200)) + "..." : "No description available",
+//                    frontendBaseUrl,
+//                    book.getBookId(),
+//                    frontendBaseUrl
+//            );
+//
+//            // Fallback email with plain text
+//            String plainText = """
+//                Dear Member,
+//
+//                We are delighted to announce a new addition to the CSPLMS collection!
+//
+//                Book Details:
+//                Title: %s
+//                Author: %s
+//                Genre: %s
+//                Published Date: %s
+//                Added On: %s
+//                Description: %s
+//
+//                Explore this exciting book at our library! Thank you for being with us.
+//
+//                Warm Regards,
+//                CSPLMS Team
+//                Pokhara-29, Bhandardhik
+//                """.formatted(
+//                    book.getTitle(),
+//                    book.getAuthor() != null ? book.getAuthor() : "N/A",
+//                    book.getCategory() != null ? book.getCategory().getName() : "N/A",
+//                    publishedDate,
+//                    addedDate,
+//                    book.getDescription() != null ? book.getDescription().substring(0, Math.min(book.getDescription().length(), 200)) + "..." : "No description available"
+//            );
+//
+//            mimeMessageHelper.setText(plainText, htmlContent);
+//            mimeMessageHelper.addAttachment("New book title" , image, "image/png");
+//            javaMailSender.send(mimeMessage);
+//        } catch (MailException | MessagingException ex) {
+//            throw new MailFailedException("Failed to send new book arrival mail");
+//        } catch (Exception ex) {
+//            throw ex;
+//        }
+//    }
 
     @Override
     public void sendOtpEmail(String userEmail, String otp) throws MailException, MessagingException, MailFailedException {

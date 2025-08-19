@@ -1,5 +1,6 @@
 package com.csplms.service.Member;
 
+import com.csplms.dto.responseDto.BookDto;
 import com.csplms.entity.*;
 import com.csplms.exception.MailFailedException;
 import jakarta.mail.MessagingException;
@@ -12,7 +13,8 @@ public interface EmailService {
     // Retrieve image from s3 as an InputStreamSource
     InputStreamSource getImageAsInputStream(String objectKey) throws MailFailedException;
 
-    void newBookMail(Book book, String[] mails) throws MailException, MessagingException, MailFailedException, IOException;
+    void newBookMail(BookDto book, String[] mails) throws MailException, MessagingException, MailFailedException, IOException;
+//    void newBookMail(Book book, String[] mails) throws MailException, MessagingException, MailFailedException, IOException;
 
     void sendOtpEmail(String userEmail, String otp) throws MailException, MessagingException, MailFailedException;
 

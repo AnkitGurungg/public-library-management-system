@@ -4,6 +4,9 @@ import com.csplms.config.AwsProperties;
 import com.csplms.constant.S3Constants;
 import com.csplms.dto.responseDto.AdminBooksDto;
 import com.csplms.dto.responseDto.BookDto;
+import com.csplms.enums.NotificationEventType;
+import com.csplms.event.BookCreatedEvent;
+import com.csplms.publisher.NotificationEventPublisher;
 import com.csplms.service.Member.EmailService;
 import com.csplms.util.FileUtils;
 import org.slf4j.Logger;
@@ -53,11 +56,12 @@ public class BookServiceImpl implements BookService {
     private final BorrowRepository borrowRepository;
     private final S3Client s3Client;
     private final AwsProperties awsProperties;
+    private final NotificationEventPublisher notificationEventPublisher;
 
     private static final Logger logger = LoggerFactory.getLogger(BookServiceImpl.class);
 
     @Autowired
-    public BookServiceImpl(BookRepository bookRepository, BookMapper bookMapper, CategoryRepository categoryRepository, EmailService emailService, UserRepository userRepository, ShelfRepository shelfRepository, BorrowRepository borrowRepository, GetAuthUserUtil getAuthUserUtil, GlobalDateUtil globalDateUtil, S3Client s3Client, AwsProperties awsProperties) {
+    public BookServiceImpl(BookRepository bookRepository, BookMapper bookMapper, CategoryRepository categoryRepository, EmailService emailService, UserRepository userRepository, ShelfRepository shelfRepository, BorrowRepository borrowRepository, GetAuthUserUtil getAuthUserUtil, GlobalDateUtil globalDateUtil, S3Client s3Client, AwsProperties awsProperties, NotificationEventPublisher notificationEventPublisher) {
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
         this.categoryRepository = categoryRepository;
@@ -69,6 +73,7 @@ public class BookServiceImpl implements BookService {
         this.globalDateUtil = globalDateUtil;
         this.s3Client = s3Client;
         this.awsProperties = awsProperties;
+        this.notificationEventPublisher = notificationEventPublisher;
     }
 
     @Override
@@ -133,7 +138,13 @@ public class BookServiceImpl implements BookService {
                         .toArray(String[]::new);
 
 //            send to mail to every user
-                emailService.newBookMail(savedBook, emails);
+                notificationEventPublisher.publish(
+                        NotificationEventType.BOOK_CREATED.getRoutingKey(),
+                        BookCreatedEvent.builder()
+                                .bookDto(bookMapper.toBookDto(book))
+                                .emails(emails)
+                                .build()
+                );
             }
             return new ResponseEntity<>(bookMapper.toBookResponseDto(savedBook), HttpStatus.CREATED);
         } catch (Exception ex) {
